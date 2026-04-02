@@ -11,6 +11,10 @@ allprojects {
     group = "org.alter"
     version = "0.0.5"
 
+    configurations.configureEach {
+        exclude(group = "org.slf4j", module = "slf4j-simple")
+    }
+
     repositories {
         mavenLocal()
         mavenCentral()
