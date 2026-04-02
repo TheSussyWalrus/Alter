@@ -1,0 +1,176 @@
+[
+  {
+    "objects": ["object.clay_rocks", "object.clay_rocks_11363"],
+    "depletedObject": "object.rocks_10081",
+    "respawnTicks": 12,
+    "level": 1,
+    "experience": 5.0,
+    "ticks": 3,
+    "depletionChance": 0.18,
+    "tools": [
+      { "item": "item.bronze_pickaxe", "level": 1 },
+      { "item": "item.iron_pickaxe", "level": 1 },
+      { "item": "item.steel_pickaxe", "level": 6 },
+      { "item": "item.mithril_pickaxe", "level": 21 },
+      { "item": "item.adamant_pickaxe", "level": 31 },
+      { "item": "item.rune_pickaxe", "level": 41 },
+      { "item": "item.dragon_pickaxe", "level": 61 }
+    ],
+    "outputs": [{ "item": "item.clay" }]
+  },
+  {
+    "objects": ["object.copper_rocks", "object.copper_rocks_10943", "object.copper_rocks_11161"],
+    "depletedObject": "object.rocks_10081",
+    "respawnTicks": 10,
+    "level": 1,
+    "experience": 17.5,
+    "ticks": 3,
+    "depletionChance": 0.2,
+    "tools": [
+      { "item": "item.bronze_pickaxe", "level": 1 },
+      { "item": "item.iron_pickaxe", "level": 1 },
+      { "item": "item.steel_pickaxe", "level": 6 },
+      { "item": "item.mithril_pickaxe", "level": 21 },
+      { "item": "item.adamant_pickaxe", "level": 31 },
+      { "item": "item.rune_pickaxe", "level": 41 },
+      { "item": "item.dragon_pickaxe", "level": 61 }
+    ],
+    "outputs": [{ "item": "item.copper_ore" }]
+  },
+  {
+    "objects": ["object.tin_rocks", "object.tin_rocks_11360", "object.tin_rocks_11361"],
+    "depletedObject": "object.rocks_10081",
+    "respawnTicks": 10,
+    "level": 1,
+    "experience": 17.5,
+    "ticks": 3,
+    "depletionChance": 0.2,
+    "tools": [
+      { "item": "item.bronze_pickaxe", "level": 1 },
+      { "item": "item.iron_pickaxe", "level": 1 },
+      { "item": "item.steel_pickaxe", "level": 6 },
+      { "item": "item.mithril_pickaxe", "level": 21 },
+      { "item": "item.adamant_pickaxe", "level": 31 },
+      { "item": "item.rune_pickaxe", "level": 41 },
+      { "item": "item.dragon_pickaxe", "level": 61 }
+    ],
+    "outputs": [{ "item": "item.tin_ore" }]
+  },
+  {
+    "objects": ["object.iron_rocks", "object.iron_rocks_11365"],
+    "depletedObject": "object.rocks_10081",
+    "respawnTicks": 14,
+    "level": 15,
+    "experience": 35.0,
+    "ticks": 4,
+    "depletionChance": 0.22,
+    "tools": [
+      { "item": "item.bronze_pickaxe", "level": 1 },
+      { "item": "item.iron_pickaxe", "level": 1 },
+      { "item": "item.steel_pickaxe", "level": 6 },
+      { "item": "item.mithril_pickaxe", "level": 21 },
+      { "item": "item.adamant_pickaxe", "level": 31 },
+      { "item": "item.rune_pickaxe", "level": 41 },
+      { "item": "item.dragon_pickaxe", "level": 61 }
+    ],
+    "outputs": [{ "item": "item.iron_ore" }]
+  },
+  {
+    "objects": ["object.coal_rocks", "object.coal_rocks_11366", "object.coal_rocks_11367"],
+    "depletedObject": "object.rocks_10081",
+    "respawnTicks": 22,
+    "level": 30,
+    "experience": 50.0,
+    "ticks": 5,
+    "depletionChance": 0.22,
+    "tools": [
+      { "item": "item.bronze_pickaxe", "level": 1 },
+      { "item": "item.iron_pickaxe", "level": 1 },
+      { "item": "item.steel_pickaxe", "level": 6 },
+      { "item": "item.mithril_pickaxe", "level": 21 },
+      { "item": "item.adamant_pickaxe", "level": 31 },
+      { "item": "item.rune_pickaxe", "level": 41 },
+      { "item": "item.dragon_pickaxe", "level": 61 }
+    ],
+    "outputs": [{ "item": "item.coal" }]
+  },
+  {
+    "objects": ["object.mithril_rocks", "object.mithril_rocks_11373"],
+    "depletedObject": "object.rocks_10081",
+    "respawnTicks": 35,
+    "level": 55,
+    "experience": 80.0,
+    "ticks": 6,
+    "depletionChance": 0.25,
+    "tools": [
+      { "item": "item.bronze_pickaxe", "level": 1 },
+      { "item": "item.iron_pickaxe", "level": 1 },
+      { "item": "item.steel_pickaxe", "level": 6 },
+      { "item": "item.mithril_pickaxe", "level": 21 },
+      { "item": "item.adamant_pickaxe", "level": 31 },
+      { "item": "item.rune_pickaxe", "level": 41 },
+      { "item": "item.dragon_pickaxe", "level": 61 }
+    ],
+    "outputs": [{ "item": "item.mithril_ore" }]
+  },
+  {
+    "objects": ["object.adamantite_rocks", "object.adamantite_rocks_11375"],
+    "depletedObject": "object.rocks_10081",
+    "respawnTicks": 45,
+    "level": 70,
+    "experience": 95.0,
+    "ticks": 7,
+    "depletionChance": 0.25,
+    "tools": [
+      { "item": "item.bronze_pickaxe", "level": 1 },
+      { "item": "item.iron_pickaxe", "level": 1 },
+      { "item": "item.steel_pickaxe", "level": 6 },
+      { "item": "item.mithril_pickaxe", "level": 21 },
+      { "item": "item.adamant_pickaxe", "level": 31 },
+      { "item": "item.rune_pickaxe", "level": 41 },
+      { "item": "item.dragon_pickaxe", "level": 61 }
+    ],
+    "outputs": [{ "item": "item.adamantite_ore" }]
+  },
+  {
+    "objects": ["object.runite_rocks_11376", "object.runite_rocks_11377"],
+    "depletedObject": "object.rocks_10081",
+    "respawnTicks": 70,
+    "level": 85,
+    "experience": 125.0,
+    "ticks": 8,
+    "depletionChance": 0.28,
+    "tools": [
+      { "item": "item.bronze_pickaxe", "level": 1 },
+      { "item": "item.iron_pickaxe", "level": 1 },
+      { "item": "item.steel_pickaxe", "level": 6 },
+      { "item": "item.mithril_pickaxe", "level": 21 },
+      { "item": "item.adamant_pickaxe", "level": 31 },
+      { "item": "item.rune_pickaxe", "level": 41 },
+      { "item": "item.dragon_pickaxe", "level": 61 }
+    ],
+    "outputs": [{ "item": "item.runite_ore" }]
+  },
+  {
+    "objects": ["object.rune_essence_15410", "object.rune_essence_16687", "object.rune_essence_34773"],
+    "depletedObject": "object.rune_essence_15410",
+    "respawnTicks": 1,
+    "level": 1,
+    "experience": 5.0,
+    "ticks": 3,
+    "depletionChance": 0.0,
+    "tools": [
+      { "item": "item.bronze_pickaxe", "level": 1 },
+      { "item": "item.iron_pickaxe", "level": 1 },
+      { "item": "item.steel_pickaxe", "level": 6 },
+      { "item": "item.mithril_pickaxe", "level": 21 },
+      { "item": "item.adamant_pickaxe", "level": 31 },
+      { "item": "item.rune_pickaxe", "level": 41 },
+      { "item": "item.dragon_pickaxe", "level": 61 }
+    ],
+    "outputs": [
+      { "item": "item.rune_essence", "min": 1, "max": 1, "weight": 0.7 },
+      { "item": "item.pure_essence", "min": 1, "max": 1, "weight": 0.3 }
+    ]
+  }
+]

@@ -1,0 +1,229 @@
+[
+  {
+    "id": "gnome_stronghold",
+    "name": "Gnome Stronghold course",
+    "lapExperience": 86.5,
+    "steps": [
+      {
+        "objects": ["log_balance", "log_balance_3554", "log_balance_3555", "log_balance_3556", "log_balance_3557", "log_balance_3558"],
+        "options": ["cross", "walk-across", "balance"],
+        "level": 1,
+        "experience": 7.5,
+        "animation": 7134,
+        "ticks": 2,
+        "successMessage": "You edge across the log balance."
+      },
+      {
+        "objects": ["climbing_net", "climbing_net_11310", "obstacle_net_16499"],
+        "options": ["climb", "climb-over", "cross"],
+        "level": 1,
+        "experience": 7.5,
+        "animation": 828,
+        "ticks": 2,
+        "successMessage": "You climb the net."
+      },
+      {
+        "objects": ["monkey_bars", "monkey_bars_3564"],
+        "options": ["walk-on", "cross"],
+        "level": 1,
+        "experience": 7.5,
+        "animation": 744,
+        "ticks": 3,
+        "successMessage": "You swing across the monkey bars."
+      },
+      {
+        "objects": ["low_wall", "low_wall_10035", "low_wall_10865"],
+        "options": ["climb", "climb-over"],
+        "level": 1,
+        "experience": 7.5,
+        "animation": 828,
+        "ticks": 2,
+        "successMessage": "You scale the wall."
+      },
+      {
+        "objects": ["rope_swing"],
+        "options": ["swing-on", "swing"],
+        "level": 1,
+        "experience": 7.5,
+        "animation": 751,
+        "ticks": 3,
+        "successMessage": "You swing across the rope."
+      }
+    ]
+  },
+  {
+    "id": "draynor_course",
+    "name": "Draynor Village course",
+    "lapExperience": 120.0,
+    "steps": [
+      {
+        "objects": ["wall_159", "wall_1594", "wall_1595", "wall_1597", "wall_1598", "wall_1796"],
+        "options": ["climb-over", "climb"],
+        "level": 10,
+        "experience": 12.0,
+        "animation": 828,
+        "ticks": 2,
+        "successMessage": "You scramble over the wall."
+      },
+      {
+        "objects": ["hole", "hole_2336", "hole_2589", "hole_2823", "hole_2824", "hole_6620", "manhole", "manhole_882"],
+        "options": ["crawl-through", "climb-in", "enter"],
+        "level": 10,
+        "experience": 12.0,
+        "animation": 2590,
+        "ticks": 2,
+        "successMessage": "You squeeze through the opening."
+      },
+      {
+        "objects": ["gap_2831", "gap_10859", "gap_10861", "gap_10862", "gap_10863", "gap_10864", "gap_10882", "gap_10883", "gap_10884", "gap_10885"],
+        "options": ["jump", "cross"],
+        "level": 10,
+        "experience": 12.0,
+        "animation": 3067,
+        "ticks": 2,
+        "successMessage": "You leap across the gap."
+      },
+      {
+        "objects": ["rope_bridge"],
+        "options": ["cross", "walk-across"],
+        "level": 10,
+        "experience": 12.0,
+        "animation": 763,
+        "ticks": 2,
+        "successMessage": "You cross the bridge."
+      }
+    ]
+  },
+  {
+    "id": "canifis_course",
+    "name": "Canifis course",
+    "lapExperience": 180.0,
+    "steps": [
+      {
+        "objects": ["mossy_branch", "mossy_branch_1321"],
+        "options": ["balance", "cross", "walk-across"],
+        "level": 40,
+        "experience": 18.0,
+        "animation": 7134,
+        "ticks": 2,
+        "successMessage": "You balance across the branch."
+      },
+      {
+        "objects": ["gap_14833", "gap_14834", "gap_14835", "gap_14844", "gap_14845", "gap_14846", "gap_14847", "gap_14848", "gap_14903", "gap_14904", "gap_14919", "gap_14928", "gap_14929", "gap_14930", "gap_14938", "gap_14946", "gap_14947", "gap_15609", "gap_15610", "gap_15611", "gap_15612"],
+        "options": ["jump", "cross"],
+        "level": 40,
+        "experience": 18.0,
+        "animation": 3067,
+        "ticks": 2,
+        "successMessage": "You jump the gap."
+      },
+      {
+        "objects": ["rough_wall", "rough_wall_11633", "rough_wall_14412", "rough_wall_14898", "rough_wall_14940", "rough_wall_14946"],
+        "options": ["climb", "climb-over"],
+        "level": 40,
+        "experience": 18.0,
+        "animation": 828,
+        "ticks": 2,
+        "successMessage": "You clamber over the wall."
+      },
+      {
+        "objects": ["tightrope", "tightrope_11406", "tightrope_14398", "tightrope_14409", "tightrope_14892", "tightrope_14899", "tightrope_14905", "tightrope_14911", "tightrope_14932", "tightrope_14987", "tightrope_14992"],
+        "options": ["cross", "walk-across", "balance"],
+        "level": 40,
+        "experience": 18.0,
+        "animation": 7134,
+        "ticks": 2,
+        "successMessage": "You carefully cross the tightrope."
+      }
+    ]
+  },
+  {
+    "id": "seers_course",
+    "name": "Seers' Village course",
+    "lapExperience": 240.0,
+    "steps": [
+      {
+        "objects": ["log_balance_3929", "log_balance_3930", "log_balance_3931", "log_balance_3932", "log_balance_3933", "log_balance_16540", "log_balance_16541", "log_balance_16542", "log_balance_16546", "log_balance_16547", "log_balance_16548"],
+        "options": ["cross", "walk-across", "balance"],
+        "level": 60,
+        "experience": 24.0,
+        "animation": 7134,
+        "ticks": 2,
+        "successMessage": "You steady yourself on the log."
+      },
+      {
+        "objects": ["tightrope", "tightrope_11406", "tightrope_14398", "tightrope_14409", "tightrope_14892", "tightrope_14899", "tightrope_14905", "tightrope_14911", "tightrope_14932", "tightrope_14987", "tightrope_14992"],
+        "options": ["cross", "walk-across", "balance"],
+        "level": 60,
+        "experience": 24.0,
+        "animation": 7134,
+        "ticks": 2,
+        "successMessage": "You inch across the rope."
+      },
+      {
+        "objects": ["gap_14399", "gap_14414", "gap_14833", "gap_14834", "gap_14835", "gap_14844", "gap_14845", "gap_14846", "gap_14847", "gap_14848", "gap_14903", "gap_14904", "gap_14919", "gap_14928", "gap_14929", "gap_14930", "gap_14938", "gap_14946", "gap_14947"],
+        "options": ["jump", "cross"],
+        "level": 60,
+        "experience": 24.0,
+        "animation": 3067,
+        "ticks": 2,
+        "successMessage": "You jump the gap."
+      },
+      {
+        "objects": ["rough_wall", "rough_wall_11633", "rough_wall_14412", "rough_wall_14898", "rough_wall_14940", "rough_wall_14946"],
+        "options": ["climb", "climb-over"],
+        "level": 60,
+        "experience": 24.0,
+        "animation": 828,
+        "ticks": 2,
+        "successMessage": "You climb the wall."
+      },
+      {
+        "objects": ["rope_bridge"],
+        "options": ["cross", "walk-across"],
+        "level": 60,
+        "experience": 24.0,
+        "animation": 763,
+        "ticks": 2,
+        "successMessage": "You cross the rope bridge."
+      }
+    ]
+  },
+  {
+    "id": "yanille_dungeon_shortcuts",
+    "name": "Yanille dungeon shortcuts",
+    "lapExperience": 0.0,
+    "steps": [
+      {
+        "objects": ["climbing_rope", "climbing_rope_2825", "climbing_rope_2958", "climbing_rope_3610", "climbing_rope_3692", "climbing_rope_4444", "climbing_rope_4728", "climbing_rope_4881", "climbing_rope_4889", "climbing_rope_5946"],
+        "options": ["climb", "climb-up"],
+        "level": 20,
+        "experience": 15.0,
+        "animation": 828,
+        "ticks": 2,
+        "shortcut": true,
+        "successMessage": "You climb the rope."
+      },
+      {
+        "objects": ["hand_holds", "hand_holds_2585", "hand_holds_3583", "hand_holds_3584"],
+        "options": ["climb", "cross"],
+        "level": 20,
+        "experience": 15.0,
+        "animation": 828,
+        "ticks": 2,
+        "shortcut": true,
+        "successMessage": "You use the hand holds."
+      },
+      {
+        "objects": ["pipe_with_rope", "pipe_11410"],
+        "options": ["squeeze-through", "crawl-through", "crawl-under"],
+        "level": 20,
+        "experience": 15.0,
+        "animation": 746,
+        "ticks": 2,
+        "shortcut": true,
+        "successMessage": "You squeeze through the pipe."
+      }
+    ]
+  }
+]

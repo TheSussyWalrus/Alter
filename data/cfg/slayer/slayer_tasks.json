@@ -1,0 +1,114 @@
+[
+  {
+    "name": "zombies",
+    "npcs": ["zombie"],
+    "minLevel": 1,
+    "experience": 12.0,
+    "points": 1,
+    "weight": 10
+  },
+  {
+    "name": "skeletons",
+    "npcs": ["skeleton", "skeleton_mage"],
+    "minLevel": 1,
+    "experience": 12.0,
+    "points": 1,
+    "weight": 10
+  },
+  {
+    "name": "chaos druids",
+    "npcs": ["chaos_druid", "chaos_druid_warrior"],
+    "minLevel": 10,
+    "experience": 18.0,
+    "points": 1,
+    "weight": 8
+  },
+  {
+    "name": "banshees",
+    "npcs": ["banshee_414"],
+    "minLevel": 15,
+    "experience": 20.0,
+    "points": 1,
+    "weight": 6
+  },
+  {
+    "name": "pyrefiends",
+    "npcs": ["pyrefiend_433", "pyrefiend_434", "pyrefiend_435", "pyrefiend_436"],
+    "minLevel": 20,
+    "experience": 22.0,
+    "points": 2,
+    "weight": 6
+  },
+  {
+    "name": "jellies",
+    "npcs": ["jelly_437", "jelly_438", "jelly_439", "jelly_440", "jelly_441", "jelly_442"],
+    "minLevel": 40,
+    "experience": 30.0,
+    "points": 2,
+    "weight": 6
+  },
+  {
+    "name": "ankous",
+    "npcs": ["ankou", "ankou_2515", "ankou_2516", "ankou_2517", "ankou_2518", "ankou_2519"],
+    "minLevel": 40,
+    "experience": 32.0,
+    "points": 2,
+    "weight": 7
+  },
+  {
+    "name": "greater demons",
+    "npcs": ["greater_demon", "greater_demon_2026", "greater_demon_2027", "greater_demon_2028", "greater_demon_2029", "greater_demon_2030", "greater_demon_2031", "greater_demon_2032"],
+    "minLevel": 40,
+    "experience": 35.0,
+    "points": 2,
+    "weight": 7
+  },
+  {
+    "name": "kalphites",
+    "npcs": ["kalphite_worker", "kalphite_soldier_138", "kalphite_soldier_957", "kalphite_soldier_958", "kalphite_guardian", "kalphite_guardian_960", "kalphite_guardian_962"],
+    "minLevel": 35,
+    "experience": 30.0,
+    "points": 2,
+    "weight": 5
+  },
+  {
+    "name": "bloodvelds",
+    "npcs": ["bloodveld_484", "bloodveld_485", "bloodveld_486", "bloodveld_487", "bloodveld_3138"],
+    "minLevel": 50,
+    "experience": 40.0,
+    "points": 3,
+    "weight": 6
+  },
+  {
+    "name": "dust devils",
+    "npcs": ["dust_devil_423", "dust_devil_7249", "dust_devil_11238"],
+    "minLevel": 65,
+    "experience": 45.0,
+    "points": 3,
+    "weight": 5
+  },
+  {
+    "name": "blue dragons",
+    "npcs": ["blue_dragon", "blue_dragon_266", "blue_dragon_267", "blue_dragon_268", "blue_dragon_269"],
+    "minLevel": 70,
+    "experience": 55.0,
+    "points": 4,
+    "weight": 5
+  },
+  {
+    "name": "hellhounds",
+    "npcs": ["hellhound_104", "hellhound_105", "hellhound_135", "hellhound_3133", "hellhound_7256", "hellhound_7877"],
+    "minLevel": 75,
+    "experience": 55.0,
+    "points": 4,
+    "weight": 5
+  },
+  {
+    "name": "abyssal demons",
+    "npcs": ["abyssal_demon_124", "abyssal_demon_415", "abyssal_demon_416", "abyssal_demon_7241", "abyssal_demon_11239"],
+    "minLevel": 85,
+    "experience": 75.0,
+    "points": 5,
+    "weight": 4
+  }
+]

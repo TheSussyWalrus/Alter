@@ -1,0 +1,14 @@
+[
+  { "raw": "item.raw_shrimps", "cooked": "item.shrimps", "burnt": "item.burnt_fish", "level": 1, "stopBurn": 34, "experience": 30.0, "ticks": 2 },
+  { "raw": "item.raw_anchovies", "cooked": "item.anchovies", "burnt": "item.burnt_fish", "level": 1, "stopBurn": 34, "experience": 30.0, "ticks": 2 },
+  { "raw": "item.raw_sardine", "cooked": "item.sardine", "burnt": "item.burnt_fish", "level": 1, "stopBurn": 38, "experience": 40.0, "ticks": 2 },
+  { "raw": "item.raw_trout", "cooked": "item.trout", "burnt": "item.burnt_fish_343", "level": 15, "stopBurn": 50, "experience": 70.0, "ticks": 2 },
+  { "raw": "item.raw_salmon", "cooked": "item.salmon", "burnt": "item.burnt_fish_343", "level": 25, "stopBurn": 58, "experience": 90.0, "ticks": 2 },
+  { "raw": "item.raw_tuna", "cooked": "item.tuna", "burnt": "item.burnt_fish_367", "level": 30, "stopBurn": 64, "experience": 100.0, "ticks": 2 },
+  { "raw": "item.raw_lobster", "cooked": "item.lobster", "burnt": "item.burnt_lobster", "level": 40, "stopBurn": 74, "experience": 120.0, "ticks": 2 },
+  { "raw": "item.raw_swordfish", "cooked": "item.swordfish", "burnt": "item.burnt_swordfish", "level": 45, "stopBurn": 86, "experience": 140.0, "ticks": 2 },
+  { "raw": "item.raw_beef", "cooked": "item.cooked_meat", "burnt": "item.burnt_meat", "level": 1, "stopBurn": 34, "experience": 30.0, "ticks": 2 },
+  { "raw": "item.raw_chicken", "cooked": "item.cooked_chicken", "burnt": "item.burnt_chicken", "level": 1, "stopBurn": 34, "experience": 30.0, "ticks": 2 },
+  { "raw": "item.bread_dough", "cooked": "item.bread", "burnt": "item.burnt_bread", "level": 1, "stopBurn": 40, "experience": 40.0, "ticks": 2 },
+  { "raw": "item.potato", "cooked": "item.baked_potato", "burnt": "item.burnt_potato", "level": 7, "stopBurn": 41, "experience": 15.0, "ticks": 2 }
+]

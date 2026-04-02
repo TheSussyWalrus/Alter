@@ -1,0 +1,63 @@
+[
+  {
+    "name": "herb_patch",
+    "type": "herb",
+    "objects": ["herb_patch", "herb_patch_18818", "herb_patch_18819", "herb_patch_18820", "herb_patch_18821", "herb_patch_18822", "herb_patch_18823"],
+    "rakeExperience": 4.0,
+    "plantTool": "item.seed_dibber",
+    "crops": [
+      {"seed":"grimy_guam_leaf","product":"grimy_guam_leaf","minLevel":1,"experience":12.5,"growthMillis":60000,"harvestAmountMin":1,"harvestAmountMax":3},
+      {"seed":"grimy_marrentill","product":"grimy_marrentill","minLevel":5,"experience":15.0,"growthMillis":70000,"harvestAmountMin":1,"harvestAmountMax":3},
+      {"seed":"grimy_tarromin","product":"grimy_tarromin","minLevel":11,"experience":18.5,"growthMillis":80000,"harvestAmountMin":1,"harvestAmountMax":3},
+      {"seed":"grimy_harralander","product":"grimy_harralander","minLevel":20,"experience":26.5,"growthMillis":90000,"harvestAmountMin":1,"harvestAmountMax":3},
+      {"seed":"grimy_ranarr_weed","product":"grimy_ranarr_weed","minLevel":26,"experience":32.0,"growthMillis":100000,"harvestAmountMin":1,"harvestAmountMax":3},
+      {"seed":"grimy_irit_leaf","product":"grimy_irit_leaf","minLevel":40,"experience":40.0,"growthMillis":110000,"harvestAmountMin":1,"harvestAmountMax":3},
+      {"seed":"grimy_avantoe","product":"grimy_avantoe","minLevel":48,"experience":54.5,"growthMillis":120000,"harvestAmountMin":1,"harvestAmountMax":3},
+      {"seed":"grimy_kwuarm","product":"grimy_kwuarm","minLevel":54,"experience":69.0,"growthMillis":130000,"harvestAmountMin":1,"harvestAmountMax":3},
+      {"seed":"grimy_cadantine","product":"grimy_cadantine","minLevel":66,"experience":88.5,"growthMillis":140000,"harvestAmountMin":1,"harvestAmountMax":3},
+      {"seed":"grimy_dwarf_weed","product":"grimy_dwarf_weed","minLevel":72,"experience":110.0,"growthMillis":150000,"harvestAmountMin":1,"harvestAmountMax":3},
+      {"seed":"grimy_torstol","product":"grimy_torstol","minLevel":85,"experience":172.5,"growthMillis":160000,"harvestAmountMin":1,"harvestAmountMax":3}
+    ]
+  },
+  {
+    "name": "allotment",
+    "type": "allotment",
+    "objects": ["allotment", "allotment_8574", "allotment_8575", "allotment_8576", "allotment_8577", "allotment_8578", "allotment_8579"],
+    "rakeExperience": 4.0,
+    "plantTool": "item.seed_dibber",
+    "crops": [
+      {"seed":"potato_seed","product":"potato","minLevel":1,"experience":8.0,"growthMillis":50000,"harvestAmountMin":2,"harvestAmountMax":5},
+      {"seed":"onion_seed","product":"onion","minLevel":5,"experience":9.5,"growthMillis":60000,"harvestAmountMin":2,"harvestAmountMax":5},
+      {"seed":"cabbage_seed","product":"cabbage","minLevel":7,"experience":10.5,"growthMillis":65000,"harvestAmountMin":2,"harvestAmountMax":5},
+      {"seed":"tomato_seed","product":"tomato","minLevel":12,"experience":12.5,"growthMillis":70000,"harvestAmountMin":2,"harvestAmountMax":5},
+      {"seed":"strawberry_seed","product":"strawberry","minLevel":31,"experience":20.0,"growthMillis":80000,"harvestAmountMin":2,"harvestAmountMax":5},
+      {"seed":"sweetcorn_seed","product":"sweetcorn","minLevel":47,"experience":26.5,"growthMillis":90000,"harvestAmountMin":2,"harvestAmountMax":5},
+      {"seed":"watermelon_seed","product":"watermelon","minLevel":47,"experience":48.5,"growthMillis":110000,"harvestAmountMin":2,"harvestAmountMax":4}
+    ]
+  },
+  {
+    "name": "flower_patch",
+    "type": "flower",
+    "objects": ["flower_patch", "flower_patch_7841", "flower_patch_7842", "flower_patch_7843", "flower_patch_7844", "flower_patch_7845", "flower_patch_7846"],
+    "rakeExperience": 4.0,
+    "plantTool": "item.seed_dibber",
+    "crops": [
+      {"seed":"marigold_seed","product":"marigolds","minLevel":2,"experience":8.5,"growthMillis":50000,"harvestAmountMin":1,"harvestAmountMax":1},
+      {"seed":"rosemary_seed","product":"rosemary","minLevel":11,"experience":12.0,"growthMillis":65000,"harvestAmountMin":1,"harvestAmountMax":1}
+    ]
+  },
+  {
+    "name": "tree_patch",
+    "type": "tree",
+    "objects": ["tree_patch", "tree_patch_8393", "tree_patch_8394", "tree_patch_8395", "white_tree_patch", "white_tree_patch_9211", "white_tree_patch_9212", "white_tree_patch_9213", "white_tree_patch_9214", "white_tree_patch_9215", "white_tree_patch_9216", "white_tree_patch_9217", "white_tree_patch_9218", "white_tree_patch_9219", "white_tree_patch_9220", "white_tree_patch_9221", "white_tree_patch_9222"],
+    "rakeExperience": 8.0,
+    "plantTool": "item.spade",
+    "crops": [
+      {"seed":"oak_sapling","product":"oak_logs","minLevel":15,"experience":37.5,"growthMillis":120000,"harvestAmountMin":3,"harvestAmountMax":8},
+      {"seed":"willow_sapling","product":"willow_logs","minLevel":30,"experience":67.5,"growthMillis":150000,"harvestAmountMin":4,"harvestAmountMax":10},
+      {"seed":"maple_sapling","product":"maple_logs","minLevel":45,"experience":100.0,"growthMillis":180000,"harvestAmountMin":5,"harvestAmountMax":12},
+      {"seed":"yew_sapling","product":"yew_logs","minLevel":60,"experience":150.0,"growthMillis":220000,"harvestAmountMin":6,"harvestAmountMax":16},
+      {"seed":"magic_sapling","product":"magic_logs","minLevel":75,"experience":250.0,"growthMillis":260000,"harvestAmountMin":8,"harvestAmountMax":20}
+    ]
+  }
+]

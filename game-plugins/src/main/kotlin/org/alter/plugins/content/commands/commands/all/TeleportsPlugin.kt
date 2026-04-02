@@ -39,6 +39,15 @@ class TeleportsPlugin(
         onCommand("gnome", Privilege.Companion.ADMIN_POWER, description = "Teleports you to Gnome Stronghold") {
             player.moveTo(Tile(x = 2461, z = 3443, height = 0))
         }
+        onCommand("seers", Privilege.Companion.ADMIN_POWER, description = "Teleports you to Seers' Village") {
+            player.moveTo(Tile(x = 2729, z = 3487, height = 0))
+        }
+        onCommand("slayer_tower", Privilege.Companion.ADMIN_POWER, description = "Teleports you near the Slayer Tower") {
+            player.moveTo(Tile(x = 3428, z = 3535, height = 0))
+        }
+        onCommand("legends", Privilege.Companion.ADMIN_POWER, description = "Teleports you near the Legends' Guild") {
+            player.moveTo(Tile(x = 2729, z = 3348, height = 0))
+        }
         onCommand("thieving", description = "Teleports you to the test thieving") {
             player.moveTo(Tile(x = 2591, z = 4731, height = 0))
         }

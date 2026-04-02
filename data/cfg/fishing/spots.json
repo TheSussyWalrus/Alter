@@ -1,0 +1,61 @@
+[
+  {
+    "npcs": ["npc.fishing_spot", "npc.fishing_spot_1497", "npc.fishing_spot_1498", "npc.fishing_spot_1499", "npc.fishing_spot_1500"],
+    "option": "net",
+    "level": 1,
+    "experience": 10.0,
+    "ticks": 3,
+    "tools": [{ "item": "item.small_fishing_net", "level": 1 }],
+    "outputs": [
+      { "item": "item.raw_shrimps", "min": 1, "max": 1, "weight": 0.7 },
+      { "item": "item.raw_anchovies", "min": 1, "max": 1, "weight": 0.3 }
+    ]
+  },
+  {
+    "npcs": ["npc.rod_fishing_spot", "npc.rod_fishing_spot_1506", "npc.rod_fishing_spot_1507", "npc.rod_fishing_spot_1508", "npc.rod_fishing_spot_1509"],
+    "option": "bait",
+    "level": 5,
+    "experience": 20.0,
+    "ticks": 4,
+    "tools": [{ "item": "item.fishing_rod", "level": 1 }],
+    "bait": { "item": "item.fishing_bait", "amount": 1 },
+    "outputs": [{ "item": "item.raw_sardine", "min": 1, "max": 1, "weight": 1.0 }]
+  },
+  {
+    "npcs": ["npc.rod_fishing_spot_1512", "npc.rod_fishing_spot_1513", "npc.rod_fishing_spot_1526", "npc.rod_fishing_spot_1527", "npc.rod_fishing_spot_1529"],
+    "option": "lure",
+    "level": 20,
+    "experience": 50.0,
+    "ticks": 4,
+    "tools": [{ "item": "item.fly_fishing_rod", "level": 20 }],
+    "bait": { "item": "item.feather", "amount": 1 },
+    "outputs": [
+      { "item": "item.raw_trout", "min": 1, "max": 1, "weight": 0.65 },
+      { "item": "item.raw_salmon", "min": 1, "max": 1, "weight": 0.35 }
+    ]
+  },
+  {
+    "npcs": ["npc.fishing_spot_1517", "npc.fishing_spot_1518", "npc.fishing_spot_1519", "npc.fishing_spot_1520"],
+    "option": "cage",
+    "level": 40,
+    "experience": 90.0,
+    "ticks": 5,
+    "tools": [{ "item": "item.lobster_pot", "level": 40 }],
+    "outputs": [{ "item": "item.raw_lobster", "min": 1, "max": 1, "weight": 1.0 }]
+  },
+  {
+    "npcs": ["npc.fishing_spot_1521", "npc.fishing_spot_1522", "npc.fishing_spot_1523", "npc.fishing_spot_1524", "npc.fishing_spot_1525"],
+    "option": "harpoon",
+    "level": 50,
+    "experience": 100.0,
+    "ticks": 5,
+    "tools": [
+      { "item": "item.harpoon", "level": 50 },
+      { "item": "item.barbtail_harpoon", "level": 50 }
+    ],
+    "outputs": [
+      { "item": "item.raw_tuna", "min": 1, "max": 1, "weight": 0.65 },
+      { "item": "item.raw_swordfish", "min": 1, "max": 1, "weight": 0.35 }
+    ]
+  }
+]

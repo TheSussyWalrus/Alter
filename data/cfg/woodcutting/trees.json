@@ -1,0 +1,116 @@
+[
+  {
+    "objects": ["object.tree_1276", "object.tree_1277", "object.tree_1278", "object.tree_1279", "object.tree_1280", "object.tree_3881", "object.tree_3882", "object.tree_3883"],
+    "depletedObject": "object.tree_stump",
+    "respawnTicks": 12,
+    "level": 1,
+    "experience": 25.0,
+    "ticks": 4,
+    "depletionChance": 0.15,
+    "tools": [
+      { "item": "item.bronze_axe", "level": 1 },
+      { "item": "item.iron_axe", "level": 1 },
+      { "item": "item.steel_axe", "level": 6 },
+      { "item": "item.mithril_axe", "level": 21 },
+      { "item": "item.adamant_axe", "level": 31 },
+      { "item": "item.rune_axe", "level": 41 },
+      { "item": "item.dragon_axe", "level": 61 }
+    ],
+    "outputs": [{ "item": "item.logs" }]
+  },
+  {
+    "objects": ["object.oak_tree_4533", "object.oak_tree_4540", "object.oak_tree_8462", "object.oak_tree_8463", "object.oak_tree_8464", "object.oak_tree_8465", "object.oak_tree_8466", "object.oak_tree_8467"],
+    "depletedObject": "object.oak_tree_stump",
+    "respawnTicks": 20,
+    "level": 15,
+    "experience": 37.5,
+    "ticks": 5,
+    "depletionChance": 0.18,
+    "tools": [
+      { "item": "item.bronze_axe", "level": 1 },
+      { "item": "item.iron_axe", "level": 1 },
+      { "item": "item.steel_axe", "level": 6 },
+      { "item": "item.mithril_axe", "level": 21 },
+      { "item": "item.adamant_axe", "level": 31 },
+      { "item": "item.rune_axe", "level": 41 },
+      { "item": "item.dragon_axe", "level": 61 }
+    ],
+    "outputs": [{ "item": "item.oak_logs" }]
+  },
+  {
+    "objects": ["object.willow_tree_4534", "object.willow_tree_4541", "object.willow_tree_8481", "object.willow_tree_8482", "object.willow_tree_8483", "object.willow_tree_8484", "object.willow_tree_8485", "object.willow_tree_8486", "object.willow_tree_8487", "object.willow_tree_8488"],
+    "depletedObject": "object.willow_tree_stump",
+    "respawnTicks": 28,
+    "level": 30,
+    "experience": 67.5,
+    "ticks": 5,
+    "depletionChance": 0.2,
+    "tools": [
+      { "item": "item.bronze_axe", "level": 1 },
+      { "item": "item.iron_axe", "level": 1 },
+      { "item": "item.steel_axe", "level": 6 },
+      { "item": "item.mithril_axe", "level": 21 },
+      { "item": "item.adamant_axe", "level": 31 },
+      { "item": "item.rune_axe", "level": 41 },
+      { "item": "item.dragon_axe", "level": 61 }
+    ],
+    "outputs": [{ "item": "item.willow_logs" }]
+  },
+  {
+    "objects": ["object.maple_tree_4535", "object.maple_tree_4674", "object.maple_tree_8435", "object.maple_tree_8436", "object.maple_tree_8437", "object.maple_tree_8438", "object.maple_tree_8439", "object.maple_tree_8440", "object.maple_tree_8441", "object.maple_tree_8442", "object.maple_tree_8443", "object.maple_tree_8444"],
+    "depletedObject": "object.tree_stump_8445",
+    "respawnTicks": 40,
+    "level": 45,
+    "experience": 100.0,
+    "ticks": 6,
+    "depletionChance": 0.22,
+    "tools": [
+      { "item": "item.bronze_axe", "level": 1 },
+      { "item": "item.iron_axe", "level": 1 },
+      { "item": "item.steel_axe", "level": 6 },
+      { "item": "item.mithril_axe", "level": 21 },
+      { "item": "item.adamant_axe", "level": 31 },
+      { "item": "item.rune_axe", "level": 41 },
+      { "item": "item.dragon_axe", "level": 61 }
+    ],
+    "outputs": [{ "item": "item.maple_logs" }]
+  },
+  {
+    "objects": ["object.yew_tree_4536", "object.yew_tree_8503", "object.yew_tree_8504", "object.yew_tree_8505", "object.yew_tree_8506", "object.yew_tree_8507", "object.yew_tree_8508", "object.yew_tree_8509", "object.yew_tree_8510", "object.yew_tree_8511", "object.yew_tree_8512", "object.yew_tree_8513"],
+    "depletedObject": "object.yew_tree_stump",
+    "respawnTicks": 70,
+    "level": 60,
+    "experience": 175.0,
+    "ticks": 7,
+    "depletionChance": 0.25,
+    "tools": [
+      { "item": "item.bronze_axe", "level": 1 },
+      { "item": "item.iron_axe", "level": 1 },
+      { "item": "item.steel_axe", "level": 6 },
+      { "item": "item.mithril_axe", "level": 21 },
+      { "item": "item.adamant_axe", "level": 31 },
+      { "item": "item.rune_axe", "level": 41 },
+      { "item": "item.dragon_axe", "level": 61 }
+    ],
+    "outputs": [{ "item": "item.yew_logs" }]
+  },
+  {
+    "objects": ["object.magic_tree_4537", "object.magic_tree_8396", "object.magic_tree_8397", "object.magic_tree_8398", "object.magic_tree_8399", "object.magic_tree_8400", "object.magic_tree_8401", "object.magic_tree_8402", "object.magic_tree_8403", "object.magic_tree_8404", "object.magic_tree_8405", "object.magic_tree_8406", "object.magic_tree_8407", "object.magic_tree_8408", "object.magic_tree_8409"],
+    "depletedObject": "object.magic_tree_stump",
+    "respawnTicks": 100,
+    "level": 75,
+    "experience": 250.0,
+    "ticks": 8,
+    "depletionChance": 0.28,
+    "tools": [
+      { "item": "item.bronze_axe", "level": 1 },
+      { "item": "item.iron_axe", "level": 1 },
+      { "item": "item.steel_axe", "level": 6 },
+      { "item": "item.mithril_axe", "level": 21 },
+      { "item": "item.adamant_axe", "level": 31 },
+      { "item": "item.rune_axe", "level": 41 },
+      { "item": "item.dragon_axe", "level": 61 }
+    ],
+    "outputs": [{ "item": "item.magic_logs" }]
+  }
+]

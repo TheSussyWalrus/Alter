@@ -1,0 +1,26 @@
+[
+  {
+    "npc": "npc.turael",
+    "name": "Turael",
+    "minLevel": 1,
+    "taskNames": ["zombies", "skeletons", "chaos druids", "banshees"],
+    "minAmount": 10,
+    "maxAmount": 15
+  },
+  {
+    "npc": "npc.mazchna",
+    "name": "Mazchna",
+    "minLevel": 20,
+    "taskNames": ["pyrefiends", "jellies", "ankous", "greater demons", "kalphites"],
+    "minAmount": 15,
+    "maxAmount": 25
+  },
+  {
+    "npc": "npc.duradel",
+    "name": "Duradel",
+    "minLevel": 50,
+    "taskNames": ["bloodvelds", "dust devils", "blue dragons", "hellhounds", "abyssal demons", "greater demons", "ankous"],
+    "minAmount": 20,
+    "maxAmount": 35
+  }
+]
