@@ -1,54 +1,48 @@
 [
   {
-    "objectNames": ["furnace"],
-    "inputs": ["copper_ore", "tin_ore"],
-    "output": "bronze_bar",
-    "inputAmount": 1,
+    "objectNames": ["object.furnace"],
+    "inputs": ["item.copper_ore", "item.tin_ore"],
+    "output": "item.bronze_bar",
     "outputAmount": 1,
     "level": 1,
     "experience": 6.2
   },
   {
-    "objectNames": ["furnace"],
-    "inputs": ["iron_ore"],
-    "output": "iron_bar",
-    "inputAmount": 1,
+    "objectNames": ["object.furnace"],
+    "inputs": ["item.iron_ore"],
+    "output": "item.iron_bar",
     "outputAmount": 1,
     "level": 15,
     "experience": 12.5
   },
   {
-    "objectNames": ["furnace"],
-    "inputs": ["iron_ore", "coal", "coal"],
-    "output": "steel_bar",
-    "inputAmount": 1,
+    "objectNames": ["object.furnace"],
+    "inputs": ["item.iron_ore", "item.coal", "item.coal"],
+    "output": "item.steel_bar",
     "outputAmount": 1,
     "level": 30,
     "experience": 17.5
   },
   {
-    "objectNames": ["furnace"],
-    "inputs": ["mithril_ore", "coal", "coal", "coal", "coal"],
-    "output": "mithril_bar",
-    "inputAmount": 1,
+    "objectNames": ["object.furnace"],
+    "inputs": ["item.mithril_ore", "item.coal", "item.coal", "item.coal", "item.coal"],
+    "output": "item.mithril_bar",
     "outputAmount": 1,
     "level": 50,
     "experience": 30.0
   },
   {
-    "objectNames": ["furnace"],
-    "inputs": ["adamantite_ore", "coal", "coal", "coal", "coal"],
-    "output": "adamantite_bar",
-    "inputAmount": 1,
+    "objectNames": ["object.furnace"],
+    "inputs": ["item.adamantite_ore", "item.coal", "item.coal", "item.coal", "item.coal"],
+    "output": "item.adamantite_bar",
     "outputAmount": 1,
     "level": 70,
     "experience": 37.5
   },
   {
-    "objectNames": ["furnace"],
-    "inputs": ["runite_ore", "coal", "coal", "coal", "coal", "coal", "coal", "coal", "coal"],
-    "output": "runite_bar",
-    "inputAmount": 1,
+    "objectNames": ["object.furnace"],
+    "inputs": ["item.runite_ore", "item.coal", "item.coal", "item.coal", "item.coal", "item.coal", "item.coal", "item.coal", "item.coal"],
+    "output": "item.runite_bar",
     "outputAmount": 1,
     "level": 85,
     "experience": 50.0

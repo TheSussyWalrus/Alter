@@ -1,0 +1,20 @@
+[
+  {
+    "unstrung": "item.shortbow_u",
+    "strung": "item.shortbow",
+    "level": 5,
+    "experience": 15.0,
+    "ticks": 2,
+    "animation": 6678,
+    "message": "You string the shortbow."
+  },
+  {
+    "unstrung": "item.longbow_u",
+    "strung": "item.longbow",
+    "level": 10,
+    "experience": 20.0,
+    "ticks": 2,
+    "animation": 6684,
+    "message": "You string the longbow."
+  }
+]

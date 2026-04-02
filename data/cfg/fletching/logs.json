@@ -1,0 +1,35 @@
+[
+  {
+    "log": "item.logs",
+    "knife": "item.knife",
+    "products": [
+      {
+        "item": "item.arrow_shafts",
+        "level": 1,
+        "experience": 5.0,
+        "amount": 15,
+        "ticks": 2,
+        "animation": 1248,
+        "message": "You fletch some arrow shafts."
+      },
+      {
+        "item": "item.shortbow_u",
+        "level": 5,
+        "experience": 10.0,
+        "amount": 1,
+        "ticks": 2,
+        "animation": 1248,
+        "message": "You carve an unstrung shortbow."
+      },
+      {
+        "item": "item.longbow_u",
+        "level": 10,
+        "experience": 16.5,
+        "amount": 1,
+        "ticks": 3,
+        "animation": 1248,
+        "message": "You carve an unstrung longbow."
+      }
+    ]
+  }
+]
