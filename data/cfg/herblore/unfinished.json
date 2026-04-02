@@ -1,0 +1,26 @@
+[
+  {
+    "herb": "item.guam_leaf",
+    "vial": "item.vial_of_water",
+    "output": "item.guam_potion_unf",
+    "level": 3,
+    "experience": 0.0,
+    "ticks": 2
+  },
+  {
+    "herb": "item.marrentill",
+    "vial": "item.vial_of_water",
+    "output": "item.marrentill_potion_unf",
+    "level": 5,
+    "experience": 0.0,
+    "ticks": 2
+  },
+  {
+    "herb": "item.tarromin",
+    "vial": "item.vial_of_water",
+    "output": "item.tarromin_potion_unf",
+    "level": 12,
+    "experience": 0.0,
+    "ticks": 2
+  }
+]

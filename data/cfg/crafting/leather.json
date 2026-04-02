@@ -1,0 +1,27 @@
+[
+  {
+    "needle": "item.needle",
+    "leather": "item.leather",
+    "thread": "item.thread",
+    "products": [
+      {
+        "item": "item.leather_gloves",
+        "level": 1,
+        "experience": 13.8,
+        "amount": 1,
+        "ticks": 2,
+        "animation": 1249,
+        "message": "You make a pair of leather gloves."
+      },
+      {
+        "item": "item.leather_boots",
+        "level": 7,
+        "experience": 16.25,
+        "amount": 1,
+        "ticks": 2,
+        "animation": 1249,
+        "message": "You make a pair of leather boots."
+      }
+    ]
+  }
+]
