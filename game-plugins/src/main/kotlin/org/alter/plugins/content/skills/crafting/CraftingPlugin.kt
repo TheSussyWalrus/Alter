@@ -108,11 +108,24 @@ class CraftingPlugin(
             player = player,
             *productIds,
             title = "What would you like to craft?",
-            maxProducable = minOf(player.inventory.getItemCount(leatherId), player.inventory.getItemCount(threadId)),
+            maxProducable =
+                availableProducts.maxOfOrNull { product ->
+                    minOf(
+                        player.inventory.getItemCount(leatherId) / product.leatherAmount,
+                        player.inventory.getItemCount(threadId) / product.threadAmount,
+                    )
+                } ?: 0,
         ) { selectedItem, qty ->
             val product = availableProducts.firstOrNull { getRSCM(it.item) == selectedItem } ?: return@produceItemBox
             player.queue(TaskPriority.STRONG) {
-                repeat(qty.coerceAtMost(minOf(player.inventory.getItemCount(leatherId), player.inventory.getItemCount(threadId)))) {
+                repeat(
+                    qty.coerceAtMost(
+                        minOf(
+                            player.inventory.getItemCount(leatherId) / product.leatherAmount,
+                            player.inventory.getItemCount(threadId) / product.threadAmount,
+                        ),
+                    ),
+                ) {
                     if (!craftLeatherPiece(this, player, entry, product)) {
                         return@queue
                     }
@@ -130,7 +143,11 @@ class CraftingPlugin(
         val needleId = getRSCM(entry.needle)
         val leatherId = getRSCM(entry.leather)
         val threadId = getRSCM(entry.thread)
-        if (!player.inventory.contains(needleId) || !player.inventory.contains(leatherId) || !player.inventory.contains(threadId)) {
+        if (
+            !player.inventory.contains(needleId) ||
+            player.inventory.getItemCount(leatherId) < product.leatherAmount ||
+            player.inventory.getItemCount(threadId) < product.threadAmount
+        ) {
             return false
         }
         if (player.getSkills().getCurrentLevel(Skills.CRAFTING) < product.level) {
@@ -141,12 +158,21 @@ class CraftingPlugin(
         player.animate(product.animation)
         try {
             task.wait(product.ticks)
-            if (!player.inventory.contains(needleId) || !player.inventory.contains(leatherId) || !player.inventory.contains(threadId)) {
+            if (
+                !player.inventory.contains(needleId) ||
+                player.inventory.getItemCount(leatherId) < product.leatherAmount ||
+                player.inventory.getItemCount(threadId) < product.threadAmount
+            ) {
                 return false
             }
 
-            player.inventory.remove(leatherId)
-            player.inventory.remove(threadId)
+            if (player.inventory.remove(leatherId, product.leatherAmount, assureFullRemoval = true).hasFailed()) {
+                return false
+            }
+            if (player.inventory.remove(threadId, product.threadAmount, assureFullRemoval = true).hasFailed()) {
+                player.addOrDrop(entry.leather, product.leatherAmount)
+                return false
+            }
             player.addXp(Skills.CRAFTING, product.experience)
             player.addOrDrop(product.item, product.amount)
             player.message(product.message ?: "You craft the ${product.item.substringAfter("item.").replace('_', ' ')}.")

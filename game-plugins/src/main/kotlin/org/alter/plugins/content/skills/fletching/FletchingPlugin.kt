@@ -31,6 +31,10 @@ class FletchingPlugin(
             service.stringEntries.forEach { entry ->
                 registerStringRecipe(entry)
             }
+
+            service.assemblyEntries.forEach { entry ->
+                registerAssemblyRecipe(entry)
+            }
         }
     }
 
@@ -46,6 +50,14 @@ class FletchingPlugin(
         onItemOnItem("item.bow_string", entry.unstrung) {
             player.queue(TaskPriority.STRONG) {
                 handleStringing(this, player, entry)
+            }
+        }
+    }
+
+    private fun registerAssemblyRecipe(entry: FletchingAssemblyEntry) {
+        onItemOnItem(entry.first, entry.second) {
+            player.queue(TaskPriority.STRONG) {
+                handleAssembly(this, player, entry)
             }
         }
     }
@@ -159,6 +171,55 @@ class FletchingPlugin(
         } finally {
             player.animate(Animation.RESET_CHARACTER)
             player.unlock()
+        }
+    }
+
+    private suspend fun handleAssembly(
+        task: QueueTask,
+        player: Player,
+        entry: FletchingAssemblyEntry,
+    ) {
+        val firstId = getRSCM(entry.first)
+        val secondId = getRSCM(entry.second)
+        if (
+            player.inventory.getItemCount(firstId) < entry.firstAmount ||
+            player.inventory.getItemCount(secondId) < entry.secondAmount
+        ) {
+            return
+        }
+        if (player.getSkills().getCurrentLevel(Skills.FLETCHING) < entry.level) {
+            player.message("You need a Fletching level of ${entry.level} to make that.")
+            return
+        }
+
+        try {
+            while (
+                player.inventory.getItemCount(firstId) >= entry.firstAmount &&
+                player.inventory.getItemCount(secondId) >= entry.secondAmount
+            ) {
+                player.animate(entry.animation)
+                task.wait(entry.ticks)
+                if (
+                    player.inventory.getItemCount(firstId) < entry.firstAmount ||
+                    player.inventory.getItemCount(secondId) < entry.secondAmount
+                ) {
+                    return
+                }
+
+                if (player.inventory.remove(firstId, entry.firstAmount, assureFullRemoval = true).hasFailed()) {
+                    return
+                }
+                if (player.inventory.remove(secondId, entry.secondAmount, assureFullRemoval = true).hasFailed()) {
+                    player.addOrDrop(entry.first, entry.firstAmount)
+                    return
+                }
+
+                player.addOrDrop(entry.output, entry.outputAmount)
+                player.addXp(Skills.FLETCHING, entry.experience)
+                player.message(entry.message ?: "You make some ${entry.output.substringAfter("item.").replace('_', ' ')}.")
+            }
+        } finally {
+            player.animate(Animation.RESET_CHARACTER)
         }
     }
 }

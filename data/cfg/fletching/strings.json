@@ -3,7 +3,7 @@
     "unstrung": "item.shortbow_u",
     "strung": "item.shortbow",
     "level": 5,
-    "experience": 15.0,
+    "experience": 5.0,
     "ticks": 2,
     "animation": 6678,
     "message": "You string the shortbow."
@@ -12,9 +12,99 @@
     "unstrung": "item.longbow_u",
     "strung": "item.longbow",
     "level": 10,
-    "experience": 20.0,
+    "experience": 10.0,
     "ticks": 2,
     "animation": 6684,
     "message": "You string the longbow."
+  },
+  {
+    "unstrung": "item.oak_shortbow_u",
+    "strung": "item.oak_shortbow",
+    "level": 20,
+    "experience": 16.5,
+    "ticks": 2,
+    "animation": 6679,
+    "message": "You string the oak shortbow."
+  },
+  {
+    "unstrung": "item.oak_longbow_u",
+    "strung": "item.oak_longbow",
+    "level": 25,
+    "experience": 25.0,
+    "ticks": 2,
+    "animation": 6685,
+    "message": "You string the oak longbow."
+  },
+  {
+    "unstrung": "item.willow_shortbow_u",
+    "strung": "item.willow_shortbow",
+    "level": 35,
+    "experience": 33.3,
+    "ticks": 2,
+    "animation": 6680,
+    "message": "You string the willow shortbow."
+  },
+  {
+    "unstrung": "item.willow_longbow_u",
+    "strung": "item.willow_longbow",
+    "level": 40,
+    "experience": 41.5,
+    "ticks": 2,
+    "animation": 6686,
+    "message": "You string the willow longbow."
+  },
+  {
+    "unstrung": "item.maple_shortbow_u",
+    "strung": "item.maple_shortbow",
+    "level": 50,
+    "experience": 50.0,
+    "ticks": 2,
+    "animation": 6681,
+    "message": "You string the maple shortbow."
+  },
+  {
+    "unstrung": "item.maple_longbow_u",
+    "strung": "item.maple_longbow",
+    "level": 55,
+    "experience": 58.3,
+    "ticks": 2,
+    "animation": 6687,
+    "message": "You string the maple longbow."
+  },
+  {
+    "unstrung": "item.yew_shortbow_u",
+    "strung": "item.yew_shortbow",
+    "level": 65,
+    "experience": 67.5,
+    "ticks": 2,
+    "animation": 6682,
+    "message": "You string the yew shortbow."
+  },
+  {
+    "unstrung": "item.yew_longbow_u",
+    "strung": "item.yew_longbow",
+    "level": 70,
+    "experience": 75.0,
+    "ticks": 2,
+    "animation": 6688,
+    "message": "You string the yew longbow."
+  },
+  {
+    "unstrung": "item.magic_shortbow_u",
+    "strung": "item.magic_shortbow",
+    "level": 80,
+    "experience": 83.3,
+    "ticks": 2,
+    "animation": 6683,
+    "message": "You string the magic shortbow."
+  },
+  {
+    "unstrung": "item.magic_longbow_u",
+    "strung": "item.magic_longbow",
+    "level": 85,
+    "experience": 91.5,
+    "ticks": 2,
+    "animation": 6689,
+    "message": "You string the magic longbow."
   }
 ]

@@ -1,0 +1,93 @@
+[
+  {
+    "first": "item.arrow_shaft",
+    "second": "item.feather",
+    "output": "item.headless_arrow",
+    "level": 1,
+    "experience": 1.0,
+    "outputAmount": 15,
+    "firstAmount": 15,
+    "secondAmount": 15,
+    "ticks": 2,
+    "animation": 1248,
+    "message": "You attach feathers to the shafts."
+  },
+  {
+    "first": "item.headless_arrow",
+    "second": "item.bronze_arrowtips",
+    "output": "item.bronze_arrow",
+    "level": 1,
+    "experience": 1.3,
+    "outputAmount": 15,
+    "firstAmount": 15,
+    "secondAmount": 15,
+    "ticks": 2,
+    "animation": 1248,
+    "message": "You attach the arrowheads to the shafts."
+  },
+  {
+    "first": "item.headless_arrow",
+    "second": "item.iron_arrowtips",
+    "output": "item.iron_arrow",
+    "level": 15,
+    "experience": 2.5,
+    "outputAmount": 15,
+    "firstAmount": 15,
+    "secondAmount": 15,
+    "ticks": 2,
+    "animation": 1248,
+    "message": "You attach the arrowheads to the shafts."
+  },
+  {
+    "first": "item.headless_arrow",
+    "second": "item.steel_arrowtips",
+    "output": "item.steel_arrow",
+    "level": 30,
+    "experience": 5.0,
+    "outputAmount": 15,
+    "firstAmount": 15,
+    "secondAmount": 15,
+    "ticks": 2,
+    "animation": 1248,
+    "message": "You attach the arrowheads to the shafts."
+  },
+  {
+    "first": "item.headless_arrow",
+    "second": "item.mithril_arrowtips",
+    "output": "item.mithril_arrow",
+    "level": 45,
+    "experience": 7.5,
+    "outputAmount": 15,
+    "firstAmount": 15,
+    "secondAmount": 15,
+    "ticks": 2,
+    "animation": 1248,
+    "message": "You attach the arrowheads to the shafts."
+  },
+  {
+    "first": "item.headless_arrow",
+    "second": "item.adamant_arrowtips",
+    "output": "item.adamant_arrow",
+    "level": 60,
+    "experience": 10.0,
+    "outputAmount": 15,
+    "firstAmount": 15,
+    "secondAmount": 15,
+    "ticks": 2,
+    "animation": 1248,
+    "message": "You attach the arrowheads to the shafts."
+  },
+  {
+    "first": "item.headless_arrow",
+    "second": "item.rune_arrowtips",
+    "output": "item.rune_arrow",
+    "level": 75,
+    "experience": 12.5,
+    "outputAmount": 15,
+    "firstAmount": 15,
+    "secondAmount": 15,
+    "ticks": 2,
+    "animation": 1248,
+    "message": "You attach the arrowheads to the shafts."
+  }
+]

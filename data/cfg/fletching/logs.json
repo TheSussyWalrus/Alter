@@ -4,7 +4,7 @@
     "knife": "item.knife",
     "products": [
       {
-        "item": "item.arrow_shafts",
+        "item": "item.arrow_shaft",
         "level": 1,
         "experience": 5.0,
         "amount": 15,
@@ -15,7 +15,7 @@
       {
         "item": "item.shortbow_u",
         "level": 5,
-        "experience": 10.0,
+        "experience": 5.0,
         "amount": 1,
         "ticks": 2,
         "animation": 1248,
@@ -24,11 +24,131 @@
       {
         "item": "item.longbow_u",
         "level": 10,
-        "experience": 16.5,
+        "experience": 10.0,
         "amount": 1,
         "ticks": 3,
         "animation": 1248,
         "message": "You carve an unstrung longbow."
+      }
+    ]
+  },
+  {
+    "log": "item.oak_logs",
+    "knife": "item.knife",
+    "products": [
+      {
+        "item": "item.oak_shortbow_u",
+        "level": 20,
+        "experience": 16.5,
+        "amount": 1,
+        "ticks": 2,
+        "animation": 1248,
+        "message": "You carve an unstrung oak shortbow."
+      },
+      {
+        "item": "item.oak_longbow_u",
+        "level": 25,
+        "experience": 25.0,
+        "amount": 1,
+        "ticks": 3,
+        "animation": 1248,
+        "message": "You carve an unstrung oak longbow."
+      }
+    ]
+  },
+  {
+    "log": "item.willow_logs",
+    "knife": "item.knife",
+    "products": [
+      {
+        "item": "item.willow_shortbow_u",
+        "level": 35,
+        "experience": 33.3,
+        "amount": 1,
+        "ticks": 2,
+        "animation": 1248,
+        "message": "You carve an unstrung willow shortbow."
+      },
+      {
+        "item": "item.willow_longbow_u",
+        "level": 40,
+        "experience": 41.5,
+        "amount": 1,
+        "ticks": 3,
+        "animation": 1248,
+        "message": "You carve an unstrung willow longbow."
+      }
+    ]
+  },
+  {
+    "log": "item.maple_logs",
+    "knife": "item.knife",
+    "products": [
+      {
+        "item": "item.maple_shortbow_u",
+        "level": 50,
+        "experience": 50.0,
+        "amount": 1,
+        "ticks": 2,
+        "animation": 1248,
+        "message": "You carve an unstrung maple shortbow."
+      },
+      {
+        "item": "item.maple_longbow_u",
+        "level": 55,
+        "experience": 58.3,
+        "amount": 1,
+        "ticks": 3,
+        "animation": 1248,
+        "message": "You carve an unstrung maple longbow."
+      }
+    ]
+  },
+  {
+    "log": "item.yew_logs",
+    "knife": "item.knife",
+    "products": [
+      {
+        "item": "item.yew_shortbow_u",
+        "level": 65,
+        "experience": 67.5,
+        "amount": 1,
+        "ticks": 2,
+        "animation": 1248,
+        "message": "You carve an unstrung yew shortbow."
+      },
+      {
+        "item": "item.yew_longbow_u",
+        "level": 70,
+        "experience": 75.0,
+        "amount": 1,
+        "ticks": 3,
+        "animation": 1248,
+        "message": "You carve an unstrung yew longbow."
+      }
+    ]
+  },
+  {
+    "log": "item.magic_logs",
+    "knife": "item.knife",
+    "products": [
+      {
+        "item": "item.magic_shortbow_u",
+        "level": 80,
+        "experience": 83.3,
+        "amount": 1,
+        "ticks": 2,
+        "animation": 1248,
+        "message": "You carve an unstrung magic shortbow."
+      },
+      {
+        "item": "item.magic_longbow_u",
+        "level": 85,
+        "experience": 91.5,
+        "amount": 1,
+        "ticks": 3,
+        "animation": 1248,
+        "message": "You carve an unstrung magic longbow."
       }
     ]
   }

@@ -49,3 +49,29 @@ data class FletchingStringEntry(
         require(ticks >= 1) { "Fletching stringing ticks must be >= 1." }
     }
 }
+
+data class FletchingAssemblyEntry(
+    val first: String,
+    val second: String,
+    val output: String,
+    val level: Int,
+    val experience: Double,
+    val outputAmount: Int = 1,
+    val firstAmount: Int = 1,
+    val secondAmount: Int = 1,
+    val ticks: Int = 2,
+    val animation: Int = Animation.FLETCHING_LOG_CUT,
+    val message: String? = null,
+) {
+    init {
+        require(first.isNotBlank()) { "Fletching first ingredient cannot be blank." }
+        require(second.isNotBlank()) { "Fletching second ingredient cannot be blank." }
+        require(output.isNotBlank()) { "Fletching output cannot be blank." }
+        require(level >= 1) { "Fletching assembly level must be >= 1." }
+        require(experience >= 0.0) { "Fletching assembly experience cannot be negative." }
+        require(outputAmount >= 1) { "Fletching assembly output amount must be >= 1." }
+        require(firstAmount >= 1) { "Fletching first ingredient amount must be >= 1." }
+        require(secondAmount >= 1) { "Fletching second ingredient amount must be >= 1." }
+        require(ticks >= 1) { "Fletching assembly ticks must be >= 1." }
+    }
+}

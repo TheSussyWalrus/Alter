@@ -38,6 +38,8 @@ data class CraftingLeatherProduct(
     val level: Int,
     val experience: Double,
     val amount: Int = 1,
+    val leatherAmount: Int = 1,
+    val threadAmount: Int = 1,
     val ticks: Int = 2,
     val animation: Int = Animation.LEATHER_CRAFTING,
     val message: String? = null,
@@ -47,6 +49,8 @@ data class CraftingLeatherProduct(
         require(level >= 1) { "Crafting leather product level must be >= 1." }
         require(experience >= 0.0) { "Crafting leather product experience cannot be negative." }
         require(amount >= 1) { "Crafting leather product amount must be >= 1." }
+        require(leatherAmount >= 1) { "Crafting leather amount must be >= 1." }
+        require(threadAmount >= 1) { "Crafting thread amount must be >= 1." }
         require(ticks >= 1) { "Crafting leather product ticks must be >= 1." }
     }
 }

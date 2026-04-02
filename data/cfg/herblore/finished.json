@@ -22,5 +22,109 @@
     "level": 12,
     "experience": 50.0,
     "ticks": 2
+  },
+  {
+    "unfinished": "item.harralander_potion_unf",
+    "secondary": "item.red_spiders_eggs",
+    "output": "item.restore_potion3",
+    "level": 22,
+    "experience": 62.5,
+    "ticks": 2
+  },
+  {
+    "unfinished": "item.harralander_potion_unf",
+    "secondary": "item.chocolate_dust",
+    "output": "item.energy_potion3",
+    "level": 26,
+    "experience": 67.5,
+    "ticks": 2
+  },
+  {
+    "unfinished": "item.ranarr_potion_unf",
+    "secondary": "item.white_berries",
+    "output": "item.defence_potion3",
+    "level": 30,
+    "experience": 75.0,
+    "ticks": 2
+  },
+  {
+    "unfinished": "item.harralander_potion_unf",
+    "secondary": "item.goat_horn_dust",
+    "output": "item.combat_potion3",
+    "level": 36,
+    "experience": 84.0,
+    "ticks": 2
+  },
+  {
+    "unfinished": "item.ranarr_potion_unf",
+    "secondary": "item.snape_grass",
+    "output": "item.prayer_potion3",
+    "level": 38,
+    "experience": 87.5,
+    "ticks": 2
+  },
+  {
+    "unfinished": "item.irit_potion_unf",
+    "secondary": "item.eye_of_newt",
+    "output": "item.super_attack3",
+    "level": 45,
+    "experience": 100.0,
+    "ticks": 2
+  },
+  {
+    "unfinished": "item.avantoe_potion_unf",
+    "secondary": "item.mort_myre_fungus",
+    "output": "item.super_energy3",
+    "level": 52,
+    "experience": 117.5,
+    "ticks": 2
+  },
+  {
+    "unfinished": "item.kwuarm_potion_unf",
+    "secondary": "item.limpwurt_root",
+    "output": "item.super_strength3",
+    "level": 55,
+    "experience": 125.0,
+    "ticks": 2
+  },
+  {
+    "unfinished": "item.snapdragon_potion_unf",
+    "secondary": "item.red_spiders_eggs",
+    "output": "item.super_restore3",
+    "level": 63,
+    "experience": 142.5,
+    "ticks": 2
+  },
+  {
+    "unfinished": "item.cadantine_potion_unf",
+    "secondary": "item.white_berries",
+    "output": "item.super_defence3",
+    "level": 66,
+    "experience": 150.0,
+    "ticks": 2
+  },
+  {
+    "unfinished": "item.lantadyme_potion_unf",
+    "secondary": "item.dragon_scale_dust",
+    "output": "item.antifire_potion3",
+    "level": 69,
+    "experience": 157.5,
+    "ticks": 2
+  },
+  {
+    "unfinished": "item.dwarf_weed_potion_unf",
+    "secondary": "item.wine_of_zamorak",
+    "output": "item.ranging_potion3",
+    "level": 72,
+    "experience": 162.5,
+    "ticks": 2
+  },
+  {
+    "unfinished": "item.lantadyme_potion_unf",
+    "secondary": "item.potato_cactus",
+    "output": "item.magic_potion3",
+    "level": 76,
+    "experience": 172.5,
+    "ticks": 2
   }
 ]

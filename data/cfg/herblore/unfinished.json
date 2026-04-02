@@ -22,5 +22,93 @@
     "level": 12,
     "experience": 0.0,
     "ticks": 2
+  },
+  {
+    "herb": "item.harralander",
+    "vial": "item.vial_of_water",
+    "output": "item.harralander_potion_unf",
+    "level": 22,
+    "experience": 0.0,
+    "ticks": 2
+  },
+  {
+    "herb": "item.ranarr_weed",
+    "vial": "item.vial_of_water",
+    "output": "item.ranarr_potion_unf",
+    "level": 30,
+    "experience": 0.0,
+    "ticks": 2
+  },
+  {
+    "herb": "item.toadflax",
+    "vial": "item.vial_of_water",
+    "output": "item.toadflax_potion_unf",
+    "level": 34,
+    "experience": 0.0,
+    "ticks": 2
+  },
+  {
+    "herb": "item.irit_leaf",
+    "vial": "item.vial_of_water",
+    "output": "item.irit_potion_unf",
+    "level": 45,
+    "experience": 0.0,
+    "ticks": 2
+  },
+  {
+    "herb": "item.avantoe",
+    "vial": "item.vial_of_water",
+    "output": "item.avantoe_potion_unf",
+    "level": 50,
+    "experience": 0.0,
+    "ticks": 2
+  },
+  {
+    "herb": "item.kwuarm",
+    "vial": "item.vial_of_water",
+    "output": "item.kwuarm_potion_unf",
+    "level": 55,
+    "experience": 0.0,
+    "ticks": 2
+  },
+  {
+    "herb": "item.snapdragon",
+    "vial": "item.vial_of_water",
+    "output": "item.snapdragon_potion_unf",
+    "level": 63,
+    "experience": 0.0,
+    "ticks": 2
+  },
+  {
+    "herb": "item.cadantine",
+    "vial": "item.vial_of_water",
+    "output": "item.cadantine_potion_unf",
+    "level": 66,
+    "experience": 0.0,
+    "ticks": 2
+  },
+  {
+    "herb": "item.lantadyme",
+    "vial": "item.vial_of_water",
+    "output": "item.lantadyme_potion_unf",
+    "level": 69,
+    "experience": 0.0,
+    "ticks": 2
+  },
+  {
+    "herb": "item.dwarf_weed",
+    "vial": "item.vial_of_water",
+    "output": "item.dwarf_weed_potion_unf",
+    "level": 72,
+    "experience": 0.0,
+    "ticks": 2
+  },
+  {
+    "herb": "item.torstol",
+    "vial": "item.vial_of_water",
+    "output": "item.torstol_potion_unf",
+    "level": 78,
+    "experience": 0.0,
+    "ticks": 2
   }
 ]

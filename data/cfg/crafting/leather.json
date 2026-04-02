@@ -9,18 +9,73 @@
         "level": 1,
         "experience": 13.8,
         "amount": 1,
+        "leatherAmount": 1,
+        "threadAmount": 1,
         "ticks": 2,
         "animation": 1249,
         "message": "You make a pair of leather gloves."
+      },
+      {
+        "item": "item.leather_vambraces",
+        "level": 11,
+        "experience": 22.0,
+        "amount": 1,
+        "leatherAmount": 1,
+        "threadAmount": 1,
+        "ticks": 2,
+        "animation": 1249,
+        "message": "You make a pair of leather vambraces."
+      },
+      {
+        "item": "item.leather_body",
+        "level": 14,
+        "experience": 25.0,
+        "amount": 1,
+        "leatherAmount": 3,
+        "threadAmount": 1,
+        "ticks": 2,
+        "animation": 1249,
+        "message": "You make a leather body."
+      },
+      {
+        "item": "item.leather_chaps",
+        "level": 18,
+        "experience": 27.0,
+        "amount": 1,
+        "leatherAmount": 2,
+        "threadAmount": 1,
+        "ticks": 2,
+        "animation": 1249,
+        "message": "You make a pair of leather chaps."
       },
       {
         "item": "item.leather_boots",
         "level": 7,
         "experience": 16.25,
         "amount": 1,
+        "leatherAmount": 1,
+        "threadAmount": 1,
         "ticks": 2,
         "animation": 1249,
         "message": "You make a pair of leather boots."
+      }
+    ]
+  },
+  {
+    "needle": "item.needle",
+    "leather": "item.hard_leather",
+    "thread": "item.thread",
+    "products": [
+      {
+        "item": "item.hardleather_body",
+        "level": 28,
+        "experience": 35.0,
+        "amount": 1,
+        "leatherAmount": 1,
+        "threadAmount": 1,
+        "ticks": 2,
+        "animation": 1249,
+        "message": "You make a hardleather body."
       }
     ]
   }

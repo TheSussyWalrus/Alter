@@ -19,5 +19,82 @@
     "level": 11,
     "experience": 5.0,
     "ticks": 1
+  },
+  {
+    "grimy": "item.grimy_harralander",
+    "clean": "item.harralander",
+    "level": 20,
+    "experience": 6.3,
+    "ticks": 1
+  },
+  {
+    "grimy": "item.grimy_ranarr_weed",
+    "clean": "item.ranarr_weed",
+    "level": 25,
+    "experience": 7.5,
+    "ticks": 1
+  },
+  {
+    "grimy": "item.grimy_toadflax",
+    "clean": "item.toadflax",
+    "level": 30,
+    "experience": 8.0,
+    "ticks": 1
+  },
+  {
+    "grimy": "item.grimy_irit_leaf",
+    "clean": "item.irit_leaf",
+    "level": 40,
+    "experience": 8.8,
+    "ticks": 1
+  },
+  {
+    "grimy": "item.grimy_avantoe",
+    "clean": "item.avantoe",
+    "level": 48,
+    "experience": 10.0,
+    "ticks": 1
+  },
+  {
+    "grimy": "item.grimy_kwuarm",
+    "clean": "item.kwuarm",
+    "level": 54,
+    "experience": 11.3,
+    "ticks": 1
+  },
+  {
+    "grimy": "item.grimy_snapdragon",
+    "clean": "item.snapdragon",
+    "level": 59,
+    "experience": 11.8,
+    "ticks": 1
+  },
+  {
+    "grimy": "item.grimy_cadantine",
+    "clean": "item.cadantine",
+    "level": 65,
+    "experience": 12.5,
+    "ticks": 1
+  },
+  {
+    "grimy": "item.grimy_lantadyme",
+    "clean": "item.lantadyme",
+    "level": 67,
+    "experience": 13.1,
+    "ticks": 1
+  },
+  {
+    "grimy": "item.grimy_dwarf_weed",
+    "clean": "item.dwarf_weed",
+    "level": 70,
+    "experience": 13.8,
+    "ticks": 1
+  },
+  {
+    "grimy": "item.grimy_torstol",
+    "clean": "item.torstol",
+    "level": 75,
+    "experience": 15.0,
+    "ticks": 1
   }
 ]
