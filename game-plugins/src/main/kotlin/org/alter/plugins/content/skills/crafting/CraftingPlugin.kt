@@ -65,17 +65,21 @@ class CraftingPlugin(
             return
         }
 
-        player.animate(entry.animation)
         try {
-            task.wait(entry.ticks)
-            if (!player.inventory.contains(chiselId) || !player.inventory.contains(uncutId)) {
-                return
-            }
+            while (player.inventory.contains(chiselId) && player.inventory.contains(uncutId)) {
+                player.animate(entry.animation)
+                task.wait(entry.ticks)
+                if (!player.inventory.contains(chiselId) || !player.inventory.contains(uncutId)) {
+                    return
+                }
 
-            player.inventory.remove(uncutId)
-            player.addXp(Skills.CRAFTING, entry.experience)
-            player.addOrDrop(entry.cut, 1)
-            player.message("You cut the ${entry.cut.substringAfter("item.").replace('_', ' ')}.")
+                if (player.inventory.remove(uncutId, 1, assureFullRemoval = true).hasFailed()) {
+                    return
+                }
+                player.addXp(Skills.CRAFTING, entry.experience)
+                player.addOrDrop(entry.cut, 1)
+                player.message("You cut the ${entry.cut.substringAfter("item.").replace('_', ' ')}.")
+            }
         } finally {
             player.animate(Animation.RESET_CHARACTER)
         }

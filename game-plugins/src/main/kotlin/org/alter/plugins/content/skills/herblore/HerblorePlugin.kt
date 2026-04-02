@@ -77,21 +77,21 @@ class HerblorePlugin(
             return
         }
 
-        player.animate(entry.animation)
         try {
-            task.wait(entry.ticks)
-            if (!player.inventory.contains(grimyId)) {
-                return
-            }
+            while (player.inventory.contains(grimyId)) {
+                player.animate(entry.animation)
+                task.wait(entry.ticks)
+                if (!player.inventory.contains(grimyId)) {
+                    return
+                }
 
-            if (!player.replaceItemInSlot(grimyId, cleanId, player.getInteractingItemSlot())) {
                 if (player.inventory.remove(grimyId, 1, assureFullRemoval = true).hasFailed()) {
                     return
                 }
                 player.addOrDrop(entry.clean, 1)
+                player.addXp(Skills.HERBLORE, entry.experience)
+                player.message("You clean the ${entry.clean.substringAfter("item.").replace('_', ' ')}.")
             }
-            player.addXp(Skills.HERBLORE, entry.experience)
-            player.message("You clean the ${entry.clean.substringAfter("item.").replace('_', ' ')}.")
         } finally {
             player.animate(Animation.RESET_CHARACTER)
         }
@@ -112,24 +112,26 @@ class HerblorePlugin(
             return
         }
 
-        player.animate(entry.animation)
         try {
-            task.wait(entry.ticks)
-            if (!player.inventory.contains(herbId) || !player.inventory.contains(vialId)) {
-                return
-            }
+            while (player.inventory.contains(herbId) && player.inventory.contains(vialId)) {
+                player.animate(entry.animation)
+                task.wait(entry.ticks)
+                if (!player.inventory.contains(herbId) || !player.inventory.contains(vialId)) {
+                    return
+                }
 
-            if (player.inventory.remove(herbId, 1, assureFullRemoval = true).hasFailed()) {
-                return
-            }
-            if (player.inventory.remove(vialId, 1, assureFullRemoval = true).hasFailed()) {
-                player.addOrDrop(entry.herb, 1)
-                return
-            }
+                if (player.inventory.remove(herbId, 1, assureFullRemoval = true).hasFailed()) {
+                    return
+                }
+                if (player.inventory.remove(vialId, 1, assureFullRemoval = true).hasFailed()) {
+                    player.addOrDrop(entry.herb, 1)
+                    return
+                }
 
-            player.addOrDrop(entry.output, 1)
-            player.addXp(Skills.HERBLORE, entry.experience)
-            player.message("You put the ${entry.herb.substringAfter("item.").replace('_', ' ')} into the vial of water.")
+                player.addOrDrop(entry.output, 1)
+                player.addXp(Skills.HERBLORE, entry.experience)
+                player.message("You put the ${entry.herb.substringAfter("item.").replace('_', ' ')} into the vial of water.")
+            }
         } finally {
             player.animate(Animation.RESET_CHARACTER)
         }
@@ -150,24 +152,26 @@ class HerblorePlugin(
             return
         }
 
-        player.animate(entry.animation)
         try {
-            task.wait(entry.ticks)
-            if (!player.inventory.contains(unfinishedId) || !player.inventory.contains(secondaryId)) {
-                return
-            }
+            while (player.inventory.contains(unfinishedId) && player.inventory.contains(secondaryId)) {
+                player.animate(entry.animation)
+                task.wait(entry.ticks)
+                if (!player.inventory.contains(unfinishedId) || !player.inventory.contains(secondaryId)) {
+                    return
+                }
 
-            if (player.inventory.remove(unfinishedId, 1, assureFullRemoval = true).hasFailed()) {
-                return
-            }
-            if (player.inventory.remove(secondaryId, 1, assureFullRemoval = true).hasFailed()) {
-                player.addOrDrop(entry.unfinished, 1)
-                return
-            }
+                if (player.inventory.remove(unfinishedId, 1, assureFullRemoval = true).hasFailed()) {
+                    return
+                }
+                if (player.inventory.remove(secondaryId, 1, assureFullRemoval = true).hasFailed()) {
+                    player.addOrDrop(entry.unfinished, 1)
+                    return
+                }
 
-            player.addOrDrop(entry.output, 1)
-            player.addXp(Skills.HERBLORE, entry.experience)
-            player.message("You make ${articleFor(entry.output)} ${entry.output.substringAfter("item.").replace('_', ' ')}.")
+                player.addOrDrop(entry.output, 1)
+                player.addXp(Skills.HERBLORE, entry.experience)
+                player.message("You make ${articleFor(entry.output)} ${entry.output.substringAfter("item.").replace('_', ' ')}.")
+            }
         } finally {
             player.animate(Animation.RESET_CHARACTER)
         }
