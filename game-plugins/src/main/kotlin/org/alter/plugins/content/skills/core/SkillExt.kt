@@ -45,7 +45,7 @@ fun Player.addOrDrop(item: String, amount: Int, messageOnDrop: String? = null) {
 fun World.roll(products: List<WeightedSkillStack>): SkillStack {
     if (products.size == 1) {
         val product = products.first()
-        val amount = if (product.min == product.max) product.min else random(product.min..product.max)
+        val amount = if (product.safeMin == product.safeMax) product.safeMin else random(product.safeMin..product.safeMax)
         return SkillStack(product.item, amount)
     }
 
@@ -55,25 +55,31 @@ fun World.roll(products: List<WeightedSkillStack>): SkillStack {
     products.forEach { product ->
         cumulative += product.weight
         if (roll <= cumulative) {
-            val amount = if (product.min == product.max) product.min else random(product.min..product.max)
+            val amount = if (product.safeMin == product.safeMax) product.safeMin else random(product.safeMin..product.safeMax)
             return SkillStack(product.item, amount)
         }
     }
 
     val fallback = products.last()
-    val amount = if (fallback.min == fallback.max) fallback.min else random(fallback.min..fallback.max)
+    val amount = if (fallback.safeMin == fallback.safeMax) fallback.safeMin else random(fallback.safeMin..fallback.safeMax)
     return SkillStack(fallback.item, amount)
 }
 
 fun World.replaceWithRespawn(obj: GameObject, replacementId: Int, respawnTicks: Int) {
-    val replacement = DynamicObject(id = replacementId, type = obj.type, rot = obj.rot, tile = obj.tile)
-    remove(obj)
+    val current = getObject(obj.tile, obj.type) ?: obj
+    val replacement = DynamicObject(id = replacementId, type = current.type, rot = current.rot, tile = current.tile)
+    if (isSpawned(current)) {
+        remove(current)
+    }
     spawn(replacement)
     queue {
         wait(respawnTicks)
         if (isSpawned(replacement)) {
             remove(replacement)
         }
-        spawn(DynamicObject(id = obj.id, type = obj.type, rot = obj.rot, tile = obj.tile))
+        spawn(DynamicObject(id = current.id, type = current.type, rot = current.rot, tile = current.tile))
     }
 }
+
+fun World.getLiveResourceObject(obj: GameObject): GameObject? =
+    getObject(obj.tile, obj.type)?.takeIf { it.id == obj.id }

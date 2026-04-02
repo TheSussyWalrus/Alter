@@ -26,10 +26,11 @@ data class WeightedSkillStack(
     val max: Int = min,
     val weight: Double = 1.0,
 ) {
+    val safeMin: Int get() = min.coerceAtLeast(1)
+    val safeMax: Int get() = max.coerceAtLeast(safeMin)
+
     init {
         require(item.isNotBlank()) { "Weighted stack item cannot be blank." }
-        require(min >= 1) { "Weighted stack minimum amount must be >= 1." }
-        require(max >= min) { "Weighted stack maximum cannot be less than minimum." }
         require(weight > 0.0) { "Weighted stack weight must be > 0." }
     }
 }

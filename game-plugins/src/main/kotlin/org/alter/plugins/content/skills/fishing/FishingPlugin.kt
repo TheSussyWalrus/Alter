@@ -57,7 +57,6 @@ class FishingPlugin(
         }
 
         player.facePawn(npc)
-        player.lock()
         try {
             while (true) {
                 if (player.inventory.isFull) {
@@ -83,7 +82,6 @@ class FishingPlugin(
             }
         } finally {
             player.animate(Animation.RESET_CHARACTER)
-            player.unlock()
             npc.resetFacePawn()
             player.resetFacePawn()
         }

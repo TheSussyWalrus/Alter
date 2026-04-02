@@ -12,6 +12,7 @@ import org.alter.game.plugin.KotlinPlugin
 import org.alter.game.plugin.PluginRepository
 import org.alter.plugins.content.skills.core.findBestTool
 import org.alter.plugins.content.skills.core.addOrDrop
+import org.alter.plugins.content.skills.core.getLiveResourceObject
 import org.alter.plugins.content.skills.core.roll
 import org.alter.plugins.content.skills.core.replaceWithRespawn
 
@@ -50,16 +51,16 @@ class WoodcuttingPlugin(
             player.message("You need a Woodcutting level of ${entry.level} to chop this tree.")
             return
         }
-        if (!obj.isSpawned(world)) {
+        if (world.getLiveResourceObject(obj) == null) {
             player.message("That tree has already been chopped down.")
             return
         }
 
         val animation = axeAnimation(tool.item)
         player.faceTile(obj.tile)
-        player.lock()
         try {
-            while (obj.isSpawned(world)) {
+            while (true) {
+                val liveObj = world.getLiveResourceObject(obj) ?: break
                 if (player.inventory.isFull) {
                     player.message("You don't have enough inventory space to hold any more logs.")
                     break
@@ -68,7 +69,8 @@ class WoodcuttingPlugin(
                 player.animate(animation)
                 task.wait(entry.ticks)
 
-                if (!obj.isSpawned(world)) {
+                val liveAfterWait = world.getLiveResourceObject(obj) ?: break
+                if (!liveAfterWait.isSpawned(world)) {
                     break
                 }
 
@@ -79,14 +81,13 @@ class WoodcuttingPlugin(
                     player.addOrDrop(reward.item, reward.amount, "Some logs fall to the floor.")
                     player.message("You get some ${reward.item.replace('_', ' ')}.")
                     if (world.randomDouble() <= entry.depletionChance) {
-                        world.replaceWithRespawn(obj, entry.depletedObjectId, entry.respawnTicks)
+                        world.replaceWithRespawn(liveObj, entry.depletedObjectId, entry.respawnTicks)
                         break
                     }
                 }
             }
         } finally {
             player.animate(Animation.RESET_CHARACTER)
-            player.unlock()
         }
     }
 
