@@ -58,6 +58,17 @@
         "ticks": 2,
         "animation": 1249,
         "message": "You make a pair of leather boots."
+      },
+      {
+        "item": "item.leather_cowl",
+        "level": 9,
+        "experience": 18.5,
+        "amount": 1,
+        "leatherAmount": 1,
+        "threadAmount": 1,
+        "ticks": 2,
+        "animation": 1249,
+        "message": "You make a leather cowl."
       }
     ]
   },

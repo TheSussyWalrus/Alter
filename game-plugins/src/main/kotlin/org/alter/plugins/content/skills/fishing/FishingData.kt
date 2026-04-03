@@ -2,7 +2,23 @@ package org.alter.plugins.content.skills.fishing
 
 import org.alter.plugins.content.skills.core.SkillStack
 import org.alter.plugins.content.skills.core.SkillTool
-import org.alter.plugins.content.skills.core.WeightedSkillStack
+
+data class FishingCatch(
+    val item: String,
+    val level: Int = 1,
+    val min: Int = 1,
+    val max: Int = min,
+    val weight: Double = 1.0,
+) {
+    val safeMin: Int get() = min.coerceAtLeast(1)
+    val safeMax: Int get() = max.coerceAtLeast(safeMin)
+
+    init {
+        require(item.isNotBlank()) { "Fishing catch item cannot be blank." }
+        require(level >= 1) { "Fishing catch level must be >= 1." }
+        require(weight > 0.0) { "Fishing catch weight must be > 0." }
+    }
+}
 
 data class FishingEntry(
     val npcs: List<String>,
@@ -12,7 +28,7 @@ data class FishingEntry(
     val ticks: Int = 4,
     val tools: List<SkillTool>,
     val bait: SkillStack? = null,
-    val outputs: List<WeightedSkillStack>,
+    val outputs: List<FishingCatch>,
 ) {
     @Transient
     var npcIds: IntArray = intArrayOf()

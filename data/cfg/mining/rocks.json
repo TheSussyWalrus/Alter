@@ -95,6 +95,44 @@
     "outputs": [{ "item": "item.coal" }]
   },
   {
+    "objects": ["object.silver_rocks", "object.silver_rocks_11369", "object.silver_rocks_36205"],
+    "depletedObject": "object.rocks_10081",
+    "respawnTicks": 24,
+    "level": 20,
+    "experience": 40.0,
+    "ticks": 4,
+    "depletionChance": 0.22,
+    "tools": [
+      { "item": "item.bronze_pickaxe", "level": 1 },
+      { "item": "item.iron_pickaxe", "level": 1 },
+      { "item": "item.steel_pickaxe", "level": 6 },
+      { "item": "item.mithril_pickaxe", "level": 21 },
+      { "item": "item.adamant_pickaxe", "level": 31 },
+      { "item": "item.rune_pickaxe", "level": 41 },
+      { "item": "item.dragon_pickaxe", "level": 61 }
+    ],
+    "outputs": [{ "item": "item.silver_ore" }]
+  },
+  {
+    "objects": ["object.gold_rocks", "object.gold_rocks_11371", "object.gold_rocks_36206"],
+    "depletedObject": "object.rocks_10081",
+    "respawnTicks": 28,
+    "level": 40,
+    "experience": 65.0,
+    "ticks": 5,
+    "depletionChance": 0.22,
+    "tools": [
+      { "item": "item.bronze_pickaxe", "level": 1 },
+      { "item": "item.iron_pickaxe", "level": 1 },
+      { "item": "item.steel_pickaxe", "level": 6 },
+      { "item": "item.mithril_pickaxe", "level": 21 },
+      { "item": "item.adamant_pickaxe", "level": 31 },
+      { "item": "item.rune_pickaxe", "level": 41 },
+      { "item": "item.dragon_pickaxe", "level": 61 }
+    ],
+    "outputs": [{ "item": "item.gold_ore" }]
+  },
+  {
     "objects": ["object.mithril_rocks", "object.mithril_rocks_11373"],
     "depletedObject": "object.rocks_10081",
     "respawnTicks": 35,

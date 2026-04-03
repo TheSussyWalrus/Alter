@@ -109,12 +109,66 @@
   },
   {
     "objectNames": ["object.anvil"],
+    "bar": "item.bronze_bar",
+    "product": "item.bronze_full_helm",
+    "barsRequired": 2,
+    "level": 7,
+    "experience": 25.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.bronze_bar",
+    "product": "item.bronze_platelegs",
+    "barsRequired": 3,
+    "level": 16,
+    "experience": 37.5,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.bronze_bar",
+    "product": "item.bronze_platebody",
+    "barsRequired": 5,
+    "level": 18,
+    "experience": 62.5,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
     "bar": "item.iron_bar",
     "product": "item.iron_arrowtips",
     "barsRequired": 1,
     "level": 15,
     "experience": 25.0,
     "productCount": 15
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.iron_bar",
+    "product": "item.iron_full_helm",
+    "barsRequired": 2,
+    "level": 22,
+    "experience": 50.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.iron_bar",
+    "product": "item.iron_platelegs",
+    "barsRequired": 3,
+    "level": 31,
+    "experience": 75.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.iron_bar",
+    "product": "item.iron_platebody",
+    "barsRequired": 5,
+    "level": 33,
+    "experience": 125.0,
+    "productCount": 1
   },
   {
     "objectNames": ["object.anvil"],
@@ -127,12 +181,66 @@
   },
   {
     "objectNames": ["object.anvil"],
+    "bar": "item.steel_bar",
+    "product": "item.steel_full_helm",
+    "barsRequired": 2,
+    "level": 37,
+    "experience": 75.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.steel_bar",
+    "product": "item.steel_platelegs",
+    "barsRequired": 3,
+    "level": 46,
+    "experience": 112.5,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.steel_bar",
+    "product": "item.steel_platebody",
+    "barsRequired": 5,
+    "level": 48,
+    "experience": 187.5,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
     "bar": "item.mithril_bar",
     "product": "item.mithril_arrowtips",
     "barsRequired": 1,
     "level": 50,
     "experience": 50.0,
     "productCount": 15
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.mithril_bar",
+    "product": "item.mithril_full_helm",
+    "barsRequired": 2,
+    "level": 52,
+    "experience": 100.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.mithril_bar",
+    "product": "item.mithril_platelegs",
+    "barsRequired": 3,
+    "level": 61,
+    "experience": 150.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.mithril_bar",
+    "product": "item.mithril_platebody",
+    "barsRequired": 5,
+    "level": 63,
+    "experience": 250.0,
+    "productCount": 1
   },
   {
     "objectNames": ["object.anvil"],
@@ -145,11 +253,443 @@
   },
   {
     "objectNames": ["object.anvil"],
+    "bar": "item.adamantite_bar",
+    "product": "item.adamant_full_helm",
+    "barsRequired": 2,
+    "level": 74,
+    "experience": 125.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.adamantite_bar",
+    "product": "item.adamant_platelegs",
+    "barsRequired": 3,
+    "level": 83,
+    "experience": 187.5,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.adamantite_bar",
+    "product": "item.adamant_platebody",
+    "barsRequired": 5,
+    "level": 88,
+    "experience": 312.5,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
     "bar": "item.runite_bar",
     "product": "item.rune_arrowtips",
     "barsRequired": 1,
     "level": 85,
     "experience": 75.0,
     "productCount": 15
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.runite_bar",
+    "product": "item.rune_full_helm",
+    "barsRequired": 2,
+    "level": 92,
+    "experience": 150.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.runite_bar",
+    "product": "item.rune_platelegs",
+    "barsRequired": 3,
+    "level": 99,
+    "experience": 225.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.runite_bar",
+    "product": "item.rune_platebody",
+    "barsRequired": 5,
+    "level": 99,
+    "experience": 375.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.bronze_bar",
+    "product": "item.bronze_med_helm",
+    "barsRequired": 1,
+    "level": 3,
+    "experience": 12.5,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.bronze_bar",
+    "product": "item.bronze_chainbody",
+    "barsRequired": 3,
+    "level": 11,
+    "experience": 37.5,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.bronze_bar",
+    "product": "item.bronze_kiteshield",
+    "barsRequired": 3,
+    "level": 12,
+    "experience": 37.5,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.bronze_bar",
+    "product": "item.bronze_longsword",
+    "barsRequired": 2,
+    "level": 12,
+    "experience": 50.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.bronze_bar",
+    "product": "item.bronze_2h_sword",
+    "barsRequired": 3,
+    "level": 14,
+    "experience": 75.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.bronze_bar",
+    "product": "item.bronze_warhammer",
+    "barsRequired": 3,
+    "level": 15,
+    "experience": 75.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.bronze_bar",
+    "product": "item.bronze_plateskirt",
+    "barsRequired": 3,
+    "level": 16,
+    "experience": 37.5,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.iron_bar",
+    "product": "item.iron_med_helm",
+    "barsRequired": 1,
+    "level": 18,
+    "experience": 25.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.iron_bar",
+    "product": "item.iron_chainbody",
+    "barsRequired": 3,
+    "level": 26,
+    "experience": 75.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.iron_bar",
+    "product": "item.iron_kiteshield",
+    "barsRequired": 3,
+    "level": 27,
+    "experience": 75.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.iron_bar",
+    "product": "item.iron_longsword",
+    "barsRequired": 2,
+    "level": 29,
+    "experience": 100.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.iron_bar",
+    "product": "item.iron_2h_sword",
+    "barsRequired": 3,
+    "level": 29,
+    "experience": 112.5,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.iron_bar",
+    "product": "item.iron_plateskirt",
+    "barsRequired": 3,
+    "level": 31,
+    "experience": 75.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.iron_bar",
+    "product": "item.iron_warhammer",
+    "barsRequired": 3,
+    "level": 34,
+    "experience": 112.5,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.steel_bar",
+    "product": "item.steel_med_helm",
+    "barsRequired": 1,
+    "level": 33,
+    "experience": 37.5,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.steel_bar",
+    "product": "item.steel_longsword",
+    "barsRequired": 2,
+    "level": 36,
+    "experience": 100.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.steel_bar",
+    "product": "item.steel_2h_sword",
+    "barsRequired": 3,
+    "level": 39,
+    "experience": 150.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.steel_bar",
+    "product": "item.steel_chainbody",
+    "barsRequired": 3,
+    "level": 41,
+    "experience": 112.5,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.steel_bar",
+    "product": "item.steel_kiteshield",
+    "barsRequired": 3,
+    "level": 42,
+    "experience": 112.5,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.steel_bar",
+    "product": "item.steel_warhammer",
+    "barsRequired": 3,
+    "level": 44,
+    "experience": 150.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.steel_bar",
+    "product": "item.steel_plateskirt",
+    "barsRequired": 3,
+    "level": 46,
+    "experience": 112.5,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.mithril_bar",
+    "product": "item.mithril_med_helm",
+    "barsRequired": 1,
+    "level": 53,
+    "experience": 50.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.mithril_bar",
+    "product": "item.mithril_chainbody",
+    "barsRequired": 3,
+    "level": 56,
+    "experience": 150.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.mithril_bar",
+    "product": "item.mithril_kiteshield",
+    "barsRequired": 3,
+    "level": 57,
+    "experience": 150.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.mithril_bar",
+    "product": "item.mithril_longsword",
+    "barsRequired": 2,
+    "level": 58,
+    "experience": 125.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.mithril_bar",
+    "product": "item.mithril_2h_sword",
+    "barsRequired": 3,
+    "level": 59,
+    "experience": 225.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.mithril_bar",
+    "product": "item.mithril_plateskirt",
+    "barsRequired": 3,
+    "level": 61,
+    "experience": 150.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.mithril_bar",
+    "product": "item.mithril_warhammer",
+    "barsRequired": 3,
+    "level": 64,
+    "experience": 225.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.adamantite_bar",
+    "product": "item.adamant_med_helm",
+    "barsRequired": 1,
+    "level": 73,
+    "experience": 62.5,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.adamantite_bar",
+    "product": "item.adamant_longsword",
+    "barsRequired": 2,
+    "level": 76,
+    "experience": 156.2,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.adamantite_bar",
+    "product": "item.adamant_chainbody",
+    "barsRequired": 3,
+    "level": 78,
+    "experience": 187.5,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.adamantite_bar",
+    "product": "item.adamant_kiteshield",
+    "barsRequired": 3,
+    "level": 79,
+    "experience": 187.5,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.adamantite_bar",
+    "product": "item.adamant_2h_sword",
+    "barsRequired": 3,
+    "level": 80,
+    "experience": 281.2,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.adamantite_bar",
+    "product": "item.adamant_plateskirt",
+    "barsRequired": 3,
+    "level": 83,
+    "experience": 187.5,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.adamantite_bar",
+    "product": "item.adamant_warhammer",
+    "barsRequired": 3,
+    "level": 85,
+    "experience": 281.2,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.runite_bar",
+    "product": "item.rune_med_helm",
+    "barsRequired": 1,
+    "level": 88,
+    "experience": 75.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.runite_bar",
+    "product": "item.rune_longsword",
+    "barsRequired": 2,
+    "level": 91,
+    "experience": 187.5,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.runite_bar",
+    "product": "item.rune_chainbody",
+    "barsRequired": 3,
+    "level": 93,
+    "experience": 225.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.runite_bar",
+    "product": "item.rune_kiteshield",
+    "barsRequired": 3,
+    "level": 94,
+    "experience": 225.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.runite_bar",
+    "product": "item.rune_2h_sword",
+    "barsRequired": 3,
+    "level": 99,
+    "experience": 337.5,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.runite_bar",
+    "product": "item.rune_plateskirt",
+    "barsRequired": 3,
+    "level": 99,
+    "experience": 225.0,
+    "productCount": 1
+  },
+  {
+    "objectNames": ["object.anvil"],
+    "bar": "item.runite_bar",
+    "product": "item.rune_warhammer",
+    "barsRequired": 3,
+    "level": 99,
+    "experience": 337.5,
+    "productCount": 1
   }
 ]

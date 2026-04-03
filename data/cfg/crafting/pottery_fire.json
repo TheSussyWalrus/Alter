@@ -1,0 +1,34 @@
+[
+  {
+    "objectNames": ["object.pottery_oven", "object.pottery_oven_11601", "object.pottery_oven_14888", "object.pottery_oven_39396"],
+    "unfired": "item.unfired_pot",
+    "fired": "item.pot",
+    "level": 1,
+    "experience": 6.3,
+    "message": "You fire the pot in the oven."
+  },
+  {
+    "objectNames": ["object.pottery_oven", "object.pottery_oven_11601", "object.pottery_oven_14888", "object.pottery_oven_39396"],
+    "unfired": "item.unfired_pie_dish",
+    "fired": "item.pie_dish",
+    "level": 7,
+    "experience": 10.0,
+    "message": "You fire the pie dish in the oven."
+  },
+  {
+    "objectNames": ["object.pottery_oven", "object.pottery_oven_11601", "object.pottery_oven_14888", "object.pottery_oven_39396"],
+    "unfired": "item.unfired_bowl",
+    "fired": "item.bowl",
+    "level": 8,
+    "experience": 15.0,
+    "message": "You fire the bowl in the oven."
+  },
+  {
+    "objectNames": ["object.pottery_oven", "object.pottery_oven_11601", "object.pottery_oven_14888", "object.pottery_oven_39396"],
+    "unfired": "item.unfired_plant_pot",
+    "fired": "item.plant_pot",
+    "level": 19,
+    "experience": 17.5,
+    "message": "You fire the plant pot in the oven."
+  }
+]

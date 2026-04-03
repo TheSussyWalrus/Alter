@@ -42,7 +42,6 @@ class FiremakingPlugin(
                         }
                         val fireTile = player.tile
 
-                        player.lock()
                         try {
                             player.animate(Animation.FIREMAKING_TINDERBOX)
                             wait(entry.ticks)
@@ -65,7 +64,6 @@ class FiremakingPlugin(
                             player.moveTo(Tile(player.tile.x, player.tile.z - 1, player.tile.height))
                         } finally {
                             player.animate(Animation.RESET_CHARACTER)
-                            player.unlock()
                         }
                     }
                 }

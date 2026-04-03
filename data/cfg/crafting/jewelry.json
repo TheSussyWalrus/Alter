@@ -1,0 +1,54 @@
+[
+  {
+    "mould": "item.ring_mould",
+    "bar": "item.gold_bar",
+    "products": [
+      { "item": "item.gold_ring", "level": 5, "experience": 15.0 },
+      { "item": "item.sapphire_ring", "level": 20, "experience": 40.0, "gem": "item.sapphire" },
+      { "item": "item.emerald_ring", "level": 27, "experience": 55.0, "gem": "item.emerald" },
+      { "item": "item.ruby_ring", "level": 34, "experience": 70.0, "gem": "item.ruby" },
+      { "item": "item.diamond_ring", "level": 43, "experience": 85.0, "gem": "item.diamond" },
+      { "item": "item.dragonstone_ring", "level": 55, "experience": 100.0, "gem": "item.dragonstone" },
+      { "item": "item.onyx_ring", "level": 67, "experience": 115.0, "gem": "item.onyx" }
+    ]
+  },
+  {
+    "mould": "item.necklace_mould",
+    "bar": "item.gold_bar",
+    "products": [
+      { "item": "item.gold_necklace", "level": 6, "experience": 20.0 },
+      { "item": "item.sapphire_necklace", "level": 22, "experience": 55.0, "gem": "item.sapphire" },
+      { "item": "item.emerald_necklace", "level": 29, "experience": 60.0, "gem": "item.emerald" },
+      { "item": "item.ruby_necklace", "level": 40, "experience": 75.0, "gem": "item.ruby" },
+      { "item": "item.diamond_necklace", "level": 56, "experience": 90.0, "gem": "item.diamond" },
+      { "item": "item.onyx_necklace", "level": 82, "experience": 120.0, "gem": "item.onyx" }
+    ]
+  },
+  {
+    "mould": "item.amulet_mould",
+    "bar": "item.gold_bar",
+    "products": [
+      { "item": "item.gold_amulet_u", "level": 8, "experience": 30.0 },
+      { "item": "item.sapphire_amulet_u", "level": 24, "experience": 65.0, "gem": "item.sapphire" },
+      { "item": "item.emerald_amulet_u", "level": 31, "experience": 70.0, "gem": "item.emerald" },
+      { "item": "item.ruby_amulet_u", "level": 50, "experience": 85.0, "gem": "item.ruby" },
+      { "item": "item.diamond_amulet_u", "level": 70, "experience": 100.0, "gem": "item.diamond" },
+      { "item": "item.dragonstone_amulet_u", "level": 80, "experience": 150.0, "gem": "item.dragonstone" },
+      { "item": "item.onyx_amulet_u", "level": 90, "experience": 165.0, "gem": "item.onyx" }
+    ]
+  },
+  {
+    "mould": "item.holy_mould",
+    "bar": "item.silver_bar",
+    "products": [
+      { "item": "item.unstrung_symbol", "level": 16, "experience": 50.0 }
+    ]
+  },
+  {
+    "mould": "item.unholy_mould",
+    "bar": "item.silver_bar",
+    "products": [
+      { "item": "item.unholy_symbol", "level": 17, "experience": 50.0 }
+    ]
+  }
+]

@@ -19,7 +19,11 @@
     "ticks": 4,
     "tools": [{ "item": "item.fishing_rod", "level": 1 }],
     "bait": { "item": "item.fishing_bait", "amount": 1 },
-    "outputs": [{ "item": "item.raw_sardine", "min": 1, "max": 1, "weight": 1.0 }]
+    "outputs": [
+      { "item": "item.raw_sardine", "level": 5, "min": 1, "max": 1, "weight": 0.6 },
+      { "item": "item.raw_herring", "level": 10, "min": 1, "max": 1, "weight": 0.3 },
+      { "item": "item.raw_pike", "level": 25, "min": 1, "max": 1, "weight": 0.1 }
+    ]
   },
   {
     "npcs": ["npc.rod_fishing_spot_1512", "npc.rod_fishing_spot_1513", "npc.rod_fishing_spot_1526", "npc.rod_fishing_spot_1527", "npc.rod_fishing_spot_1529"],
@@ -30,8 +34,8 @@
     "tools": [{ "item": "item.fly_fishing_rod", "level": 20 }],
     "bait": { "item": "item.feather", "amount": 1 },
     "outputs": [
-      { "item": "item.raw_trout", "min": 1, "max": 1, "weight": 0.65 },
-      { "item": "item.raw_salmon", "min": 1, "max": 1, "weight": 0.35 }
+      { "item": "item.raw_trout", "level": 20, "min": 1, "max": 1, "weight": 0.65 },
+      { "item": "item.raw_salmon", "level": 30, "min": 1, "max": 1, "weight": 0.35 }
     ]
   },
   {
@@ -54,8 +58,9 @@
       { "item": "item.barbtail_harpoon", "level": 50 }
     ],
     "outputs": [
-      { "item": "item.raw_tuna", "min": 1, "max": 1, "weight": 0.65 },
-      { "item": "item.raw_swordfish", "min": 1, "max": 1, "weight": 0.35 }
+      { "item": "item.raw_tuna", "level": 50, "min": 1, "max": 1, "weight": 0.6 },
+      { "item": "item.raw_swordfish", "level": 50, "min": 1, "max": 1, "weight": 0.3 },
+      { "item": "item.raw_shark", "level": 76, "min": 1, "max": 1, "weight": 0.1 }
     ]
   }
 ]

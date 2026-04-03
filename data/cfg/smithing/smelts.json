@@ -46,5 +46,21 @@
     "outputAmount": 1,
     "level": 85,
     "experience": 50.0
+  },
+  {
+    "objectNames": ["object.furnace"],
+    "inputs": ["item.silver_ore"],
+    "output": "item.silver_bar",
+    "outputAmount": 1,
+    "level": 20,
+    "experience": 13.7
+  },
+  {
+    "objectNames": ["object.furnace"],
+    "inputs": ["item.gold_ore"],
+    "output": "item.gold_bar",
+    "outputAmount": 1,
+    "level": 40,
+    "experience": 22.5
   }
 ]

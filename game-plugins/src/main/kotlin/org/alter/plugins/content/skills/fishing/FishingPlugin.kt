@@ -12,7 +12,6 @@ import org.alter.game.plugin.KotlinPlugin
 import org.alter.game.plugin.PluginRepository
 import org.alter.plugins.content.skills.core.addOrDrop
 import org.alter.plugins.content.skills.core.findBestTool
-import org.alter.plugins.content.skills.core.roll
 
 class FishingPlugin(
     r: PluginRepository,
@@ -73,8 +72,8 @@ class FishingPlugin(
 
                 val successChance = fishingChance(player.getSkills().getCurrentLevel(Skills.FISHING), entry.level, tool.level)
                 if (world.randomDouble() <= successChance) {
+                    val reward = rollCatch(player.getSkills().getCurrentLevel(Skills.FISHING), entry.outputs) ?: continue
                     entry.bait?.let { player.inventory.remove(it.item, it.amount, assureFullRemoval = true) }
-                    val reward = world.roll(entry.outputs)
                     player.addXp(Skills.FISHING, entry.experience)
                     player.addOrDrop(reward.item, reward.amount, "The fish falls to the floor.")
                     player.message("You catch some ${reward.item.replace('_', ' ')}.")
@@ -101,4 +100,35 @@ class FishingPlugin(
             option.equals("net", true) -> Animation.FISHING_NET
             else -> Animation.FISHING_ROD
         }
+
+    private fun rollCatch(level: Int, outputs: List<FishingCatch>): CaughtFish? {
+        val available = outputs.filter { level >= it.level }
+        if (available.isEmpty()) {
+            return null
+        }
+        val totalWeight = available.sumOf { it.weight }
+        var roll = world.randomDouble() * totalWeight
+        for (output in available) {
+            roll -= output.weight
+            if (roll <= 0.0) {
+                val amount =
+                    if (output.safeMin == output.safeMax) {
+                        output.safeMin
+                    } else {
+                        world.random(output.safeMin..output.safeMax)
+                    }
+                return CaughtFish(output.item, amount)
+            }
+        }
+        val fallback = available.last()
+        val amount =
+            if (fallback.safeMin == fallback.safeMax) {
+                fallback.safeMin
+            } else {
+                world.random(fallback.safeMin..fallback.safeMax)
+            }
+        return CaughtFish(fallback.item, amount)
+    }
+
+    private data class CaughtFish(val item: String, val amount: Int)
 }

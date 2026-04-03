@@ -38,27 +38,27 @@ class CookingPlugin(
 
                             val source = player.getInteractingGameObj()
                             player.faceTile(source.tile)
-                            player.lock()
                             try {
-                                player.animate(if (source.id == getRSCM("object.fire_26185")) Animation.COOKING_ON_FIRE else Animation.COOKING_ON_RANGE)
-                                wait(def.ticks)
-                                if (!player.inventory.contains(rawId)) {
-                                    return@queue
-                                }
+                                while (player.inventory.contains(rawId)) {
+                                    player.animate(if (source.id == getRSCM("object.fire_26185")) Animation.COOKING_ON_FIRE else Animation.COOKING_ON_RANGE)
+                                    wait(def.ticks)
+                                    if (!player.inventory.contains(rawId)) {
+                                        return@queue
+                                    }
 
-                                player.inventory.remove(rawId)
-                                val success = !shouldBurn(player.getSkills().getCurrentLevel(Skills.COOKING), def.level, def.stopBurn)
-                                val output = if (success) def.cooked else def.burnt
-                                player.inventory.add(item = output, amount = 1)
-                                if (success) {
-                                    player.addXp(Skills.COOKING, def.experience)
-                                    player.message("You successfully cook the ${def.cooked.replace('_', ' ')}.")
-                                } else {
-                                    player.message("You accidentally burn the food.")
+                                    player.inventory.remove(rawId)
+                                    val success = !shouldBurn(player.getSkills().getCurrentLevel(Skills.COOKING), def.level, def.stopBurn)
+                                    val output = if (success) def.cooked else def.burnt
+                                    player.inventory.add(item = output, amount = 1)
+                                    if (success) {
+                                        player.addXp(Skills.COOKING, def.experience)
+                                        player.message("You successfully cook the ${def.cooked.replace('_', ' ')}.")
+                                    } else {
+                                        player.message("You accidentally burn the food.")
+                                    }
                                 }
                             } finally {
                                 player.animate(Animation.RESET_CHARACTER)
-                                player.unlock()
                             }
                         }
                     }

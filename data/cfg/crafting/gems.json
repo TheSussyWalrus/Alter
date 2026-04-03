@@ -1,5 +1,21 @@
 [
   {
+    "uncut": "item.uncut_opal",
+    "cut": "item.opal",
+    "level": 1,
+    "experience": 15.0,
+    "ticks": 2,
+    "animation": 890
+  },
+  {
+    "uncut": "item.uncut_jade",
+    "cut": "item.jade",
+    "level": 13,
+    "experience": 20.0,
+    "ticks": 2,
+    "animation": 891
+  },
+  {
     "uncut": "item.uncut_sapphire",
     "cut": "item.sapphire",
     "level": 20,
@@ -30,5 +46,29 @@
     "experience": 107.5,
     "ticks": 2,
     "animation": 886
+  },
+  {
+    "uncut": "item.uncut_red_topaz",
+    "cut": "item.red_topaz",
+    "level": 16,
+    "experience": 25.0,
+    "ticks": 2,
+    "animation": 892
+  },
+  {
+    "uncut": "item.uncut_dragonstone",
+    "cut": "item.dragonstone",
+    "level": 55,
+    "experience": 137.5,
+    "ticks": 2,
+    "animation": 885
+  },
+  {
+    "uncut": "item.uncut_onyx",
+    "cut": "item.onyx",
+    "level": 67,
+    "experience": 167.5,
+    "ticks": 2,
+    "animation": 2717
   }
 ]

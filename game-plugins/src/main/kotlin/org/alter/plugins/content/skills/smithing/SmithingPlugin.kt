@@ -143,7 +143,6 @@ class SmithingPlugin(
             }
 
             player.faceTile(player.getInteractingGameObj().tile)
-            player.lock()
             try {
                 player.animate(recipe.animation)
                 task.wait(recipe.ticks)
@@ -155,7 +154,6 @@ class SmithingPlugin(
                 player.message("You make ${articleFor(recipe.product)} ${recipe.product.substringAfter("item.").replace('_', ' ')}.")
             } finally {
                 player.animate(Animation.RESET_CHARACTER)
-                player.unlock()
             }
         }
     }
