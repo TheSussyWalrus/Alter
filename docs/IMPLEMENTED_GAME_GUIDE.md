@@ -1,343 +1,328 @@
 # Alter Implemented Game Guide
 
-This document is based on the current code in this repository, not on intended features or older setup docs.
+This document reflects the code that is actually present in this repository as of 2026-04-06. It is intentionally split into two views:
 
-It is meant to serve two purposes:
+- player guide: what you can do in-game right now
+- developer guide: what is implemented, partially implemented, or still missing compared to Old School RuneScape
 
-- player guide: what you can actually do in-game right now
-- developer guide: what is implemented, what is partial, and what is still missing compared to OSRS
+If a system is mentioned here, it is because I found code for it. If a system is called out as partial or missing, that means the current code either stubs it, comments it out, or only implements a thin slice of the OSRS behavior.
 
-## High-level summary
+## Quick Summary
 
-The current playable slice is a sandbox-style OSRS server with:
+The current game is a Lumbridge-centered OSRS sandbox with a strong engine foundation and a narrow set of live gameplay loops:
 
 - automatic account creation on first login
-- a Lumbridge-centered spawn experience
-- working movement, interaction, inventory, equipment, combat, banking, shops, prayer, run energy, and death handling
-- player trading
-- meaningful Thieving content
-- selected item mechanics
-- a large amount of UI scaffolding that is only partly backed by gameplay logic
+- movement, routing, interaction, object handling, NPC interaction, and combat
+- banking, trading, shops, prayer, run energy, and death handling
+- thieving as the clearest full skill loop
+- several item mechanics such as teleport tabs, food, prayer scrolls, essence pouches, rock cake, mystery boxes, and a few equipment effects
+- a lot of interface scaffolding that looks complete but is not always backed by real gameplay
 
-It is not a full OSRS recreation. The strongest implemented areas are engine fundamentals plus selected systems, not broad questing or full skilling coverage.
+This is not a full OSRS recreation yet. It is a playable base with some genuinely finished systems and a large amount of partial UI or placeholder logic around them.
 
-## What a player can do right now
+## Player Guide
 
-### Create an account and log in
+### Getting Started
 
 - Log in with any unused username and password.
-- Your account is created automatically on first successful login.
+- The first successful login auto-creates your account.
 - Your login name becomes your in-game display name.
-- You spawn at the configured home tile from `game.yml`, default `3218, 3218, 0`.
+- You spawn at the home tile configured in `game.yml`, which defaults to `3218, 3218, 0`.
+- New accounts receive a starter kit:
+  - 5 logs
+  - 1 tinderbox
+  - 5 bread
+  - 1 bronze pickaxe
+  - 1 bronze dagger
+  - 1 knife
 
-### Start with a small starter kit
+### Movement and Interaction
 
-New accounts currently receive:
+You can already do the normal OSRS basics:
 
-- 5 logs
-- 1 tinderbox
-- 5 bread
-- 1 bronze pickaxe
-- 1 bronze dagger
-- 1 knife
+- walk and run
+- click the minimap and world map
+- interact with NPCs, objects, doors, gates, ladders, stairs, and some trapdoors
+- cross the Wilderness ditch
+- use the Al Kharid gate shortcut by paying 10 coins
 
-### Move around and interact with the world
+Run energy is live. You can toggle it from the minimap orb or the settings tab.
 
-- Walk, run, click the minimap, and use the world map.
-- Toggle run energy.
-- Open and close many doors and gates.
-- Use ladders, stairs, and at least one trapdoor route.
-- Cross the Wilderness ditch with proper forced movement.
-- Pay 10 coins to use the Al Kharid gate shortcut.
+### Combat
 
-### Fight things
+Combat is broadly working for both players and NPCs.
 
-Core combat is implemented for:
+What is currently supported:
 
-- player versus NPC combat
-- player versus player attack initiation
-- melee
-- ranged with weapon and ammo mappings
-- magic combat spells
-- attack styles
-- auto-retaliate
-- special attack energy restoration
+- melee, ranged, and magic combat logic
+- attack styles and auto-retaliate
+- target acquisition and pathing toward combat targets
+- special attacks for:
+  - abyssal bludgeon
+  - abyssal dagger
+  - Armadyl godsword
+  - dragon dagger
+  - dragon pickaxe
+- Osmumten's fang has weapon-specific handling
 
-Special attack implementations exist for:
+You can attack players with the normal `Attack` interaction, and NPC aggression/response is wired into the combat loop.
 
-- abyssal bludgeon
-- abyssal dagger
-- Armadyl godsword
-- dragon dagger
+### Prayer
 
-There is also weapon-specific code for Osmumten's fang.
+Prayer is one of the more complete subsystems.
 
-Magic combat includes the standard elemental combat line through surge and Ancient Magicks combat spells through barrage. Autocast wiring is present through the attack tab.
+You can:
 
-### Use prayers
+- toggle normal prayers
+- use quick prayers
+- drain prayer over time
+- keep Protect Item active
+- unlock and use the prayers:
+  - Preserve
+  - Rigour
+  - Augury
 
-Prayer support is fairly deep:
+Prayer scrolls are implemented as read-and-consume unlock items:
 
-- normal prayer toggling
-- overhead icons
-- quick prayers
-- prayer drain over time
-- protect item state
-- reset on death and logout
+- Dexterous prayer scroll unlocks Rigour
+- Arcane prayer scroll unlocks Augury
+- Torn prayer scroll unlocks Preserve
 
-Unlockable prayers implemented in code:
+Prayers are turned off on death and logout.
 
-- Preserve
-- Rigour
-- Augury
+### Banking
 
-Prayer scroll items can unlock those prayers.
+Banking is functional and fairly complete.
 
-### Eat and survive
+You can:
 
-- Food consumption works through the food table.
-- Death restores stats and returns you home unless you are in an instance.
-- NPC respawns are handled through combat definitions.
-- Poison support exists in the mechanics layer.
+- open banks from booths and banker NPCs
+- use deposit boxes
+- deposit inventory and equipment
+- withdraw as item or note
+- use quantity modes, withdraw-X, placeholders, and bank tabs
+- move items between tabs
 
-### Bank, deposit, and trade
+Banking looks close to the real interface, but the bank PIN screen is only a UI shell right now.
 
-Banking is one of the more complete systems:
+### Trading
 
-- bank booths and banker NPCs open the bank
-- deposit boxes work
-- deposit inventory and equipment work
-- withdraw as item or note works
-- quantity modes and withdraw-X work
-- placeholders work
-- bank tabs and item movement logic work
+Player-to-player trading works.
 
-Player trading is also implemented:
+You can:
 
-- request/accept flow
-- item offering and removal
-- first and second confirmation screens
-- decline on close and logout
+- request trades
+- accept and decline trades
+- offer and remove items
+- use the standard two-step confirmation flow
 
-### Use shops
+The trade closes on logout or if the interface is dismissed.
 
-The shop system is implemented, and Lumbridge currently includes at least:
+### Shops
+
+The shop system works.
+
+Known Lumbridge shops currently wired in:
 
 - Lumbridge General Store
 - Bob's Brilliant Axes
 
-### Thieve
+You can open shops from NPC interactions and buy/sell with coin currency.
 
-Thieving is the clearest full skill loop in the repo today.
+### Thieving
 
-Implemented content includes:
+Thieving is the clearest full skill loop currently implemented.
 
-- pickpocketing
-- stall thieving
-- chest thieving with traps and disarm chances
+You can:
 
-The data files currently define pickpocket targets ranging from men up to heroes, plus multiple stall tiers and chest tiers.
+- pickpocket supported NPCs
+- steal from stalls
+- loot chests
+- search for traps on trapped chests
 
-There is also a dedicated `::thieving` command that teleports you to a test area containing representative NPCs, stalls, and chests.
+The dedicated `::thieving` command sends you to a test area with representative NPCs, stalls, and chests.
 
-### Use selected item mechanics
+That test area includes examples such as:
 
-Working or mostly working item interactions include:
+- men, farmers, HAM members, warriors, rogues, cave goblins, master farmers, guards, menaphite thugs, knights, paladins, and heroes
+- vegetable, baker's, tea, silk, market, seed, fur, fish, silver, spice, and gem stalls
+- multiple chest tiers
 
-- teleport tablets
-- essence pouches
-- prayer scrolls
-- mystery box
-- food items
-- dwarven rock cake
-- spade
+### Items and Consumables
 
-Teleport tabs explicitly support many destinations, including Varrock, Falador, Lumbridge, Camelot, Ardougne, Watchtower, Rimmington, Taverley, Pollnivneach, Hosidius, Rellekka, Brimhaven, Yanille, Trollheim, Catherby, Barbarian, Draynor Manor, Fishing Guild, Khazard, and Mind Altar.
+Several item behaviors are live:
 
-### Use gameframe interfaces
+- food consumption works for a broad food table
+- prayer scrolls unlock prayers
+- teleport tabs work for many destinations
+- essence pouches can be filled, checked, and emptied
+- the dwarven rock cake behaves as expected for damage-based self-harm
+- mystery boxes give random items
+- spade digging advances a hardcoded clue-style item chain
+- some equipment pieces play custom visual effects when equipped
+- ring of wealth has a few equipment options and teleport handling
+- dragon pickaxe has its special attack
+- shattered cane has its emotes when the full outfit is worn
 
-A lot of OSRS-style interface behavior is present, including:
+Teleport tabs currently cover destinations like Varrock, Falador, Lumbridge, Camelot, Ardougne, Watchtower, Rimmington, Taverley, Pollnivneach, Hosidius, Rellekka, Brimhaven, Yanille, Trollheim, Catherby, Barbarian, Draynor Manor, Fishing Guild, Khazard, and Mind Altar.
 
-- attack tab
-- inventory tab
-- worn equipment tab
-- prayer tab
-- magic tab filtering
-- emotes tab
-- account tab
-- character summary tab
-- settings tab
+### Interface Tabs
+
+A lot of the OSRS gameframe is present and usable:
+
+- combat options
+- inventory
+- worn equipment
+- prayer
+- magic
+- emotes
+- friends and ignores
+- account management
+- character summary
+- settings and keybinds
 - world map
 - XP drops and XP settings
-- skill guide openings
+- skill guides
+- item sets
+- tournament supplies
 
-Some of these are genuinely useful. Others are mostly presentation shells.
+Important caveat: several of these tabs are mostly interface scaffolding and do not yet represent full OSRS gameplay depth.
 
-## Implemented content by area
+### Commands You Can Use
 
-### Lumbridge and nearby
+Player-facing commands currently found in the codebase:
 
-The repo explicitly spawns content in and around Lumbridge:
+- `::home` teleports you home
+- `::thieving` teleports you to the thieving test area
+- `::yell <message>` broadcasts a global message with rank formatting
+- `::empty` clears your inventory
 
-- men and women
-- rats, sheep, rams, imps, goblins, spiders, and zombie rats
-- banker interactions
-- Bob and general store NPCs
-- tutors and other Lumbridge NPC dialogue plugins
-- local item spawns
-- an altar object
+There are also utility/debug commands such as `::getdist`, `::gc`, `::heap`, and `::qutest`, plus admin/dev commands for spawning, teleports, bank resets, and similar testing tasks. Treat those as test tooling, not production gameplay.
 
-### Test content
+## Developer Guide
 
-There is a hard-coded thieving test area populated by the repo itself, not just by data files. It is the best place to validate the current Thieving feature set.
+### What Is Implemented
 
-### World data
+The strongest live systems in the codebase are:
 
-The repository also includes a very large `data/cfg/spawns/item_spawns.yml`, so there are many additional ground item spawns beyond the small hand-authored Lumbridge examples.
+- login, account bootstrap, and save serialization
+- world loading and plugin dispatch
+- movement, route finding, interaction handling, and object/NPC clicks
+- melee, ranged, magic, and special attacks
+- prayer toggles, drain, and unlock scrolls
+- banking with tabs and placeholders
+- player trading
+- shops
+- run energy
+- food and several consumable item behaviors
+- thieving pickpocketing, stalls, and chests
+- a small set of Lumbridge area NPCs, shops, and object interactions
 
-## What is partial, placeholder, or misleading
+### What Is Partial Or Stubbed
 
-### Automatic account creation is real, but onboarding is incomplete
+These systems exist, but not as full OSRS mechanics:
 
-- New accounts are created automatically.
-- The first-login appearance flow exists as plugin scaffolding, but the login appearance prompt is commented out.
-- In practice, creation is easier than OSRS-style onboarding but much less polished.
-
-### Bank PIN is UI-only
-
-The bank PIN interface opens and shows settings text, but there is no actual PIN setup, verification, or enforcement flow.
-
-### Kept on Death is placeholder
-
-The interface opens, but it currently fills the screen with dummy items and TODO text rather than real death-loss calculations.
-
-### Looting bag is incomplete
-
-- The looting bag interface opens.
-- Checking and bank-depositing the bag are implemented.
-- Actual storage into the bag is currently disabled because the storage method returns `false`.
-
-So from a player perspective, looting bag behavior is not complete.
-
-### Social features are mostly not ready
-
-Friends, ignores, private messaging, and clan chat should all be treated as incomplete:
-
-- friend and ignore list UI switching exists
-- backend social syncing is stubbed or commented out
-- private messages are logged but not delivered
-- clan join/leave handling throws an unhandled runtime exception
-
-### Some item plugins exist only as shells
-
-Examples:
-
+- Bank PIN is UI only
+  - the interface opens
+  - there is no real PIN setup, verification, or enforcement
+- Kept on Death is a placeholder
+  - it renders dummy items and placeholder text
+  - it does not calculate actual risk or item loss
+- Looting bag storage is disabled
+  - the UI opens
+  - check/deposit/bank flows exist
+  - actually storing items into the bag returns `false`
+- Social systems are incomplete
+  - friends/ignores have partial list handling
+  - private messaging logs intent but does not deliver messages
+  - clan chat join/leave currently throws an unhandled runtime exception
+- First-login appearance onboarding is commented out
+  - the login appearance flow is not active
+- Water-container logic is commented out
+  - the plugin file exists, but the behavior is disabled
 - Amulet of Glory teleporting is commented out
-- water container behavior is commented out
+  - the file is present, but the actual teleport mechanic is not live
+- Ancient Wyvern Shield combination logic is commented out
+  - only the file shell remains
+- Some UI tabs are decorative or incomplete
+  - character summary uses hardcoded quest/diary counts
+  - skill guides open, but do not imply full skill implementation
+  - account tab buttons mostly report placeholder information
+  - equipment stats still contains placeholder text for some fields
 
-A plugin file existing in the tree is not proof that the mechanic is fully playable.
+### What Is Missing Compared To OSRS
 
-### UI presence does not mean feature completion
-
-The project has a lot of interface code. That does not mean the matching gameplay is done.
-
-Examples:
-
-- account tab exists without a broader account-management feature set
-- skill guides open even though most skills are not implemented end to end
-- character summary exists without a broader progression system around it
-
-## What is not implemented compared to OSRS
-
-Based on the reviewed code, you should assume these are missing or far from complete unless new content lands:
+Do not treat these as implemented unless new code lands:
 
 - quests
+- quest progression
 - diaries
-- minigames
 - slayer
+- minigames
+- Grand Exchange
+- tutorial island or equivalent real onboarding
+- clan chat
+- real private messaging
+- most social features beyond simple local list bookkeeping
+- most skill loops outside thieving
 - farming
 - woodcutting
 - firemaking
 - fishing
-- cooking as a full skill loop
-- mining and smithing as full skill loops
-- runecrafting altars and full crafting loop
-- crafting as a full skill loop
+- cooking as a full progression loop
+- mining and smithing as full progression loops
+- runecrafting as a full progression loop
+- crafting as a full progression loop
 - fletching
 - herblore
 - agility
 - hunter
 - construction
-- clue scrolls
-- achievement systems
-- Grand Exchange
-- functioning friend chat and clan systems
-- real kept-on-death and item-loss parity
-- full wilderness and PvP rules parity
-- complete jewelry teleport behavior
-- tutorial island or equivalent onboarding
+- clue scroll system beyond the hardcoded spade chain
+- full wilderness and PvP parity
+- full item-loss parity on death
+- broad jewelry teleport parity
+- broader special-item coverage
 
-The codebase contains pieces of some of these areas, but not enough to document them as live game features.
+The repository does contain fragments of some of these areas, but not enough to call them live OSRS equivalents.
 
-## Developer notes
+### Module Split
 
-### Module split
+- `game-server`: engine, login, save system, world, message handling, entity logic
+- `game-plugins`: gameplay content and most feature logic
+- `game-api`: shared/generated config references
+- `plugins`: support modules such as filestore/tooling
 
-- `game-server`: engine, login, save system, world, handlers, entity logic
-- `game-plugins`: most gameplay content
-- `game-api`: generated/shared config references
-- `plugins`: filestore and tooling support modules
+### Save Model
 
-### Save model
+JSON is the default save format if `saveFormat` is omitted in `game.yml`.
 
-JSON is the default save format if `saveFormat` is not set in `game.yml`.
+The current save structure includes collections for things like:
 
-Important save collections:
+- accounts
+- details
+- skills
+- containers
+- attributes
+- timers
+- varps
+- appearance
 
-- `accounts`
-- `details`
-- `skills`
-- `containers`
-- `attributes`
-- `timers`
-- `varps`
-- `appearance`
+### Useful Development Notes
 
-### Server startup expectations
+- The server targets revision `228`.
+- The default game port is `43594`.
+- The install flow generates RSA material and runs the map decrypter.
+- `dev-settings.yml` is for debug toggles such as packet, button, spell, and item-action logging.
+- Some Docker files appear stale relative to the current module names.
 
-The launcher expects:
+### Recommended Next Priorities
 
-- `../data/api.yml`
-- `../data/cache`
-- `../game.yml`
-- optional `../dev-settings.yml`
+If the goal is to turn this into a more coherent playable server, the highest-value next steps are:
 
-The install flow also generates RSA material and decrypts the world map before a clean first boot.
-
-### Default player-facing commands
-
-Commands available without elevated powers in the reviewed content:
-
-- `::home`
-- `::thieving`
-- `::yell`
-- `::empty`
-
-This is useful for local testing, but not safe as a production command set.
-
-### Revision and networking
-
-- default revision: `228`
-- default game port: `43594`
-- desktop-client oriented network setup through rsprot
-
-## Recommended next priorities
-
-If the goal is to turn this into a coherent playable server, the highest-leverage next steps are:
-
-1. Decide whether the project is a Lumbridge sandbox, a thieving-focused test server, or a broader OSRS base.
-2. Remove or restrict player-facing debug commands like `::empty`.
-3. Finish first-login appearance and onboarding.
-4. Replace placeholder interfaces like Bank PIN and Kept on Death with real logic or hide them.
-5. Either complete or disable incomplete social systems.
-6. Pick the next full skill loop after Thieving and implement it end to end.
+1. Decide whether the project is primarily a Lumbridge sandbox, a thieving-focused test server, or a broader OSRS base.
+2. Replace placeholder UI screens like Bank PIN and Kept on Death with real logic or hide them.
+3. Finish first-login appearance/onboarding.
+4. Fix the social stack or remove the broken pieces.
+5. Either complete or disable incomplete item mechanics such as amulet teleports and water containers.
+6. Pick one more full skill loop after Thieving and implement it end to end.
