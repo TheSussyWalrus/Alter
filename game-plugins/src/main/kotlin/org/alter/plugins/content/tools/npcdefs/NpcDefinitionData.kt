@@ -116,6 +116,7 @@ data class NpcAggressionDefinition(
 data class NpcDropDefinition(
     var always: MutableList<NpcDropEntry> = mutableListOf(),
     var main: MutableList<NpcDropEntry> = mutableListOf(),
+    var mainEmptySlots: Int = 0,
     var preroll: MutableList<NpcDropEntry> = mutableListOf(),
     var tertiary: MutableList<NpcDropEntry> = mutableListOf(),
 ) {
@@ -177,6 +178,14 @@ data class NpcDefinitionSearchResult(
     val id: Int,
     val name: String,
     val defined: Boolean,
+)
+
+data class NpcItemSearchResult(
+    val id: Int,
+    val name: String,
+    val noted: Boolean,
+    val placeholder: Boolean,
+    val stackable: Boolean,
 )
 
 data class NpcImageContent(

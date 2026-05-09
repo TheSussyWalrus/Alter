@@ -4,6 +4,8 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import dev.openrune.cache.CacheManager.getItem
+import dev.openrune.cache.CacheManager.getItems
+import dev.openrune.cache.CacheManager.itemSize
 import dev.openrune.cache.CacheManager.getNpc
 import dev.openrune.cache.CacheManager.npcSize
 import gg.rsmod.util.ServerProperties
@@ -40,6 +42,8 @@ class NpcDefinitionService : Service {
     private val baseShops: MutableMap<String, Shop?> = mutableMapOf()
     private val appliedShops: MutableSet<String> = mutableSetOf()
     private val attemptedShopBindings: MutableSet<Int> = mutableSetOf()
+    private val itemSearchIndex: MutableList<IndexedItem> = mutableListOf()
+    private val itemNameIndex: MutableMap<Int, String> = mutableMapOf()
 
     lateinit var definitionsPath: Path
         private set
@@ -66,10 +70,12 @@ class NpcDefinitionService : Service {
         definitionsPath = resolveConfigPath(serviceProperties.get("npc.definitions") ?: DEFAULT_DEFINITIONS_CONFIG)
         shopsPath = resolveConfigPath(serviceProperties.get("npc.shops") ?: DEFAULT_SHOPS_CONFIG)
         imageCacheDir = resolveConfigPath(serviceProperties.get("npc.image-cache") ?: DEFAULT_IMAGE_CACHE)
+        buildItemSearchIndex()
         loadFromDisk()
         Server.logger.info {
             "Loaded ${definitions.size} NPC definition${if (definitions.size == 1) "" else "s"} and " +
-                "${shops.size} NPC shop definition${if (shops.size == 1) "" else "s"}."
+                "${shops.size} NPC shop definition${if (shops.size == 1) "" else "s"} with " +
+                "${itemSearchIndex.size} indexed item${if (itemSearchIndex.size == 1) "" else "s"}."
         }
     }
 
@@ -203,6 +209,9 @@ class NpcDefinitionService : Service {
         if (entry.aggression.radius < 0) {
             errors.add("aggression.radius must be zero or greater.")
         }
+        if (entry.drops.mainEmptySlots < 0) {
+            errors.add("drops.mainEmptySlots must be zero or greater.")
+        }
         if (entry.shopKey != null && shops.none { it.id == entry.shopKey }) {
             errors.add("shopKey '${entry.shopKey}' does not match a configured NPC shop.")
         }
@@ -248,29 +257,44 @@ class NpcDefinitionService : Service {
         return NpcDefinitionValidationResult(errors.isEmpty(), errors)
     }
 
-    fun applySpawnOverrides(npc: Npc, spawn: org.alter.plugins.content.tools.npcspawns.NpcSpawnEntry) {
+    fun applySpawnOverrides(npc: Npc, spawn: org.alter.plugins.content.tools.npcspawns.NpcSpawnEntry): Boolean {
         val current = npc.combatDef
         val aggressive = spawn.aggressive
         val aggressionRadius = spawn.aggressionRadius
         val followRange = spawn.followRange
+        var combatChanged = false
         if (aggressive != null || aggressionRadius != null || followRange != null) {
+            val enablesAggression = aggressive == true || aggressionRadius != null
             npc.combatDef =
                 current.copy(
                     aggressiveRadius =
                         when {
                             aggressive == false -> 0
                             aggressionRadius != null -> aggressionRadius.coerceAtLeast(0)
+                            enablesAggression && current.aggressiveRadius <= 0 -> DEFAULT_AGGRESSION_RADIUS
                             else -> current.aggressiveRadius
                         },
-                    aggroTargetDelay = if (aggressive == false) 0 else current.aggroTargetDelay,
-                    aggressiveTimer = if (aggressive == false) Int.MIN_VALUE else current.aggressiveTimer,
+                    aggroTargetDelay =
+                        when {
+                            aggressive == false -> 0
+                            enablesAggression && current.aggroTargetDelay <= 0 -> DEFAULT_AGGRESSION_SEARCH_DELAY
+                            else -> current.aggroTargetDelay
+                        },
+                    aggressiveTimer =
+                        when {
+                            aggressive == false -> Int.MIN_VALUE
+                            enablesAggression && current.aggressiveTimer <= 0 -> DEFAULT_AGGRESSION_TIMER
+                            else -> current.aggressiveTimer
+                        },
                     followRange = followRange?.coerceAtLeast(0) ?: current.followRange,
                 )
+            combatChanged = true
         }
         val shopKey = spawn.shopKey?.trim()?.takeIf { it.isNotBlank() } ?: shopKeyForNpc(npc.id)
         if (shopKey != null) {
             npc.attr[NPC_SHOP_KEY_ATTR] = shopKey
         }
+        return combatChanged
     }
 
     fun shopKeyForNpc(npcId: Int): String? =
@@ -300,6 +324,23 @@ class NpcDefinitionService : Service {
     fun isValidItem(id: Int): Boolean =
         id >= 0 && runCatching { getItem(id) }.isSuccess
 
+    fun itemName(id: Int): String? {
+        itemNameIndex[id]?.let { return it }
+        if (id < 0 || id >= itemSize()) {
+            return null
+        }
+        val item = runCatching { getItem(id) }.getOrNull() ?: return null
+        if (item.name.isBlank()) {
+            return null
+        }
+        return if (item.noteTemplateId > 0) {
+            val unnoted = runCatching { getItem(item.noteLinkId).name }.getOrDefault(item.name)
+            "$unnoted (noted)"
+        } else {
+            item.name
+        }
+    }
+
     fun npcName(id: Int): String? {
         if (id < 0 || id >= npcSize()) {
             return null
@@ -307,6 +348,36 @@ class NpcDefinitionService : Service {
         return runCatching { getNpc(id).name }
             .getOrNull()
             ?.takeIf { it.isNotBlank() }
+    }
+
+    fun searchItems(query: String, limit: Int = 60): List<NpcItemSearchResult> {
+        val normalizedQuery = query.trim().lowercase(Locale.ROOT)
+        if (normalizedQuery.isBlank()) {
+            return emptyList()
+        }
+        val exactId = normalizedQuery.toIntOrNull()
+        return itemSearchIndex
+            .asSequence()
+            .filter { item ->
+                item.id == exactId || item.normalizedName.contains(normalizedQuery)
+            }
+            .sortedWith(
+                compareBy<IndexedItem> { it.searchRank(normalizedQuery, exactId) }
+                    .thenBy { it.name.length }
+                    .thenBy { it.name }
+                    .thenBy { it.id },
+            )
+            .take(limit)
+            .map { item ->
+                NpcItemSearchResult(
+                    id = item.id,
+                    name = item.name,
+                    noted = item.noted,
+                    placeholder = item.placeholder,
+                    stackable = item.stackable,
+                )
+            }
+            .toList()
     }
 
     fun searchNpcs(query: String, limit: Int = 60): List<NpcDefinitionSearchResult> {
@@ -422,8 +493,10 @@ class NpcDefinitionService : Service {
     private fun refreshLiveNpcs(world: World, ids: Set<Int>) {
         world.npcs.forEach { npc ->
             if (npc.id in ids && npc.isSpawned()) {
+                npc.aggroCheck = null
                 world.setNpcDefaults(npc)
                 npc.attr[NPC_SHOP_KEY_ATTR] = shopKeyForNpc(npc.id) ?: ""
+                world.plugins.executeNpcSpawn(npc)
             }
         }
     }
@@ -438,6 +511,7 @@ class NpcDefinitionService : Service {
         entry.aggression.radius = entry.aggression.radius.coerceAtLeast(0)
         entry.aggression.searchDelay = entry.aggression.searchDelay.coerceAtLeast(1)
         entry.aggression.toleranceTicks = entry.aggression.toleranceTicks?.coerceAtLeast(0)
+        entry.drops.mainEmptySlots = entry.drops.mainEmptySlots.coerceAtLeast(0)
         normalizeDrops(entry.drops.always)
         normalizeDrops(entry.drops.main)
         normalizeDrops(entry.drops.preroll)
@@ -496,7 +570,9 @@ class NpcDefinitionService : Service {
                 when {
                     !aggression.aggressive -> Int.MIN_VALUE
                     aggression.alwaysAggressive -> Int.MAX_VALUE
-                    else -> aggression.toleranceTicks ?: base.aggressiveTimer
+                    aggression.toleranceTicks != null -> aggression.toleranceTicks!!.coerceAtLeast(0)
+                    base.aggressiveTimer > 0 -> base.aggressiveTimer
+                    else -> DEFAULT_AGGRESSION_TIMER
                 },
             followRange = followRange.coerceAtLeast(0),
             poisonChance = combat.poisonChance?.coerceAtLeast(0.0) ?: base.poisonChance,
@@ -573,7 +649,10 @@ class NpcDefinitionService : Service {
         }
         if (main.isNotEmpty()) {
             val drops = main.map { it.toLoot(weighted = true) }.toMutableSet()
-            tables.add(LootTable(TableType.MAIN, drops.sumOf { it.weight ?: 1 }.coerceAtLeast(1), drops))
+            val itemWeight = drops.sumOf { it.weight ?: 1 }.coerceAtLeast(1)
+            tables.add(LootTable(TableType.MAIN, itemWeight + mainEmptySlots.coerceAtLeast(0), drops))
+        } else if (mainEmptySlots > 0) {
+            tables.add(LootTable(TableType.MAIN, mainEmptySlots.coerceAtLeast(1), mutableSetOf()))
         }
         if (preroll.isNotEmpty()) {
             tables.add(LootTable(TableType.PRE_ROLL, null, preroll.map { it.toLoot(weighted = true) }.toMutableSet()))
@@ -694,7 +773,7 @@ class NpcDefinitionService : Service {
             drops
                 .map {
                     it.copy(
-                        name = it.name?.trim()?.takeIf { name -> name.isNotBlank() },
+                        name = itemName(it.itemId) ?: it.name?.trim()?.takeIf { name -> name.isNotBlank() },
                         minAmount = it.minAmount.coerceAtLeast(0),
                         maxAmount = it.maxAmount.coerceAtLeast(it.minAmount.coerceAtLeast(0)),
                         weight = it.weight?.coerceAtLeast(1),
@@ -707,6 +786,47 @@ class NpcDefinitionService : Service {
         drops.clear()
         drops.addAll(normalized)
     }
+
+    private fun buildItemSearchIndex() {
+        itemSearchIndex.clear()
+        itemNameIndex.clear()
+        val items = getItems()
+        for (id in 0 until itemSize()) {
+            val item = items[id] ?: continue
+            if (item.isPlaceholder || item.name.isBlank()) {
+                continue
+            }
+            val displayName =
+                if (item.noteTemplateId > 0) {
+                    val linkedName = itemNameIndex[item.noteLinkId] ?: runCatching { getItem(item.noteLinkId).name }.getOrDefault(item.name)
+                    "$linkedName (noted)"
+                } else {
+                    item.name
+                }
+            val indexed =
+                IndexedItem(
+                    id = id,
+                    name = displayName,
+                    normalizedName = displayName.lowercase(Locale.ROOT),
+                    noted = item.noted || item.noteTemplateId > 0,
+                    placeholder = item.isPlaceholder,
+                    stackable = item.stackable,
+                )
+            itemSearchIndex.add(indexed)
+            itemNameIndex[id] = displayName
+        }
+    }
+
+    private fun IndexedItem.searchRank(
+        query: String,
+        exactId: Int?,
+    ): Int =
+        when {
+            id == exactId -> 0
+            normalizedName == query -> 1
+            normalizedName.startsWith(query) -> 2
+            else -> 3
+        }
 
     private fun normalizeTags(tags: List<String>): MutableList<String> =
         tags
@@ -738,11 +858,23 @@ class NpcDefinitionService : Service {
             ?: direct.toAbsolutePath().normalize()
     }
 
+    private data class IndexedItem(
+        val id: Int,
+        val name: String,
+        val normalizedName: String,
+        val noted: Boolean,
+        val placeholder: Boolean,
+        val stackable: Boolean,
+    )
+
     companion object {
         val NPC_SHOP_KEY_ATTR = AttributeKey<String>()
         private const val DEFAULT_DEFINITIONS_CONFIG = "data/cfg/npcs/definitions.json"
         private const val DEFAULT_SHOPS_CONFIG = "data/cfg/npcs/shops.json"
         private const val DEFAULT_IMAGE_CACHE = "data/cache/npc-images"
         private const val IMAGE_TIMEOUT_MS = 5000
+        private const val DEFAULT_AGGRESSION_RADIUS = 1
+        private const val DEFAULT_AGGRESSION_SEARCH_DELAY = 5
+        private const val DEFAULT_AGGRESSION_TIMER = 1000
     }
 }

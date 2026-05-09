@@ -63,6 +63,33 @@ class WorldEditorController(private val world: World) {
         )
     }
 
+    fun searchItems(req: Request, res: Response): String {
+        val service = npcDefinitionService(res) ?: return currentResponse(res)
+        val query = req.queryParams("q") ?: ""
+        val limit = req.queryParams("limit")?.toIntOrNull()?.coerceIn(1, 250) ?: 120
+        val results =
+            service.searchItems(query, limit).fold(JsonArray()) { arr, item ->
+                arr.add(
+                    JsonObject().apply {
+                        addProperty("id", item.id)
+                        addProperty("name", item.name)
+                        addProperty("noted", item.noted)
+                        addProperty("placeholder", item.placeholder)
+                        addProperty("stackable", item.stackable)
+                    },
+                )
+                arr
+            }
+        return ok(
+            res,
+            JsonObject().apply {
+                addProperty("query", query)
+                addProperty("count", results.size())
+                add("results", results)
+            },
+        )
+    }
+
     fun listDevPlayers(res: Response): String =
         runOnGameThread(res) {
             ok(

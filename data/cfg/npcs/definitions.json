@@ -47,7 +47,7 @@
       "immuneThralls": false
     },
     "aggression": {
-      "aggressive": true,
+      "aggressive": false,
       "radius": 5,
       "searchDelay": 5,
       "alwaysAggressive": false,
@@ -55,10 +55,86 @@
     },
     "followRange": 3,
     "drops": {
-      "always": [],
-      "main": [],
-      "preroll": [],
-      "tertiary": []
+      "always": [
+        {
+          "itemId": 526,
+          "name": "Bones",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "noted": false
+        }
+      ],
+      "main": [
+        {
+          "itemId": 1067,
+          "name": "Iron platelegs",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        },
+        {
+          "itemId": 1115,
+          "name": "Iron platebody",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        },
+        {
+          "itemId": 1153,
+          "name": "Iron full helm",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        },
+        {
+          "itemId": 1191,
+          "name": "Iron kiteshield",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        },
+        {
+          "itemId": 1309,
+          "name": "Iron 2h sword",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 1,
+          "noted": false
+        },
+        {
+          "itemId": 1323,
+          "name": "Iron scimitar",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        }
+      ],
+      "mainEmptySlots": 10,
+      "preroll": [
+        {
+          "itemId": 25244,
+          "name": "Dark key",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "denominator": 1000,
+          "noted": false
+        }
+      ],
+      "tertiary": [
+        {
+          "itemId": 1325,
+          "name": "Steel scimitar",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "denominator": 128,
+          "noted": false
+        }
+      ]
     }
   }
 ]

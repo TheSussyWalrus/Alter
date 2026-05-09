@@ -69,9 +69,12 @@ fun random(boundInclusive: Int) = random.nextInt(boundInclusive + 1)
 /**
  * Table rollers
  */
-fun LootTable.mainRoll(): Loot {
+fun LootTable.mainRoll(): Loot? {
     var total = tableWeight ?: 0 // total table weight
-    val roll = random(total)
+    if (total <= 0) {
+        return null
+    }
+    val roll = Random.nextInt(total) + 1
     var cur = 0
     for (loot in drops) {
         loot.weight?.let {
@@ -81,8 +84,7 @@ fun LootTable.mainRoll(): Loot {
             }
         }
     }
-    // should never happen unless ur table is broken
-    throw IllegalStateException("fix ur code idiot")
+    return null
 }
 fun LootTable.preRoll(): Loot? {
     for (loot in drops) {

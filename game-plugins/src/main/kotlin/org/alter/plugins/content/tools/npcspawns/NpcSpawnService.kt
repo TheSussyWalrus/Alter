@@ -170,7 +170,9 @@ class NpcSpawnService : Service {
             return null
         }
         applySpawnState(npc, normalized)
-        world.getService(NpcDefinitionService::class.java)?.applySpawnOverrides(npc, normalized)
+        if (world.getService(NpcDefinitionService::class.java)?.applySpawnOverrides(npc, normalized) == true) {
+            world.plugins.executeNpcSpawn(npc)
+        }
         managedNpcs[normalized.key] = npc
         return npc
     }

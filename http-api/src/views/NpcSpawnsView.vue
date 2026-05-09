@@ -161,10 +161,123 @@
             </template>
 
             <template v-if="activeTab === 'drops'">
-              <label class="wide">Always drops JSON <textarea v-model="dropText.always" rows="6"></textarea></label>
-              <label class="wide">Main drops JSON <textarea v-model="dropText.main" rows="6"></textarea></label>
-              <label class="wide">Preroll drops JSON <textarea v-model="dropText.preroll" rows="6"></textarea></label>
-              <label class="wide">Tertiary drops JSON <textarea v-model="dropText.tertiary" rows="6"></textarea></label>
+              <div class="drop-builder wide">
+                <div class="drop-help">
+                  <strong>Drop rows</strong>
+                  <span>Use Rare extra for independent 1-in-N rolls. Empty main slots mean the main table can roll no item, leaving only always/rare-extra drops.</span>
+                </div>
+
+                <div class="drop-toolbar">
+                  <label>
+                    Add as
+                    <select v-model="newDropTable">
+                      <option v-for="table in dropTableOptions" :key="table.key" :value="table.key">{{ table.label }}</option>
+                    </select>
+                  </label>
+                  <label>
+                    Empty main slots
+                    <input v-model="mainEmptySlotsText" type="number" min="0" placeholder="0" />
+                  </label>
+                  <label class="search-field">
+                    Item search
+                    <input v-model="itemQuery" type="search" placeholder="Search item name or id..." @keyup.enter.prevent="searchItems()" />
+                  </label>
+                  <button type="button" @click="searchItems()" :disabled="definitionLoading">Search items</button>
+                  <span v-if="itemSearchLoading" class="inline-status">Searching...</span>
+                  <label>
+                    Show
+                    <select v-model="dropTableFilter">
+                      <option value="all">All drops</option>
+                      <option v-for="table in dropTableOptions" :key="`filter-${table.key}`" :value="table.key">{{ table.label }}</option>
+                    </select>
+                  </label>
+                  <button type="button" class="ghost" @click="showAdvancedDrops = !showAdvancedDrops">
+                    {{ showAdvancedDrops ? 'Hide advanced JSON' : 'Advanced JSON' }}
+                  </button>
+                </div>
+
+                <div v-if="itemResults.length" class="item-results">
+                  <button v-for="item in itemResults" :key="item.id" type="button" @click="addDropFromItem(item)">
+                    <strong>{{ item.name }}</strong>
+                    <span>{{ item.id }}<template v-if="item.stackable"> - stackable</template><template v-if="item.noted"> - noted</template></span>
+                  </button>
+                </div>
+
+                <div class="drop-table-wrap">
+                  <table class="drop-table">
+                    <thead>
+                      <tr>
+                        <th>Table</th>
+                        <th>Item</th>
+                        <th>Amount</th>
+                        <th>Rarity</th>
+                        <th>Preview</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="row in filteredDropRows" :key="row.uid">
+                        <td>
+                          <select v-model="row.table">
+                            <option v-for="table in dropTableOptions" :key="table.key" :value="table.key">{{ table.label }}</option>
+                          </select>
+                        </td>
+                        <td>
+                          <div class="item-cell">
+                            <input v-model="row.itemIdText" type="number" min="0" placeholder="Item id" @change="lookupDropItem(row)" />
+                            <input v-model="row.name" type="text" placeholder="Item name" />
+                          </div>
+                        </td>
+                        <td>
+                          <div class="amount-cell">
+                            <input v-model="row.minAmountText" type="number" min="1" placeholder="Min" />
+                            <span>to</span>
+                            <input v-model="row.maxAmountText" type="number" min="1" placeholder="Max" />
+                          </div>
+                        </td>
+                        <td>
+                          <input v-if="row.table === 'main'" v-model="row.weightText" type="number" min="1" placeholder="Relative weight" />
+                          <input v-else-if="usesOneIn(row.table)" v-model="row.oneInText" type="number" min="1" placeholder="One in..." />
+                          <span v-else class="rarity-static">Every kill</span>
+                        </td>
+                        <td><span class="chance-pill">{{ dropChanceLabel(row) }}</span></td>
+                        <td>
+                          <div class="row-actions">
+                            <button type="button" class="ghost" @click="duplicateDrop(row)">Duplicate</button>
+                            <button type="button" class="danger" @click="removeDrop(row)">Delete</button>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr v-if="!filteredDropRows.length">
+                        <td colspan="6" class="empty-drops">No drops yet. Search an item above and add it to this NPC.</td>
+                      </tr>
+                      <tr v-if="mainEmptySlots > 0 && (dropTableFilter === 'all' || dropTableFilter === 'main')" class="empty-main-row">
+                        <td>Main</td>
+                        <td colspan="3">Empty slots</td>
+                        <td><span class="chance-pill">{{ emptyMainChanceLabel }}</span></td>
+                        <td>
+                          <button type="button" class="ghost" @click="mainEmptySlotsText = '0'">Clear</button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div v-if="showAdvancedDrops" class="advanced-drops">
+                  <div class="advanced-title">
+                    <strong>Advanced JSON</strong>
+                    <span>Use this for migrations or hand fixes. Edited JSON is applied only after syncing it into rows.</span>
+                  </div>
+                  <label class="wide">Always drops JSON <textarea v-model="dropText.always" rows="6" @input="advancedDropsDirty = true"></textarea></label>
+                  <label class="wide">Main drops JSON <textarea v-model="dropText.main" rows="6" @input="advancedDropsDirty = true"></textarea></label>
+                  <label class="wide">Pre-roll drops JSON <textarea v-model="dropText.preroll" rows="6" @input="advancedDropsDirty = true"></textarea></label>
+                  <label class="wide">Rare extra drops JSON <textarea v-model="dropText.tertiary" rows="6" @input="advancedDropsDirty = true"></textarea></label>
+                  <div class="actions">
+                    <button type="button" @click="syncDropRowsFromAdvanced">Sync JSON into rows</button>
+                    <button type="button" class="ghost" @click="syncAdvancedDropsFromRows">Refresh JSON from rows</button>
+                  </div>
+                </div>
+              </div>
             </template>
 
             <template v-if="activeTab === 'aggression'">
@@ -321,6 +434,25 @@ export default {
       definitionDraft: emptyDefinition(),
       shopDraft: emptyShop(),
       dropText: { always: '[]', main: '[]', preroll: '[]', tertiary: '[]' },
+      dropRows: [],
+      dropTableFilter: 'all',
+      dropTableOptions: [
+        { key: 'always', label: 'Always' },
+        { key: 'main', label: 'Main' },
+        { key: 'tertiary', label: 'Rare extra' },
+        { key: 'preroll', label: 'Pre-roll' }
+      ],
+      newDropTable: 'tertiary',
+      itemQuery: '',
+      itemResults: [],
+      itemSearchLoading: false,
+      itemSearchCache: {},
+      itemSearchDebounce: null,
+      itemSearchToken: 0,
+      showAdvancedDrops: false,
+      advancedDropsDirty: false,
+      mainEmptySlotsText: '0',
+      nextDropUid: 1,
       definitionLoaded: false,
       definitionLoading: false,
       filter: '',
@@ -361,6 +493,25 @@ export default {
         return [entry.key, entry.name, String(entry.npcId), `${entry.x},${entry.z},${entry.height}`, entry.facing, (entry.tags || []).join(','), entry.notes || '']
           .some(value => value.toLowerCase().includes(q));
       });
+    },
+    filteredDropRows() {
+      if (this.dropTableFilter === 'all') {
+        return this.dropRows;
+      }
+      return this.dropRows.filter(row => row.table === this.dropTableFilter);
+    },
+    mainDropWeightTotal() {
+      return this.dropRows
+        .filter(row => row.table === 'main')
+        .reduce((total, row) => total + this.positiveNumber(row.weightText, 1), 0) + this.mainEmptySlots;
+    },
+    mainEmptySlots() {
+      const slots = Number(this.mainEmptySlotsText);
+      return Number.isInteger(slots) && slots > 0 ? slots : 0;
+    },
+    emptyMainChanceLabel() {
+      const total = this.mainDropWeightTotal;
+      return total > 0 ? `${this.mainEmptySlots}/${total} main (${this.percent(this.mainEmptySlots / total)})` : 'No empty slots';
     }
   },
   watch: {
@@ -375,10 +526,16 @@ export default {
       if (tab === 'shop') {
         this.syncShopDraft();
       }
+    },
+    itemQuery(query) {
+      this.scheduleItemSearch(query);
     }
   },
   created() {
     this.fetchAll();
+  },
+  beforeDestroy() {
+    clearTimeout(this.itemSearchDebounce);
   },
   methods: {
     async fetchAll() {
@@ -439,6 +596,59 @@ export default {
         this.status = `Found ${this.npcResults.length} NPC matches.`;
       } catch (err) {
         this.error = this.errorMessage(err);
+      }
+    },
+    scheduleItemSearch(query) {
+      clearTimeout(this.itemSearchDebounce);
+      const trimmed = query.trim();
+      if (!trimmed) {
+        this.itemResults = [];
+        this.itemSearchLoading = false;
+        return;
+      }
+      if (trimmed.length < 2 && !/^\d+$/.test(trimmed)) {
+        return;
+      }
+      this.itemSearchDebounce = setTimeout(() => this.searchItems(false), 220);
+    },
+    async searchItems(force = true) {
+      const query = this.itemQuery.trim();
+      if (!query) {
+        this.itemResults = [];
+        this.itemSearchLoading = false;
+        return;
+      }
+      if (!force && query.length < 2 && !/^\d+$/.test(query)) {
+        return;
+      }
+      this.error = '';
+      const cacheKey = query.toLowerCase();
+      const cached = this.itemSearchCache[cacheKey];
+      if (cached) {
+        this.itemResults = cached;
+        this.status = `Found ${cached.length} item matches.`;
+        this.itemSearchLoading = false;
+        return;
+      }
+      const token = ++this.itemSearchToken;
+      this.itemSearchLoading = true;
+      try {
+        const res = await axios.get(`${API}/world-editor/items/search`, { params: { q: query, limit: 80 } });
+        if (token !== this.itemSearchToken || query !== this.itemQuery.trim()) {
+          return;
+        }
+        const results = res.data.results || [];
+        this.rememberItemSearch(cacheKey, results);
+        this.itemResults = results;
+        this.status = `Found ${this.itemResults.length} item matches.`;
+      } catch (err) {
+        if (token === this.itemSearchToken) {
+          this.error = this.errorMessage(err);
+        }
+      } finally {
+        if (token === this.itemSearchToken) {
+          this.itemSearchLoading = false;
+        }
       }
     },
     async createSpawn(npcId) {
@@ -627,6 +837,9 @@ export default {
         preroll: this.formatJson(drops.preroll || []),
         tertiary: this.formatJson(drops.tertiary || [])
       };
+      this.mainEmptySlotsText = String(drops.mainEmptySlots || 0);
+      this.dropRows = this.rowsFromDrops(drops);
+      this.advancedDropsDirty = false;
       this.definitionDraft = draft;
       this.definitionLoaded = true;
       this.npcImageUrl = `${API}/world-editor/npcs/${encodeURIComponent(this.currentNpcId)}/image?ts=${Date.now()}`;
@@ -654,6 +867,11 @@ export default {
       this.definitionDraft = emptyDefinition();
       this.shopDraft = emptyShop();
       this.dropText = { always: '[]', main: '[]', preroll: '[]', tertiary: '[]' };
+      this.dropRows = [];
+      this.mainEmptySlotsText = '0';
+      this.itemResults = [];
+      this.itemSearchLoading = false;
+      this.advancedDropsDirty = false;
       this.definitionLoaded = false;
       this.npcImageUrl = '';
     },
@@ -676,13 +894,8 @@ export default {
       };
     },
     payloadFromDefinition() {
-      const drops = {
-        always: this.parseJsonField(this.dropText.always, 'Always drops JSON'),
-        main: this.parseJsonField(this.dropText.main, 'Main drops JSON'),
-        preroll: this.parseJsonField(this.dropText.preroll, 'Preroll drops JSON'),
-        tertiary: this.parseJsonField(this.dropText.tertiary, 'Tertiary drops JSON')
-      };
-      if (Object.values(drops).some(value => value === null)) {
+      const drops = this.dropsPayloadFromRows();
+      if (!drops) {
         return null;
       }
       return {
@@ -736,6 +949,203 @@ export default {
         notes: this.shopDraft.notes || null,
         items
       };
+    },
+    rememberItemSearch(cacheKey, results) {
+      this.itemSearchCache[cacheKey] = results;
+      const keys = Object.keys(this.itemSearchCache);
+      if (keys.length > 50) {
+        delete this.itemSearchCache[keys[0]];
+      }
+    },
+    addDropFromItem(item) {
+      this.dropRows.push({
+        uid: this.nextDropUid++,
+        table: this.newDropTable,
+        itemIdText: String(item.id),
+        name: item.name,
+        minAmountText: '1',
+        maxAmountText: '1',
+        weightText: '1',
+        oneInText: this.newDropTable === 'tertiary' ? '128' : '',
+        noted: Boolean(item.noted)
+      });
+      this.itemResults = [];
+      this.itemQuery = '';
+      this.advancedDropsDirty = false;
+    },
+    async lookupDropItem(row) {
+      const itemId = Number(row.itemIdText);
+      if (!Number.isInteger(itemId) || itemId < 0) {
+        return;
+      }
+      try {
+        const res = await axios.get(`${API}/world-editor/items/search`, { params: { q: String(itemId), limit: 20 } });
+        const match = (res.data.results || []).find(item => Number(item.id) === itemId);
+        if (match) {
+          row.name = match.name;
+          row.noted = Boolean(match.noted);
+        }
+      } catch (err) {
+        this.error = this.errorMessage(err);
+      }
+    },
+    duplicateDrop(row) {
+      this.dropRows.push({
+        ...row,
+        uid: this.nextDropUid++
+      });
+      this.advancedDropsDirty = false;
+    },
+    removeDrop(row) {
+      this.dropRows = this.dropRows.filter(item => item.uid !== row.uid);
+      this.advancedDropsDirty = false;
+    },
+    rowsFromDrops(drops = {}) {
+      return ['always', 'main', 'tertiary', 'preroll'].flatMap(table => {
+        return (drops[table] || []).map(drop => this.rowFromDrop(table, drop));
+      });
+    },
+    rowFromDrop(table, drop) {
+      const oneIn = this.oneInFromDrop(table, drop);
+      return {
+        uid: this.nextDropUid++,
+        table,
+        itemIdText: drop.itemId == null ? '' : String(drop.itemId),
+        name: drop.name || '',
+        minAmountText: String(drop.minAmount || 1),
+        maxAmountText: String(drop.maxAmount || drop.minAmount || 1),
+        weightText: String(drop.weight || this.oneInFromDrop('main', drop) || 1),
+        oneInText: oneIn === '' ? '' : String(oneIn),
+        noted: Boolean(drop.noted)
+      };
+    },
+    oneInFromDrop(table, drop) {
+      if (!this.usesOneIn(table) && table !== 'main') {
+        return '';
+      }
+      if (drop.denominator) {
+        return drop.numerator > 0 ? Math.max(1, Math.round(drop.denominator / drop.numerator)) : drop.denominator;
+      }
+      if (drop.chance > 0) {
+        return Math.max(1, Math.round(1 / drop.chance));
+      }
+      if (this.usesOneIn(table) && drop.weight) {
+        return drop.weight;
+      }
+      return '';
+    },
+    dropsPayloadFromRows() {
+      const mainEmptySlots = this.requiredPositiveInt(this.mainEmptySlotsText || '0', 'Empty main slots', 0);
+      if (mainEmptySlots === null) {
+        return null;
+      }
+      const drops = { always: [], main: [], mainEmptySlots, preroll: [], tertiary: [] };
+      for (const row of this.dropRows) {
+        const built = this.dropEntryFromRow(row);
+        if (!built) {
+          return null;
+        }
+        drops[built.table].push(built.entry);
+      }
+      this.dropText = {
+        always: this.formatJson(drops.always),
+        main: this.formatJson(drops.main),
+        preroll: this.formatJson(drops.preroll),
+        tertiary: this.formatJson(drops.tertiary)
+      };
+      return drops;
+    },
+    dropEntryFromRow(row) {
+      const table = this.dropTableOptions.some(option => option.key === row.table) ? row.table : 'tertiary';
+      const itemId = this.requiredPositiveInt(row.itemIdText, 'Drop item id', 0);
+      const minAmount = this.requiredPositiveInt(row.minAmountText, 'Drop minimum amount');
+      const maxAmount = row.maxAmountText === '' ? minAmount : this.requiredPositiveInt(row.maxAmountText, 'Drop maximum amount');
+      if (itemId === null || minAmount === null || maxAmount === null) {
+        return null;
+      }
+      if (maxAmount < minAmount) {
+        this.error = `Drop ${row.name || itemId} has max amount lower than min amount.`;
+        return null;
+      }
+      const entry = {
+        itemId,
+        name: row.name || null,
+        minAmount,
+        maxAmount
+      };
+      if (row.noted) {
+        entry.noted = true;
+      }
+      if (table === 'main') {
+        const weight = this.requiredPositiveInt(row.weightText || '1', `Main drop weight for ${row.name || itemId}`);
+        if (weight === null) {
+          return null;
+        }
+        entry.weight = weight;
+      } else if (this.usesOneIn(table)) {
+        const denominator = this.requiredPositiveInt(row.oneInText, `One-in rarity for ${row.name || itemId}`);
+        if (denominator === null) {
+          return null;
+        }
+        entry.denominator = denominator;
+      }
+      return { table, entry };
+    },
+    syncAdvancedDropsFromRows() {
+      const drops = this.dropsPayloadFromRows();
+      if (drops) {
+        this.advancedDropsDirty = false;
+        this.status = 'Advanced JSON refreshed from rows.';
+      }
+    },
+    syncDropRowsFromAdvanced() {
+      const drops = {
+        always: this.parseJsonField(this.dropText.always, 'Always drops JSON'),
+        main: this.parseJsonField(this.dropText.main, 'Main drops JSON'),
+        preroll: this.parseJsonField(this.dropText.preroll, 'Pre-roll drops JSON'),
+        tertiary: this.parseJsonField(this.dropText.tertiary, 'Rare extra drops JSON'),
+        mainEmptySlots: this.mainEmptySlots
+      };
+      if (Object.values(drops).some(value => value === null)) {
+        return;
+      }
+      this.mainEmptySlotsText = String(drops.mainEmptySlots || 0);
+      this.dropRows = this.rowsFromDrops(drops);
+      this.advancedDropsDirty = false;
+      this.status = 'Drop rows synced from advanced JSON.';
+    },
+    usesOneIn(table) {
+      return table === 'tertiary' || table === 'preroll';
+    },
+    dropChanceLabel(row) {
+      if (row.table === 'always') {
+        return 'Every kill';
+      }
+      if (row.table === 'main') {
+        const weight = this.positiveNumber(row.weightText, 1);
+        const total = this.mainDropWeightTotal || weight;
+        return `${weight}/${total} main (${this.percent(weight / total)})`;
+      }
+      if (this.usesOneIn(row.table)) {
+        const oneIn = this.positiveNumber(row.oneInText, 0);
+        return oneIn > 0 ? `1/${oneIn} (${this.percent(1 / oneIn)})` : 'Set one-in';
+      }
+      return '-';
+    },
+    requiredPositiveInt(value, label, minimum = 1) {
+      const number = Number(value);
+      if (!Number.isInteger(number) || number < minimum) {
+        this.error = `${label} must be an integer greater than or equal to ${minimum}.`;
+        return null;
+      }
+      return number;
+    },
+    positiveNumber(value, fallback) {
+      const number = Number(value);
+      return Number.isFinite(number) && number > 0 ? number : fallback;
+    },
+    percent(value) {
+      return `${(value * 100).toFixed(value < 0.01 ? 4 : 2)}%`;
     },
     requireSelection() {
       if (!this.draft.key) {
@@ -1101,6 +1511,153 @@ button.danger {
   max-width: min(100%, 440px);
   max-height: 320px;
   object-fit: contain;
+}
+
+.drop-builder {
+  display: grid;
+  gap: 16px;
+}
+
+.drop-help,
+.advanced-title {
+  display: grid;
+  gap: 5px;
+  padding: 14px;
+  border-radius: 16px;
+  background: #f6eddb;
+  color: #435044;
+}
+
+.drop-help strong,
+.advanced-title strong {
+  color: #26372d;
+}
+
+.drop-toolbar,
+.item-results {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.drop-toolbar label {
+  min-width: 170px;
+}
+
+.drop-toolbar .search-field {
+  flex: 1;
+  min-width: 260px;
+}
+
+.inline-status {
+  align-self: center;
+  color: #566157;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.item-results button {
+  display: grid;
+  gap: 3px;
+  background: #81603a;
+  text-align: left;
+}
+
+.item-results span {
+  font-size: 12px;
+  opacity: 0.78;
+}
+
+.drop-table-wrap {
+  overflow-x: auto;
+  border: 1px solid rgba(38, 55, 45, 0.14);
+  border-radius: 18px;
+}
+
+.drop-table {
+  width: 100%;
+  min-width: 920px;
+  border-collapse: collapse;
+  background: #fffdf7;
+}
+
+.drop-table th,
+.drop-table td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(38, 55, 45, 0.12);
+  text-align: left;
+  vertical-align: top;
+}
+
+.drop-table th {
+  background: #efe2c7;
+  color: #38463c;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.item-cell,
+.amount-cell,
+.row-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.item-cell {
+  min-width: 260px;
+}
+
+.item-cell input:first-child {
+  max-width: 100px;
+}
+
+.amount-cell {
+  align-items: center;
+  min-width: 190px;
+}
+
+.amount-cell input {
+  max-width: 78px;
+}
+
+.rarity-static,
+.chance-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 41px;
+  color: #435044;
+}
+
+.chance-pill {
+  padding: 0 10px;
+  border-radius: 999px;
+  background: #eef3e8;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.empty-drops {
+  color: #6e786f;
+  text-align: center;
+}
+
+.empty-main-row {
+  background: #faf4e6;
+  color: #566157;
+  font-weight: 800;
+}
+
+.advanced-drops {
+  display: grid;
+  gap: 14px;
+  padding: 14px;
+  border: 1px dashed rgba(38, 55, 45, 0.28);
+  border-radius: 18px;
+  background: rgba(255, 253, 247, 0.72);
 }
 
 .edit-grid {

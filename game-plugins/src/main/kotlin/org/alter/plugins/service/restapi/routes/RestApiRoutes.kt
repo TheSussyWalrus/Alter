@@ -73,6 +73,10 @@ class RestApiRoutes {
             worldEditorController.searchNpcs(req, res)
         }
 
+        get("/world-editor/items/search") { req, res ->
+            worldEditorController.searchItems(req, res)
+        }
+
         get("/world-editor/npcs/:npcId/image") { req, res ->
             worldEditorController.getNpcImage(req, res)
         }
