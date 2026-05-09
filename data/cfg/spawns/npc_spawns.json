@@ -50,5 +50,18 @@
     "active": true,
     "enabled": true,
     "tags": []
+  },
+  {
+    "key": "shop_keeper_2813_2596_3105_0",
+    "npcId": 2813,
+    "name": "Shop keeper",
+    "x": 2596,
+    "z": 3105,
+    "height": 0,
+    "walkRadius": 0,
+    "facing": "SOUTH",
+    "active": true,
+    "enabled": true,
+    "tags": []
   }
 ]

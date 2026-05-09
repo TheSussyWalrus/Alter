@@ -315,7 +315,81 @@
                 <label><input v-model="shopDraft.buysItems" type="checkbox" /> Buys items</label>
                 <label><input v-model="shopDraft.sellsItems" type="checkbox" /> Sells items</label>
               </div>
-              <label class="wide">Shop items JSON <textarea v-model="shopDraft.itemsText" rows="10"></textarea></label>
+              <div class="drop-builder shop-builder wide">
+                <div class="drop-help">
+                  <strong>Shop stock</strong>
+                  <span>Search items by name or id, add rows, then tune stock, sell price, buy price, and per-item restock.</span>
+                </div>
+
+                <div class="drop-toolbar">
+                  <label class="search-field">
+                    Item search
+                    <input v-model="shopItemQuery" type="search" placeholder="Search item name or id..." @keyup.enter.prevent="searchShopItems()" />
+                  </label>
+                  <button type="button" @click="searchShopItems()" :disabled="definitionLoading">Search items</button>
+                  <span v-if="shopItemSearchLoading" class="inline-status">Searching...</span>
+                  <button type="button" class="ghost" @click="showAdvancedShopItems = !showAdvancedShopItems">
+                    {{ showAdvancedShopItems ? 'Hide advanced JSON' : 'Advanced JSON' }}
+                  </button>
+                </div>
+
+                <div v-if="shopItemResults.length" class="item-results">
+                  <button v-for="item in shopItemResults" :key="`shop-result-${item.id}`" type="button" @click="addShopItemFromItem(item)">
+                    <strong>{{ item.name }}</strong>
+                    <span>{{ item.id }}<template v-if="item.stackable"> - stackable</template><template v-if="item.noted"> - noted</template></span>
+                  </button>
+                </div>
+
+                <div class="drop-table-wrap">
+                  <table class="drop-table shop-table">
+                    <thead>
+                      <tr>
+                        <th>Item</th>
+                        <th>Stock</th>
+                        <th>Sell price</th>
+                        <th>Buy price</th>
+                        <th>Restock</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="row in shopRows" :key="row.uid">
+                        <td>
+                          <div class="item-cell">
+                            <input v-model="row.itemIdText" type="number" min="0" placeholder="Item id" @change="lookupShopItem(row)" />
+                            <input v-model="row.name" type="text" placeholder="Item name" />
+                          </div>
+                        </td>
+                        <td><input v-model="row.amountText" type="number" min="0" placeholder="Stock" /></td>
+                        <td><input v-model="row.priceText" type="number" min="0" placeholder="0 = default" /></td>
+                        <td><input v-model="row.buyPriceText" type="number" min="0" placeholder="default" /></td>
+                        <td><input v-model="row.restockTicksText" type="number" min="0" placeholder="shop default" /></td>
+                        <td>
+                          <div class="row-actions">
+                            <button type="button" class="ghost" @click="duplicateShopItem(row)">Duplicate</button>
+                            <button type="button" class="danger" @click="removeShopItem(row)">Delete</button>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr v-if="!shopRows.length">
+                        <td colspan="6" class="empty-drops">No shop stock yet. Search an item above and add it here.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div v-if="showAdvancedShopItems" class="advanced-drops">
+                  <div class="advanced-title">
+                    <strong>Advanced JSON</strong>
+                    <span>Use this for migrations or hand fixes. Edited JSON is applied only after syncing it into rows.</span>
+                  </div>
+                  <label class="wide">Shop items JSON <textarea v-model="shopDraft.itemsText" rows="10" @input="advancedShopItemsDirty = true"></textarea></label>
+                  <div class="actions">
+                    <button type="button" @click="syncShopRowsFromAdvanced">Sync JSON into rows</button>
+                    <button type="button" class="ghost" @click="syncAdvancedShopItemsFromRows">Refresh JSON from rows</button>
+                  </div>
+                </div>
+              </div>
               <label class="wide">Shop notes <textarea v-model="shopDraft.notes" rows="3"></textarea></label>
             </template>
 
@@ -435,6 +509,7 @@ export default {
       shopDraft: emptyShop(),
       dropText: { always: '[]', main: '[]', preroll: '[]', tertiary: '[]' },
       dropRows: [],
+      shopRows: [],
       dropTableFilter: 'all',
       dropTableOptions: [
         { key: 'always', label: 'Always' },
@@ -449,10 +524,18 @@ export default {
       itemSearchCache: {},
       itemSearchDebounce: null,
       itemSearchToken: 0,
+      shopItemQuery: '',
+      shopItemResults: [],
+      shopItemSearchLoading: false,
+      shopItemSearchDebounce: null,
+      shopItemSearchToken: 0,
       showAdvancedDrops: false,
       advancedDropsDirty: false,
+      showAdvancedShopItems: false,
+      advancedShopItemsDirty: false,
       mainEmptySlotsText: '0',
       nextDropUid: 1,
+      nextShopItemUid: 1,
       definitionLoaded: false,
       definitionLoading: false,
       filter: '',
@@ -529,6 +612,9 @@ export default {
     },
     itemQuery(query) {
       this.scheduleItemSearch(query);
+    },
+    shopItemQuery(query) {
+      this.scheduleShopItemSearch(query);
     }
   },
   created() {
@@ -536,6 +622,7 @@ export default {
   },
   beforeDestroy() {
     clearTimeout(this.itemSearchDebounce);
+    clearTimeout(this.shopItemSearchDebounce);
   },
   methods: {
     async fetchAll() {
@@ -611,11 +698,42 @@ export default {
       }
       this.itemSearchDebounce = setTimeout(() => this.searchItems(false), 220);
     },
+    scheduleShopItemSearch(query) {
+      clearTimeout(this.shopItemSearchDebounce);
+      const trimmed = query.trim();
+      if (!trimmed) {
+        this.shopItemResults = [];
+        this.shopItemSearchLoading = false;
+        return;
+      }
+      if (trimmed.length < 2 && !/^\d+$/.test(trimmed)) {
+        return;
+      }
+      this.shopItemSearchDebounce = setTimeout(() => this.searchShopItems(false), 220);
+    },
     async searchItems(force = true) {
-      const query = this.itemQuery.trim();
+      await this.searchItemOptions({
+        queryField: 'itemQuery',
+        resultsField: 'itemResults',
+        loadingField: 'itemSearchLoading',
+        tokenField: 'itemSearchToken',
+        force
+      });
+    },
+    async searchShopItems(force = true) {
+      await this.searchItemOptions({
+        queryField: 'shopItemQuery',
+        resultsField: 'shopItemResults',
+        loadingField: 'shopItemSearchLoading',
+        tokenField: 'shopItemSearchToken',
+        force
+      });
+    },
+    async searchItemOptions({ queryField, resultsField, loadingField, tokenField, force = true }) {
+      const query = this[queryField].trim();
       if (!query) {
-        this.itemResults = [];
-        this.itemSearchLoading = false;
+        this[resultsField] = [];
+        this[loadingField] = false;
         return;
       }
       if (!force && query.length < 2 && !/^\d+$/.test(query)) {
@@ -625,29 +743,29 @@ export default {
       const cacheKey = query.toLowerCase();
       const cached = this.itemSearchCache[cacheKey];
       if (cached) {
-        this.itemResults = cached;
+        this[resultsField] = cached;
         this.status = `Found ${cached.length} item matches.`;
-        this.itemSearchLoading = false;
+        this[loadingField] = false;
         return;
       }
-      const token = ++this.itemSearchToken;
-      this.itemSearchLoading = true;
+      const token = ++this[tokenField];
+      this[loadingField] = true;
       try {
         const res = await axios.get(`${API}/world-editor/items/search`, { params: { q: query, limit: 80 } });
-        if (token !== this.itemSearchToken || query !== this.itemQuery.trim()) {
+        if (token !== this[tokenField] || query !== this[queryField].trim()) {
           return;
         }
         const results = res.data.results || [];
         this.rememberItemSearch(cacheKey, results);
-        this.itemResults = results;
-        this.status = `Found ${this.itemResults.length} item matches.`;
+        this[resultsField] = results;
+        this.status = `Found ${results.length} item matches.`;
       } catch (err) {
-        if (token === this.itemSearchToken) {
+        if (token === this[tokenField]) {
           this.error = this.errorMessage(err);
         }
       } finally {
-        if (token === this.itemSearchToken) {
-          this.itemSearchLoading = false;
+        if (token === this[tokenField]) {
+          this[loadingField] = false;
         }
       }
     },
@@ -850,10 +968,14 @@ export default {
       const shop = this.shops.find(item => item.id === key);
       if (!shop && key) {
         this.shopDraft = { ...emptyShop(), id: key, name: key, npcIdsText: String(this.currentNpcId) };
+        this.shopRows = [];
+        this.advancedShopItemsDirty = false;
         return;
       }
       if (!shop) {
         this.shopDraft = { ...emptyShop(), npcIdsText: this.currentNpcId >= 0 ? String(this.currentNpcId) : '' };
+        this.shopRows = [];
+        this.advancedShopItemsDirty = false;
         return;
       }
       this.shopDraft = {
@@ -862,16 +984,22 @@ export default {
         notes: shop.notes || '',
         itemsText: this.formatJson(shop.items || [])
       };
+      this.shopRows = this.rowsFromShopItems(shop.items || []);
+      this.advancedShopItemsDirty = false;
     },
     resetDefinition() {
       this.definitionDraft = emptyDefinition();
       this.shopDraft = emptyShop();
       this.dropText = { always: '[]', main: '[]', preroll: '[]', tertiary: '[]' };
       this.dropRows = [];
+      this.shopRows = [];
       this.mainEmptySlotsText = '0';
       this.itemResults = [];
+      this.shopItemResults = [];
       this.itemSearchLoading = false;
+      this.shopItemSearchLoading = false;
       this.advancedDropsDirty = false;
+      this.advancedShopItemsDirty = false;
       this.definitionLoaded = false;
       this.npcImageUrl = '';
     },
@@ -933,8 +1061,8 @@ export default {
         this.error = 'Shop key is required.';
         return null;
       }
-      const items = this.parseJsonField(this.shopDraft.itemsText, 'Shop items JSON');
-      if (items === null) {
+      const items = this.shopItemsPayloadFromRows();
+      if (!items) {
         return null;
       }
       return {
@@ -1000,10 +1128,67 @@ export default {
       this.dropRows = this.dropRows.filter(item => item.uid !== row.uid);
       this.advancedDropsDirty = false;
     },
+    addShopItemFromItem(item) {
+      this.shopRows.push({
+        uid: this.nextShopItemUid++,
+        itemIdText: String(item.id),
+        name: item.name,
+        amountText: '1',
+        priceText: '0',
+        buyPriceText: '',
+        restockTicksText: '',
+        noted: Boolean(item.noted)
+      });
+      this.shopItemResults = [];
+      this.shopItemQuery = '';
+      this.advancedShopItemsDirty = false;
+    },
+    async lookupShopItem(row) {
+      const itemId = Number(row.itemIdText);
+      if (!Number.isInteger(itemId) || itemId < 0) {
+        return;
+      }
+      try {
+        const res = await axios.get(`${API}/world-editor/items/search`, { params: { q: String(itemId), limit: 20 } });
+        const match = (res.data.results || []).find(item => Number(item.id) === itemId);
+        if (match) {
+          row.name = match.name;
+          row.noted = Boolean(match.noted);
+        }
+      } catch (err) {
+        this.error = this.errorMessage(err);
+      }
+    },
+    duplicateShopItem(row) {
+      this.shopRows.push({
+        ...row,
+        uid: this.nextShopItemUid++
+      });
+      this.advancedShopItemsDirty = false;
+    },
+    removeShopItem(row) {
+      this.shopRows = this.shopRows.filter(item => item.uid !== row.uid);
+      this.advancedShopItemsDirty = false;
+    },
     rowsFromDrops(drops = {}) {
       return ['always', 'main', 'tertiary', 'preroll'].flatMap(table => {
         return (drops[table] || []).map(drop => this.rowFromDrop(table, drop));
       });
+    },
+    rowsFromShopItems(items = []) {
+      return (items || []).map(item => this.rowFromShopItem(item));
+    },
+    rowFromShopItem(item) {
+      return {
+        uid: this.nextShopItemUid++,
+        itemIdText: item.itemId == null ? '' : String(item.itemId),
+        name: item.name || '',
+        amountText: String(item.amount == null ? 1 : item.amount),
+        priceText: String(item.price == null ? 0 : item.price),
+        buyPriceText: item.buyPrice == null ? '' : String(item.buyPrice),
+        restockTicksText: item.restockTicks == null ? '' : String(item.restockTicks),
+        noted: Boolean(item.noted)
+      };
     },
     rowFromDrop(table, drop) {
       const oneIn = this.oneInFromDrop(table, drop);
@@ -1091,6 +1276,47 @@ export default {
       }
       return { table, entry };
     },
+    shopItemsPayloadFromRows() {
+      const items = [];
+      for (const row of this.shopRows) {
+        const built = this.shopItemEntryFromRow(row);
+        if (!built) {
+          return null;
+        }
+        items.push(built);
+      }
+      this.shopDraft.itemsText = this.formatJson(items);
+      return items;
+    },
+    shopItemEntryFromRow(row) {
+      const itemId = this.requiredPositiveInt(row.itemIdText, 'Shop item id', 0);
+      const amount = this.requiredPositiveInt(row.amountText || '0', `Shop stock for ${row.name || row.itemIdText}`, 0);
+      const price = this.requiredPositiveInt(row.priceText || '0', `Shop sell price for ${row.name || row.itemIdText}`, 0);
+      if (itemId === null || amount === null || price === null) {
+        return null;
+      }
+      const entry = {
+        itemId,
+        name: row.name || null,
+        amount,
+        price
+      };
+      if (row.buyPriceText !== '') {
+        const buyPrice = this.requiredPositiveInt(row.buyPriceText, `Shop buy price for ${row.name || itemId}`, 0);
+        if (buyPrice === null) {
+          return null;
+        }
+        entry.buyPrice = buyPrice;
+      }
+      if (row.restockTicksText !== '') {
+        const restockTicks = this.requiredPositiveInt(row.restockTicksText, `Shop restock ticks for ${row.name || itemId}`, 0);
+        if (restockTicks === null) {
+          return null;
+        }
+        entry.restockTicks = restockTicks;
+      }
+      return entry;
+    },
     syncAdvancedDropsFromRows() {
       const drops = this.dropsPayloadFromRows();
       if (drops) {
@@ -1113,6 +1339,26 @@ export default {
       this.dropRows = this.rowsFromDrops(drops);
       this.advancedDropsDirty = false;
       this.status = 'Drop rows synced from advanced JSON.';
+    },
+    syncAdvancedShopItemsFromRows() {
+      const items = this.shopItemsPayloadFromRows();
+      if (items) {
+        this.advancedShopItemsDirty = false;
+        this.status = 'Shop items JSON refreshed from rows.';
+      }
+    },
+    syncShopRowsFromAdvanced() {
+      const items = this.parseJsonField(this.shopDraft.itemsText, 'Shop items JSON');
+      if (items === null) {
+        return;
+      }
+      if (!Array.isArray(items)) {
+        this.error = 'Shop items JSON must be an array.';
+        return;
+      }
+      this.shopRows = this.rowsFromShopItems(items);
+      this.advancedShopItemsDirty = false;
+      this.status = 'Shop rows synced from advanced JSON.';
     },
     usesOneIn(table) {
       return table === 'tertiary' || table === 'preroll';

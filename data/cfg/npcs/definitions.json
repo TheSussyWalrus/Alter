@@ -1,5 +1,67 @@
 [
   {
+    "id": 2813,
+    "name": "Shop keeper",
+    "shopKey": "yanille_general",
+    "tags": [],
+    "combat": {
+      "stats": {
+        "attack": 0,
+        "strength": 0,
+        "defence": 0,
+        "ranged": 0,
+        "magic": 0,
+        "hitpoints": 10
+      },
+      "bonuses": {
+        "attackStab": 0,
+        "attackSlash": 0,
+        "attackCrush": 0,
+        "attackMagic": 0,
+        "attackRanged": 0,
+        "defenceStab": 0,
+        "defenceSlash": 0,
+        "defenceCrush": 0,
+        "defenceMagic": 0,
+        "defenceRanged": 0,
+        "meleeStrength": 0,
+        "rangedStrength": 0,
+        "magicDamage": 0
+      },
+      "animations": {
+        "attack": 422,
+        "block": 424,
+        "death": 836
+      },
+      "sounds": {},
+      "attackSpeed": 4,
+      "respawnDelay": 25,
+      "slayerReq": 1,
+      "slayerXp": 0.0,
+      "poisonChance": 0.0,
+      "venomChance": 0.0,
+      "immunePoison": false,
+      "immuneVenom": false,
+      "immuneCannons": false,
+      "immuneThralls": false
+    },
+    "aggression": {
+      "aggressive": false,
+      "radius": 0,
+      "searchDelay": 5,
+      "alwaysAggressive": false,
+      "retaliates": true
+    },
+    "followRange": 0,
+    "drops": {
+      "always": [],
+      "main": [],
+      "mainEmptySlots": 0,
+      "preroll": [],
+      "tertiary": []
+    }
+  },
+  {
     "id": 3313,
     "name": "Giant rat",
     "tags": [

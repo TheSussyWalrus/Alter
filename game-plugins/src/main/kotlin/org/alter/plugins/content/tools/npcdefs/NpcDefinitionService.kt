@@ -445,7 +445,7 @@ class NpcDefinitionService : Service {
         val stockSize = shop.items.size.coerceAtLeast(Shop.DEFAULT_STOCK_SIZE)
         val built =
             Shop(
-                name = shop.id,
+                name = shop.name.ifBlank { shop.id },
                 stockType = if (shop.sellsItems) StockType.NORMAL else StockType.INFINITE,
                 purchasePolicy = if (shop.buysItems) PurchasePolicy.BUY_TRADEABLES else PurchasePolicy.BUY_NONE,
                 currency = ItemCurrency(shop.currencyItemId, currencyName(shop.currencyItemId, singular = true), currencyName(shop.currencyItemId, singular = false)),
