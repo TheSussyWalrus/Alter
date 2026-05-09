@@ -15,6 +15,7 @@ class SlayerService : Service {
     val tasks: MutableList<SlayerTaskEntry> = mutableListOf()
 
     private val mastersByNpc: Int2ObjectOpenHashMap<SlayerMasterEntry> = Int2ObjectOpenHashMap()
+    private val mastersByName: MutableMap<String, SlayerMasterEntry> = mutableMapOf()
     private val tasksByName: MutableMap<String, SlayerTaskEntry> = mutableMapOf()
     private val tasksByNpc: Int2ObjectOpenHashMap<SlayerTaskEntry> = Int2ObjectOpenHashMap()
 
@@ -33,6 +34,7 @@ class SlayerService : Service {
             master.npcId = getRSCM(master.npc)
             master.taskKeys = master.taskNames.map { it.lowercase() }.toSet()
             mastersByNpc[master.npcId] = master
+            mastersByName[master.name.lowercase()] = master
         }
 
         SkillJson.logLoaded("slayer master", masters.size)
@@ -40,6 +42,8 @@ class SlayerService : Service {
     }
 
     fun masterFor(npcId: Int): SlayerMasterEntry? = mastersByNpc[npcId]
+
+    fun masterForName(name: String): SlayerMasterEntry? = mastersByName[name.lowercase()]
 
     fun taskFor(name: String): SlayerTaskEntry? = tasksByName[name.lowercase()]
 

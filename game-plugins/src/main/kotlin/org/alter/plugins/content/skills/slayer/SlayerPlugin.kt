@@ -7,6 +7,7 @@ import org.alter.game.model.World
 import org.alter.game.model.attr.KILLER_ATTR
 import org.alter.game.model.entity.Npc
 import org.alter.game.model.entity.Player
+import org.alter.game.model.priv.Privilege
 import org.alter.game.model.queue.QueueTask
 import org.alter.game.plugin.KotlinPlugin
 import org.alter.game.plugin.PluginRepository
@@ -26,9 +27,28 @@ class SlayerPlugin(
         onWorldInit {
             val service = world.getService(SlayerService::class.java) ?: return@onWorldInit
             service.masters.forEach { master ->
-                onNpcOption(master.npc, option = "talk-to") {
+                onNpcOption(master.npc, option = 1) {
                     player.queue { dialog(player, master, service) }
                 }
+            }
+        }
+
+        onCommand("slayer", Privilege.ADMIN_POWER, description = "Assign or check a Slayer task") {
+            val service = world.getService(SlayerService::class.java) ?: return@onCommand
+            val args = player.getCommandArgs()
+            val requestedMaster = args.firstOrNull()?.lowercase()
+            val master =
+                when (requestedMaster) {
+                    null, "", "task", "check" -> null
+                    else -> service.masterForName(requestedMaster)
+                }
+
+            if (master != null) {
+                assignTaskFromCommand(player, master, service)
+            } else if (requestedMaster == null || requestedMaster == "task" || requestedMaster == "check") {
+                messageCurrentTask(player)
+            } else {
+                player.message("Unknown Slayer master. Try: ${service.masters.joinToString { it.name.lowercase() }}.")
             }
         }
 
@@ -107,6 +127,45 @@ class SlayerPlugin(
         }
 
         chatNpc(player, "You need to kill ${current.amountRemaining} more ${current.taskName}.")
+    }
+
+    private fun messageCurrentTask(player: Player) {
+        val current = player.state(SLAYER_STATE)
+        if (current.amountRemaining <= 0 || current.taskName.isBlank()) {
+            player.message("You don't currently have a Slayer assignment.")
+            return
+        }
+
+        player.message("Current Slayer assignment: ${current.taskName} (${current.amountRemaining} remaining).")
+        player.message("Slayer streak: ${current.streak}. Slayer points: ${current.points}.")
+    }
+
+    private fun assignTaskFromCommand(player: Player, master: SlayerMasterEntry, service: SlayerService) {
+        if (player.getSkills().getBaseLevel(Skills.SLAYER) < master.minLevel) {
+            player.message("You need a Slayer level of ${master.minLevel} to use ${master.name}.")
+            return
+        }
+
+        val current = player.state(SLAYER_STATE)
+        val task = pickTask(player, master, service)
+        if (task == null) {
+            player.message("${master.name} does not have a suitable assignment for your Slayer level.")
+            return
+        }
+
+        val amount = if (master.minAmount == master.maxAmount) master.minAmount else world.random(master.minAmount..master.maxAmount)
+        player.state(
+            SLAYER_STATE,
+            current.copy(
+                master = master.name,
+                taskName = task.name,
+                npcKey = task.npcKeys.firstOrNull().orEmpty(),
+                amountAssigned = amount,
+                amountRemaining = amount,
+            ),
+        )
+
+        player.message("New Slayer assignment from ${master.name}: ${task.name} ($amount remaining).")
     }
 
     private fun pickTask(player: Player, master: SlayerMasterEntry, service: SlayerService): SlayerTaskEntry? {
