@@ -22,6 +22,11 @@ const routes = [
     path: '/npc-spawns',
     name: 'npc-spawns',
     component: () => import('../views/NpcSpawnsView.vue')
+  },
+  {
+    path: '/qa',
+    name: 'qa',
+    component: () => import('../views/QaView.vue')
   }
 ]
 

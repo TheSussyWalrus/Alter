@@ -1,0 +1,646 @@
+<template>
+  <div class="qa-page">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">World QA</p>
+        <h1>AI QA Characters</h1>
+        <p class="lede">
+          Run deterministic QA characters against skills, world routes, and gameplay loops, then inspect session reports from one central place.
+        </p>
+      </div>
+      <div class="status-card" :class="{ running: qaStatus && qaStatus.running }">
+        <span>{{ qaStatusLabel }}</span>
+        <strong>{{ qaActiveSessions.length }}</strong>
+        <small>active sessions</small>
+      </div>
+    </header>
+
+    <section v-if="error" class="notice error">{{ error }}</section>
+    <section v-if="status" class="notice">{{ status }}</section>
+
+    <section class="qa-banner">
+      <div>
+        <strong>QA Control Center</strong>
+        <small>{{ qaScenarios.length }} scenarios / {{ qaSessions.length }} recent sessions</small>
+      </div>
+      <div class="banner-actions">
+        <button type="button" @click="fetchQaPanel" :disabled="qaLoading">Refresh QA</button>
+        <button type="button" class="ghost" @click="stopQaSession(qaSelectedSessionId)" :disabled="qaLoading || !qaSelectedSessionId">
+          Stop selected
+        </button>
+      </div>
+    </section>
+
+    <main class="qa-shell">
+      <section class="qa-grid">
+        <article class="qa-card">
+          <div class="qa-card-title">
+            <h3>Status</h3>
+            <span v-if="qaLoading" class="inline-status">Loading...</span>
+          </div>
+          <div class="qa-status-grid">
+            <span>
+              <strong>{{ qaStatusLabel }}</strong>
+              <small>Runner</small>
+            </span>
+            <span>
+              <strong>{{ qaActiveSessions.length }}</strong>
+              <small>Active</small>
+            </span>
+            <span>
+              <strong>{{ qaScenarios.length }}</strong>
+              <small>Scenarios</small>
+            </span>
+          </div>
+          <p v-if="qaStatusMessage" class="qa-muted">{{ qaStatusMessage }}</p>
+          <p v-if="qaSessionsPath" class="qa-path">{{ qaSessionsPath }}</p>
+        </article>
+
+        <article class="qa-card">
+          <div class="qa-card-title">
+            <h3>Start Scenario</h3>
+          </div>
+          <label>
+            Scenario
+            <select v-model="qaSelectedScenarioId">
+              <option value="skills-basic">skills-basic</option>
+              <option v-for="scenario in qaVisibleScenarios" :key="qaScenarioId(scenario)" :value="qaScenarioId(scenario)">
+                {{ qaScenarioLabel(scenario) }}
+              </option>
+            </select>
+          </label>
+          <div v-if="qaSelectedScenario" class="qa-scenario-note">
+            {{ qaSelectedScenario.description || qaSelectedScenario.summary || 'No description provided.' }}
+          </div>
+          <div class="actions">
+            <button type="button" @click="startQaSession" :disabled="qaLoading">Start QA character</button>
+          </div>
+        </article>
+      </section>
+
+      <section class="qa-layout">
+        <article class="qa-card">
+          <div class="qa-card-title">
+            <h3>Recent Sessions</h3>
+            <button type="button" class="ghost" @click="fetchQaSessions" :disabled="qaLoading">Refresh</button>
+          </div>
+          <div class="qa-session-list">
+            <button
+              v-for="session in qaSessions"
+              :key="qaSessionId(session)"
+              type="button"
+              class="qa-session-row"
+              :class="{ selected: qaSelectedSessionId === qaSessionId(session) }"
+              @click="selectQaSession(qaSessionId(session))"
+            >
+              <span>
+                <strong>{{ session.scenarioId || session.scenario || 'QA session' }}</strong>
+                <small>{{ qaSessionId(session) }}</small>
+              </span>
+              <em>{{ session.status || session.state || 'unknown' }}</em>
+            </button>
+            <p v-if="!qaSessions.length" class="qa-empty">No QA sessions yet. Start a scenario to create one.</p>
+          </div>
+        </article>
+
+        <article class="qa-card qa-detail">
+          <div class="qa-card-title">
+            <h3>Session Detail</h3>
+            <span v-if="qaDetailLoading" class="inline-status">Loading...</span>
+          </div>
+          <div v-if="qaSelectedSession" class="qa-detail-body">
+            <div class="qa-meta">
+              <span><strong>{{ qaSelectedSession.status || qaSelectedSession.state || 'unknown' }}</strong><small>Status</small></span>
+              <span><strong>{{ qaSelectedSession.scenarioId || qaSelectedSession.scenario || 'unknown' }}</strong><small>Scenario</small></span>
+              <span><strong>{{ qaSelectedSession.startedAt || qaSelectedSession.createdAt || '-' }}</strong><small>Started</small></span>
+            </div>
+
+            <section class="qa-section">
+              <h4>Steps</h4>
+              <ol v-if="qaSelectedSessionSteps.length" class="qa-ordered">
+                <li v-for="(step, index) in qaSelectedSessionSteps" :key="`step-${index}`">{{ formatQaItem(step) }}</li>
+              </ol>
+              <p v-else class="qa-empty">No steps recorded.</p>
+            </section>
+
+            <section class="qa-section">
+              <h4>Observations</h4>
+              <ul v-if="qaSelectedSessionObservations.length" class="qa-list">
+                <li v-for="(item, index) in qaSelectedSessionObservations" :key="`observation-${index}`">{{ formatQaItem(item) }}</li>
+              </ul>
+              <p v-else class="qa-empty">No observations recorded.</p>
+            </section>
+
+            <section class="qa-section">
+              <h4>Assertions</h4>
+              <ul v-if="qaSelectedSessionAssertions.length" class="qa-list">
+                <li v-for="(item, index) in qaSelectedSessionAssertions" :key="`assertion-${index}`" :class="{ failed: qaAssertionFailed(item) }">
+                  {{ formatQaItem(item) }}
+                </li>
+              </ul>
+              <p v-else class="qa-empty">No assertions recorded.</p>
+            </section>
+
+            <section class="qa-section">
+              <h4>Warnings</h4>
+              <ul v-if="qaSelectedSessionWarnings.length" class="qa-list warning">
+                <li v-for="(item, index) in qaSelectedSessionWarnings" :key="`warning-${index}`">{{ formatQaItem(item) }}</li>
+              </ul>
+              <p v-else class="qa-empty">No warnings recorded.</p>
+            </section>
+          </div>
+          <p v-else class="qa-empty">Select a session to inspect its run details.</p>
+        </article>
+      </section>
+    </main>
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+
+const API = 'http://127.0.0.1:4567';
+
+export default {
+  name: 'QaView',
+  data() {
+    return {
+      error: '',
+      status: '',
+      qaLoading: false,
+      qaDetailLoading: false,
+      qaStatus: null,
+      qaScenarios: [],
+      qaSessions: [],
+      qaSelectedScenarioId: 'skills-basic',
+      qaSelectedSessionId: '',
+      qaSelectedSession: null
+    };
+  },
+  computed: {
+    qaActiveSessions() {
+      return this.qaSessions.filter(session => ['running', 'active', 'starting'].includes(String(session.status || session.state || '').toLowerCase()));
+    },
+    qaSelectedScenario() {
+      return this.qaScenarios.find(scenario => this.qaScenarioId(scenario) === this.qaSelectedScenarioId);
+    },
+    qaVisibleScenarios() {
+      return this.qaScenarios.filter(scenario => this.qaScenarioId(scenario) !== 'skills-basic');
+    },
+    qaStatusLabel() {
+      if (!this.qaStatus) {
+        return 'Unknown';
+      }
+      if (this.qaStatus.running) {
+        return 'Running';
+      }
+      return this.qaStatus.status || this.qaStatus.state || (this.qaStatus.enabled === false ? 'Disabled' : 'Ready');
+    },
+    qaStatusMessage() {
+      if (!this.qaStatus) {
+        return 'QA status has not been loaded yet.';
+      }
+      return this.qaStatus.message || this.qaStatus.detail || this.qaStatus.error || '';
+    },
+    qaSessionsPath() {
+      return this.qaStatus?.sessionsPath || '';
+    },
+    qaSelectedSessionSteps() {
+      return this.qaSelectedSession?.steps || [];
+    },
+    qaSelectedSessionObservations() {
+      return this.qaSelectedSession?.observations || [];
+    },
+    qaSelectedSessionAssertions() {
+      return this.qaSelectedSession?.assertions || [];
+    },
+    qaSelectedSessionWarnings() {
+      return this.qaSelectedSession?.warnings || [];
+    }
+  },
+  created() {
+    this.fetchQaPanel();
+  },
+  methods: {
+    async fetchQaPanel() {
+      this.qaLoading = true;
+      this.error = '';
+      try {
+        const [status, scenarios, sessions] = await Promise.all([
+          axios.get(`${API}/world-editor/qa/status`),
+          axios.get(`${API}/world-editor/qa/scenarios`),
+          axios.get(`${API}/world-editor/qa/sessions`)
+        ]);
+        this.qaStatus = status.data || null;
+        this.qaScenarios = this.qaArrayFromResponse(scenarios.data, 'scenarios');
+        this.qaSessions = this.qaArrayFromResponse(sessions.data, 'sessions');
+        this.ensureQaSelection();
+        if (this.qaSelectedSessionId) {
+          await this.fetchQaSession(this.qaSelectedSessionId);
+        }
+      } catch (err) {
+        this.error = this.errorMessage(err);
+      } finally {
+        this.qaLoading = false;
+      }
+    },
+    async fetchQaSessions() {
+      this.qaLoading = true;
+      this.error = '';
+      try {
+        const res = await axios.get(`${API}/world-editor/qa/sessions`);
+        this.qaSessions = this.qaArrayFromResponse(res.data, 'sessions');
+        this.ensureQaSelection();
+      } catch (err) {
+        this.error = this.errorMessage(err);
+      } finally {
+        this.qaLoading = false;
+      }
+    },
+    async startQaSession() {
+      this.qaLoading = true;
+      this.error = '';
+      try {
+        const scenarioId = this.qaSelectedScenarioId || 'skills-basic';
+        const res = await axios.post(`${API}/world-editor/qa/sessions`, { scenarioId });
+        const session = res.data?.session || res.data;
+        this.status = `Started QA scenario ${scenarioId}.`;
+        if (session && this.qaSessionId(session)) {
+          this.qaSelectedSessionId = this.qaSessionId(session);
+          this.qaSelectedSession = session;
+        }
+        await this.fetchQaPanel();
+      } catch (err) {
+        this.error = this.errorMessage(err);
+      } finally {
+        this.qaLoading = false;
+      }
+    },
+    async stopQaSession(sessionId) {
+      if (!sessionId) {
+        return;
+      }
+      this.qaLoading = true;
+      this.error = '';
+      try {
+        const res = await axios.post(`${API}/world-editor/qa/sessions/${encodeURIComponent(sessionId)}/stop`);
+        this.status = `Stopped QA session ${sessionId}.`;
+        this.qaSelectedSession = res.data?.session || res.data || this.qaSelectedSession;
+        await this.fetchQaPanel();
+      } catch (err) {
+        this.error = this.errorMessage(err);
+      } finally {
+        this.qaLoading = false;
+      }
+    },
+    async selectQaSession(sessionId) {
+      this.qaSelectedSessionId = sessionId;
+      await this.fetchQaSession(sessionId);
+    },
+    async fetchQaSession(sessionId) {
+      if (!sessionId) {
+        this.qaSelectedSession = null;
+        return;
+      }
+      this.qaDetailLoading = true;
+      this.error = '';
+      try {
+        const res = await axios.get(`${API}/world-editor/qa/sessions/${encodeURIComponent(sessionId)}`);
+        this.qaSelectedSession = res.data?.session || res.data;
+      } catch (err) {
+        this.error = this.errorMessage(err);
+      } finally {
+        this.qaDetailLoading = false;
+      }
+    },
+    ensureQaSelection() {
+      if (!this.qaSelectedScenarioId) {
+        this.qaSelectedScenarioId = 'skills-basic';
+      }
+      const selectedStillExists = this.qaSessions.some(session => this.qaSessionId(session) === this.qaSelectedSessionId);
+      if (!selectedStillExists) {
+        const first = this.qaSessions[0];
+        this.qaSelectedSessionId = first ? this.qaSessionId(first) : '';
+        this.qaSelectedSession = first || null;
+      }
+      if (this.qaSelectedSessionId && (!this.qaSelectedSession || this.qaSessionId(this.qaSelectedSession) !== this.qaSelectedSessionId)) {
+        const summary = this.qaSessions.find(session => this.qaSessionId(session) === this.qaSelectedSessionId);
+        this.qaSelectedSession = summary || null;
+      }
+    },
+    qaArrayFromResponse(data, key) {
+      if (Array.isArray(data)) {
+        return data;
+      }
+      if (Array.isArray(data?.[key])) {
+        return data[key];
+      }
+      if (Array.isArray(data?.results)) {
+        return data.results;
+      }
+      if (Array.isArray(data?.items)) {
+        return data.items;
+      }
+      return [];
+    },
+    qaScenarioId(scenario) {
+      return String(scenario?.id || scenario?.scenarioId || scenario?.key || scenario?.name || '');
+    },
+    qaScenarioLabel(scenario) {
+      const id = this.qaScenarioId(scenario);
+      const name = scenario?.name || scenario?.title || id;
+      return id && name !== id ? `${name} (${id})` : name;
+    },
+    qaSessionId(session) {
+      return String(session?.id || session?.sessionId || session?.key || '');
+    },
+    formatQaItem(item) {
+      if (item == null) {
+        return '';
+      }
+      if (typeof item === 'string') {
+        return item;
+      }
+      return item.message || item.description || item.summary || item.name || JSON.stringify(item);
+    },
+    qaAssertionFailed(item) {
+      if (!item || typeof item === 'string') {
+        return false;
+      }
+      return item.passed === false || item.success === false || String(item.status || '').toLowerCase() === 'failed';
+    },
+    errorMessage(err) {
+      return err?.response?.data?.error || err?.response?.data?.message || err?.message || String(err);
+    }
+  }
+};
+</script>
+
+<style scoped>
+.qa-page {
+  min-height: 100vh;
+  padding: 32px;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(220, 202, 171, 0.44), transparent 28%),
+    linear-gradient(135deg, #fff9eb 0%, #f2f5ed 42%, #e6ece2 100%);
+  color: #26372d;
+  font-family: "Poppins", sans-serif;
+}
+
+.hero,
+.qa-banner,
+.qa-card-title,
+.qa-meta,
+.qa-status-grid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.hero {
+  margin-bottom: 20px;
+}
+
+.eyebrow,
+label,
+.qa-section h4 {
+  margin: 0;
+  color: #4f5d50;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1,
+h3 {
+  margin: 4px 0 0;
+  color: #172820;
+}
+
+.lede {
+  max-width: 720px;
+  margin-top: 8px;
+  color: #657365;
+  line-height: 1.45;
+}
+
+.status-card {
+  min-width: 180px;
+  padding: 18px;
+  border-radius: 20px;
+  background: #f6eddb;
+  box-shadow: 0 16px 40px rgba(38, 55, 45, 0.12);
+}
+
+.status-card.running {
+  background: #26372d;
+  color: #fff9eb;
+}
+
+.status-card span,
+.status-card small {
+  display: block;
+  opacity: 0.78;
+}
+
+.status-card strong {
+  display: block;
+  margin: 4px 0;
+  font-size: 40px;
+}
+
+.notice {
+  margin-bottom: 16px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: #dfe8d8;
+  color: #26372d;
+}
+
+.notice.error {
+  background: #ffe1d7;
+  color: #9f3117;
+}
+
+.qa-banner,
+.qa-card {
+  border: 1px solid rgba(38, 55, 45, 0.12);
+  border-radius: 22px;
+  background: rgba(255, 253, 247, 0.84);
+  box-shadow: 0 14px 32px rgba(38, 55, 45, 0.08);
+}
+
+.qa-banner {
+  margin-bottom: 16px;
+  padding: 18px;
+}
+
+.qa-banner small,
+.qa-muted,
+.qa-empty,
+.qa-scenario-note,
+.qa-path,
+.qa-status-grid small,
+.qa-meta small {
+  color: #6e786f;
+}
+
+.banner-actions,
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+button {
+  border: 0;
+  border-radius: 14px;
+  padding: 12px 16px;
+  background: #26372d;
+  color: #fff9eb;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+button.ghost {
+  background: #d9c8aa;
+  color: #26372d;
+}
+
+.qa-shell,
+.qa-session-list,
+.qa-detail-body,
+.qa-section {
+  display: grid;
+  gap: 16px;
+}
+
+.qa-grid,
+.qa-layout {
+  display: grid;
+  gap: 16px;
+}
+
+.qa-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.qa-layout {
+  grid-template-columns: minmax(280px, 380px) 1fr;
+  align-items: start;
+}
+
+.qa-card {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+}
+
+label {
+  display: grid;
+  gap: 8px;
+}
+
+select {
+  width: 100%;
+  border: 1px solid rgba(38, 55, 45, 0.22);
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: #fffdf7;
+  color: #26372d;
+  font: inherit;
+}
+
+.inline-status {
+  color: #6e786f;
+  font-size: 13px;
+}
+
+.qa-status-grid span,
+.qa-meta span {
+  display: grid;
+  flex: 1;
+  gap: 4px;
+  padding: 12px;
+  border-radius: 14px;
+  background: #f6eddb;
+}
+
+.qa-status-grid strong,
+.qa-meta strong {
+  color: #26372d;
+}
+
+.qa-path {
+  overflow-wrap: anywhere;
+  font-size: 12px;
+}
+
+.qa-session-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid transparent;
+  background: #f6eddb;
+  color: #26372d;
+  text-align: left;
+}
+
+.qa-session-row.selected {
+  border-color: #26372d;
+  background: #26372d;
+  color: #fff9eb;
+}
+
+.qa-session-row small,
+.qa-session-row em {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  font-style: normal;
+  opacity: 0.75;
+}
+
+.qa-section {
+  padding: 14px;
+  border-radius: 16px;
+  background: #f6eddb;
+}
+
+.qa-list,
+.qa-ordered {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 22px;
+  color: #435044;
+  line-height: 1.45;
+}
+
+.qa-list.warning li,
+.qa-list li.failed {
+  color: #9f3117;
+  font-weight: 800;
+}
+
+@media (max-width: 960px) {
+  .hero,
+  .qa-banner {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .qa-grid,
+  .qa-layout {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

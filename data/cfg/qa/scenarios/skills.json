@@ -1,0 +1,352 @@
+{
+  "id": "skills-basic",
+  "name": "Basic Skills QA",
+  "description": "Deterministic V1 smoke scenario for QaBotService covering core skill interactions from a Yanille-centered staging area, plus availability checks for partially implemented or missing systems.",
+  "seed": 9001,
+  "defaultTimeoutTicks": 80,
+  "steps": [
+    {
+      "id": "woodcutting",
+      "skill": "woodcutting",
+      "category": "gathering",
+      "type": "resource-probe",
+      "setup": {
+        "origin": { "area": "yanille", "x": 2606, "z": 3093, "height": 0 },
+        "inventory": [{ "item": "item.bronze_axe", "amount": 1 }],
+        "skills": { "woodcutting": 1 },
+        "target": {
+          "semantic": "nearest_tree",
+          "objects": ["object.tree_1276", "object.tree_1277", "object.tree_1278", "object.tree_1279", "object.tree_1280"],
+          "searchRadius": 96
+        }
+      },
+      "action": {
+        "interact": { "target": "nearest_tree", "option": "chop-down" },
+        "repeatUntil": { "inventoryContains": "item.logs", "minAmount": 1 }
+      },
+      "expect": {
+        "inventoryDelta": [{ "item": "item.logs", "minAmount": 1 }],
+        "experienceDelta": { "skill": "woodcutting", "min": 25.0 },
+        "messagesAny": ["You get some logs.", "You swing your axe at the tree."]
+      },
+      "timeoutTicks": 90,
+      "failureClass": "skill-action"
+    },
+    {
+      "id": "mining",
+      "skill": "mining",
+      "category": "gathering",
+      "type": "resource-probe",
+      "setup": {
+        "origin": { "area": "yanille", "x": 2606, "z": 3093, "height": 0 },
+        "inventory": [{ "item": "item.bronze_pickaxe", "amount": 1 }],
+        "skills": { "mining": 1 },
+        "target": {
+          "semantic": "nearest_copper_or_tin_rock",
+          "objects": ["object.copper_rocks", "object.copper_rocks_10943", "object.copper_rocks_11161", "object.tin_rocks", "object.tin_rocks_11360", "object.tin_rocks_11361"],
+          "searchRadius": 160
+        }
+      },
+      "action": {
+        "interact": { "target": "nearest_copper_or_tin_rock", "option": "mine" },
+        "repeatUntil": { "inventoryContainsAny": ["item.copper_ore", "item.tin_ore"], "minAmount": 1 }
+      },
+      "expect": {
+        "inventoryDeltaAny": [{ "item": "item.copper_ore", "minAmount": 1 }, { "item": "item.tin_ore", "minAmount": 1 }],
+        "experienceDelta": { "skill": "mining", "min": 17.5 },
+        "messagesAny": ["You manage to mine some ore.", "You swing your pick at the rock."]
+      },
+      "timeoutTicks": 100,
+      "failureClass": "skill-action"
+    },
+    {
+      "id": "fishing",
+      "skill": "fishing",
+      "category": "gathering",
+      "type": "npc-resource-probe",
+      "setup": {
+        "origin": { "area": "yanille", "x": 2606, "z": 3093, "height": 0 },
+        "inventory": [{ "item": "item.small_fishing_net", "amount": 1 }],
+        "skills": { "fishing": 1 },
+        "target": {
+          "semantic": "nearest_net_fishing_spot",
+          "npcs": ["npc.fishing_spot", "npc.fishing_spot_1497", "npc.fishing_spot_1498", "npc.fishing_spot_1499", "npc.fishing_spot_1500"],
+          "searchRadius": 256
+        }
+      },
+      "action": {
+        "interact": { "target": "nearest_net_fishing_spot", "option": "net" },
+        "repeatUntil": { "inventoryContainsAny": ["item.raw_shrimps", "item.raw_anchovies"], "minAmount": 1 }
+      },
+      "expect": {
+        "inventoryDeltaAny": [{ "item": "item.raw_shrimps", "minAmount": 1 }, { "item": "item.raw_anchovies", "minAmount": 1 }],
+        "experienceDelta": { "skill": "fishing", "min": 10.0 },
+        "messagesAny": ["You catch some shrimps.", "You catch some anchovies."]
+      },
+      "timeoutTicks": 100,
+      "failureClass": "skill-action"
+    },
+    {
+      "id": "firemaking",
+      "skill": "firemaking",
+      "category": "production",
+      "type": "inventory-action-probe",
+      "setup": {
+        "origin": { "area": "yanille", "x": 2606, "z": 3093, "height": 0 },
+        "inventory": [{ "item": "item.tinderbox", "amount": 1 }, { "item": "item.logs", "amount": 1 }],
+        "skills": { "firemaking": 1 },
+        "ground": { "requiresOpenTile": true, "avoidBanks": true }
+      },
+      "action": {
+        "useItemOnItem": { "item": "item.tinderbox", "targetItem": "item.logs" }
+      },
+      "expect": {
+        "inventoryDelta": [{ "item": "item.logs", "maxAmount": -1 }],
+        "experienceDelta": { "skill": "firemaking", "min": 40.0 },
+        "worldObject": { "semantic": "fire", "nearPlayer": true }
+      },
+      "timeoutTicks": 40,
+      "failureClass": "skill-action"
+    },
+    {
+      "id": "cooking",
+      "skill": "cooking",
+      "category": "production",
+      "type": "object-action-probe",
+      "setup": {
+        "origin": { "area": "yanille", "x": 2606, "z": 3093, "height": 0 },
+        "inventory": [{ "item": "item.raw_shrimps", "amount": 1 }],
+        "skills": { "cooking": 1 },
+        "target": {
+          "semantic": "nearest_range_or_fire",
+          "objects": ["object.range", "object.cooking_range", "object.fire"],
+          "searchRadius": 96
+        }
+      },
+      "action": {
+        "useItemOnObject": { "item": "item.raw_shrimps", "target": "nearest_range_or_fire" }
+      },
+      "expect": {
+        "inventoryDeltaAny": [{ "item": "item.shrimps", "minAmount": 1 }, { "item": "item.burnt_shrimp", "minAmount": 1 }],
+        "experienceDelta": { "skill": "cooking", "min": 0.0 },
+        "messagesAny": ["You successfully cook the shrimps.", "You accidentally burn the shrimps."]
+      },
+      "timeoutTicks": 50,
+      "failureClass": "skill-action"
+    },
+    {
+      "id": "smithing",
+      "skill": "smithing",
+      "category": "production",
+      "type": "object-action-probe",
+      "setup": {
+        "origin": { "area": "yanille", "x": 2606, "z": 3093, "height": 0 },
+        "inventory": [{ "item": "item.copper_ore", "amount": 1 }, { "item": "item.tin_ore", "amount": 1 }],
+        "skills": { "smithing": 1 },
+        "target": {
+          "semantic": "nearest_furnace",
+          "objects": ["object.furnace"],
+          "searchRadius": 160
+        }
+      },
+      "action": {
+        "useItemOnObject": { "item": "item.copper_ore", "target": "nearest_furnace" },
+        "selectRecipe": "item.bronze_bar"
+      },
+      "expect": {
+        "inventoryDelta": [{ "item": "item.bronze_bar", "minAmount": 1 }],
+        "experienceDelta": { "skill": "smithing", "min": 6.2 },
+        "messagesAny": ["You smelt a bronze bar."]
+      },
+      "timeoutTicks": 70,
+      "failureClass": "skill-action"
+    },
+    {
+      "id": "crafting",
+      "skill": "crafting",
+      "category": "production",
+      "type": "inventory-action-probe",
+      "setup": {
+        "origin": { "area": "yanille", "x": 2606, "z": 3093, "height": 0 },
+        "inventory": [{ "item": "item.needle", "amount": 1 }, { "item": "item.thread", "amount": 1 }, { "item": "item.leather", "amount": 1 }],
+        "skills": { "crafting": 1 }
+      },
+      "action": {
+        "useItemOnItem": { "item": "item.needle", "targetItem": "item.leather" },
+        "selectRecipe": "item.leather_gloves"
+      },
+      "expect": {
+        "inventoryDelta": [{ "item": "item.leather_gloves", "minAmount": 1 }],
+        "experienceDelta": { "skill": "crafting", "min": 13.8 },
+        "messagesAny": ["You make a pair of leather gloves."]
+      },
+      "timeoutTicks": 40,
+      "failureClass": "skill-action"
+    },
+    {
+      "id": "fletching",
+      "skill": "fletching",
+      "category": "production",
+      "type": "inventory-action-probe",
+      "setup": {
+        "origin": { "area": "yanille", "x": 2606, "z": 3093, "height": 0 },
+        "inventory": [{ "item": "item.knife", "amount": 1 }, { "item": "item.logs", "amount": 1 }],
+        "skills": { "fletching": 1 }
+      },
+      "action": {
+        "useItemOnItem": { "item": "item.knife", "targetItem": "item.logs" },
+        "selectRecipe": "item.arrow_shaft"
+      },
+      "expect": {
+        "inventoryDelta": [{ "item": "item.arrow_shaft", "minAmount": 15 }],
+        "experienceDelta": { "skill": "fletching", "min": 5.0 },
+        "messagesAny": ["You fletch some arrow shafts."]
+      },
+      "timeoutTicks": 40,
+      "failureClass": "skill-action"
+    },
+    {
+      "id": "herblore",
+      "skill": "herblore",
+      "category": "production",
+      "type": "inventory-action-probe",
+      "setup": {
+        "origin": { "area": "yanille", "x": 2606, "z": 3093, "height": 0 },
+        "inventory": [{ "item": "item.grimy_guam_leaf", "amount": 1 }],
+        "skills": { "herblore": 3 }
+      },
+      "action": {
+        "interactInventory": { "item": "item.grimy_guam_leaf", "option": "clean" }
+      },
+      "expect": {
+        "inventoryDelta": [{ "item": "item.guam_leaf", "minAmount": 1 }],
+        "experienceDelta": { "skill": "herblore", "min": 2.5 },
+        "messagesAny": ["You clean the guam leaf."]
+      },
+      "timeoutTicks": 20,
+      "failureClass": "skill-action"
+    },
+    {
+      "id": "slayer-check",
+      "skill": "slayer",
+      "category": "service",
+      "type": "config-availability-probe",
+      "setup": {
+        "origin": { "area": "yanille", "x": 2606, "z": 3093, "height": 0 },
+        "skills": { "slayer": 1 },
+        "configRefs": ["data/cfg/slayer/slayer_masters.json", "data/cfg/slayer/slayer_tasks.json"],
+        "target": { "semantic": "slayer_master", "preferred": "npc.turael", "fallbackAllowed": true }
+      },
+      "action": {
+        "requestTask": { "master": "npc.turael" }
+      },
+      "expect": {
+        "configLoaded": true,
+        "taskAssigned": { "namesAny": ["zombies", "skeletons", "chaos druids", "banshees"], "minAmount": 10, "maxAmount": 15 },
+        "stateChange": "slayer_task_started"
+      },
+      "timeoutTicks": 60,
+      "failureClass": "content-wiring"
+    },
+    {
+      "id": "agility-check",
+      "skill": "agility",
+      "category": "movement",
+      "type": "config-availability-probe",
+      "setup": {
+        "origin": { "area": "yanille", "x": 2606, "z": 3093, "height": 0 },
+        "skills": { "agility": 1 },
+        "configRefs": ["data/cfg/agility/courses.json"],
+        "target": { "semantic": "agility_course", "preferred": "gnome_stronghold", "allowRemote": true }
+      },
+      "action": {
+        "validateCourse": { "courseId": "gnome_stronghold", "firstStepOnly": true }
+      },
+      "expect": {
+        "configLoaded": true,
+        "courseFound": "gnome_stronghold",
+        "firstStepHasOptions": ["cross", "walk-across", "balance"]
+      },
+      "timeoutTicks": 30,
+      "failureClass": "content-wiring"
+    },
+    {
+      "id": "farming-check",
+      "skill": "farming",
+      "category": "service",
+      "type": "config-availability-probe",
+      "setup": {
+        "origin": { "area": "yanille", "x": 2606, "z": 3093, "height": 0 },
+        "inventory": [{ "item": "item.seed_dibber", "amount": 1 }, { "item": "item.rake", "amount": 1 }, { "item": "item.potato_seed", "amount": 1 }],
+        "skills": { "farming": 1 },
+        "configRefs": ["data/cfg/farming/farming_patches.json", "data/cfg/farming/farming_state.json"],
+        "target": {
+          "semantic": "nearest_allotment_or_herb_patch",
+          "objects": ["allotment", "herb_patch"],
+          "searchRadius": 192
+        }
+      },
+      "action": {
+        "validatePatch": { "typesAny": ["allotment", "herb"], "cropAny": ["potato_seed", "grimy_guam_leaf"] }
+      },
+      "expect": {
+        "configLoaded": true,
+        "patchTypeAny": ["allotment", "herb"],
+        "cropLevelAtMost": 1
+      },
+      "timeoutTicks": 30,
+      "failureClass": "content-wiring"
+    },
+    {
+      "id": "runecrafting-missing",
+      "skill": "runecrafting",
+      "category": "negative",
+      "type": "missing-content-probe",
+      "setup": {
+        "origin": { "area": "yanille", "x": 2606, "z": 3093, "height": 0 },
+        "inventory": [{ "item": "item.rune_essence", "amount": 1 }],
+        "skills": { "runecrafting": 1 },
+        "configRefs": ["data/cfg/runecrafting/altars.json"],
+        "target": { "semantic": "air_altar", "fallbackAllowed": false }
+      },
+      "action": {
+        "attemptLoadAndRoute": { "system": "runecrafting", "content": "air_altar" }
+      },
+      "expect": {
+        "available": false,
+        "errorClass": "missing-content",
+        "botOutcome": "skip-with-reason"
+      },
+      "timeoutTicks": 10,
+      "failureClass": "missing-content"
+    },
+    {
+      "id": "world-sanity",
+      "skill": "none",
+      "category": "world",
+      "type": "world-sanity-probe",
+      "setup": {
+        "origin": { "area": "yanille", "x": 2606, "z": 3093, "height": 0 },
+        "configRefs": ["data/cfg/world.json", "data/cfg/spawns/npc_spawns.json"],
+        "anchors": [
+          { "id": "yanille_shop_keeper", "npcName": "Shop keeper", "x": 2596, "z": 3105, "height": 0 },
+          { "id": "yanille_giant_rat_line", "npcName": "Giant rat", "x": 2609, "z": 3102, "height": 0 }
+        ]
+      },
+      "action": {
+        "validateWorld": {
+          "worldId": 1,
+          "activity": "Skilling",
+          "spawnAnchorsRequired": ["yanille_shop_keeper", "yanille_giant_rat_line"]
+        }
+      },
+      "expect": {
+        "worldAvailable": true,
+        "worldTypesInclude": ["FREE"],
+        "spawnAnchorsFound": ["yanille_shop_keeper", "yanille_giant_rat_line"]
+      },
+      "timeoutTicks": 20,
+      "failureClass": "world-state"
+    }
+  ]
+}

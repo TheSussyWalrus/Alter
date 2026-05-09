@@ -81,6 +81,30 @@ class RestApiRoutes {
             worldEditorController.getNpcImage(req, res)
         }
 
+        get("/world-editor/qa/status") { _, res ->
+            worldEditorController.qaStatus(res)
+        }
+
+        get("/world-editor/qa/scenarios") { _, res ->
+            worldEditorController.listQaScenarios(res)
+        }
+
+        post("/world-editor/qa/sessions") { req, res ->
+            worldEditorController.startQaSession(req, res)
+        }
+
+        post("/world-editor/qa/sessions/:id/stop") { req, res ->
+            worldEditorController.stopQaSession(req, res)
+        }
+
+        get("/world-editor/qa/sessions") { req, res ->
+            worldEditorController.listQaSessions(req, res)
+        }
+
+        get("/world-editor/qa/sessions/:id") { req, res ->
+            worldEditorController.getQaSession(req, res)
+        }
+
         get("/world-editor/dev-players") { _, res ->
             worldEditorController.listDevPlayers(res)
         }

@@ -16,6 +16,7 @@ import org.alter.plugins.content.tools.npcspawns.NpcSpawnService
 import org.alter.plugins.content.tools.npcdefs.NpcDefinitionEntry
 import org.alter.plugins.content.tools.npcdefs.NpcDefinitionService
 import org.alter.plugins.content.tools.npcdefs.NpcShopDefinition
+import org.alter.plugins.content.tools.qabot.QaBotService
 import spark.Request
 import spark.Response
 import java.nio.charset.StandardCharsets
@@ -293,6 +294,88 @@ class WorldEditorController(private val world: World) {
         return res.raw()
     }
 
+    fun qaStatus(res: Response): String {
+        val service = qaBotService(res) ?: return currentResponse(res)
+        return ok(res, service.status())
+    }
+
+    fun listQaScenarios(res: Response): String {
+        val service = qaBotService(res) ?: return currentResponse(res)
+        return ok(
+            res,
+            JsonObject().apply {
+                val scenarios = service.listScenarios()
+                addProperty("count", scenarios.size)
+                add("scenarios", gson.toJsonTree(scenarios))
+            },
+        )
+    }
+
+    fun startQaSession(req: Request, res: Response): String {
+        val service = qaBotService(res) ?: return currentResponse(res)
+        val body = parseBody(req, res) ?: return currentResponse(res)
+        val scenarioId = body.optionalString("scenarioId") ?: body.optionalString("scenario")
+        val requestedBy = body.optionalString("player")?.let { world.getPlayerForName(it) }
+        return runOnGameThread(res) {
+            try {
+                val session = service.startSession(world, scenarioId, requestedBy)
+                ok(
+                    res,
+                    service.status().apply {
+                        addProperty("action", "started")
+                        add("session", gson.toJsonTree(session))
+                    },
+                )
+            } catch (t: IllegalStateException) {
+                error(res, 409, t.message ?: "QA session could not be started.")
+            } catch (t: IllegalArgumentException) {
+                error(res, 400, t.message ?: "Invalid QA session request.")
+            }
+        }
+    }
+
+    fun stopQaSession(req: Request, res: Response): String {
+        val service = qaBotService(res) ?: return currentResponse(res)
+        val id = req.params("id")
+        return runOnGameThread(res) {
+            val session = service.stopSession(world, id)
+                ?: return@runOnGameThread error(res, 404, "QA session '$id' is not running.")
+            ok(
+                res,
+                service.status().apply {
+                    addProperty("action", "stopped")
+                    add("session", gson.toJsonTree(session))
+                },
+            )
+        }
+    }
+
+    fun listQaSessions(req: Request, res: Response): String {
+        val service = qaBotService(res) ?: return currentResponse(res)
+        val limit = req.queryParams("limit")?.toIntOrNull()?.coerceIn(1, 250) ?: 50
+        val sessions = service.listSessionReports(limit)
+        return ok(
+            res,
+            JsonObject().apply {
+                addProperty("count", sessions.size)
+                add("sessions", sessions.fold(JsonArray()) { arr, session -> arr.add(session); arr })
+            },
+        )
+    }
+
+    fun getQaSession(req: Request, res: Response): String {
+        val service = qaBotService(res) ?: return currentResponse(res)
+        val id = req.params("id")
+        val session = service.getSessionReport(id)
+            ?: return error(res, 404, "QA session '$id' was not found.")
+        return ok(
+            res,
+            JsonObject().apply {
+                add("session", session)
+            },
+        )
+    }
+
     private fun applyPatch(
         body: JsonObject,
         entry: NpcSpawnEntry,
@@ -370,6 +453,10 @@ class WorldEditorController(private val world: World) {
 
     private fun npcDefinitionServiceOrNull(): NpcDefinitionService? =
         world.getService(NpcDefinitionService::class.java)
+
+    private fun qaBotService(res: Response): QaBotService? =
+        world.getService(QaBotService::class.java)
+            ?: errorAndNull(res, 503, "QaBotService is not loaded.")
 
     private fun placementPlayer(body: JsonObject, res: Response): Player? {
         val name = body.optionalString("player") ?: body.optionalString("playerName")

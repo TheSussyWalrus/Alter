@@ -1,0 +1,398 @@
+{
+  "id": "20260509-225439-bc804eec",
+  "scenarioId": "skills-basic",
+  "scenarioName": "Basic Skills QA",
+  "seed": 9001,
+  "requestedBy": "rest-api",
+  "startedAt": "2026-05-09T22:54:39.895115700Z",
+  "status": "running",
+  "botName": "QA_Skills",
+  "botTile": {
+    "x": 2606,
+    "z": 3093,
+    "height": 0,
+    "regionId": 10288
+  },
+  "currentStepId": "crafting",
+  "steps": [
+    {
+      "id": "woodcutting",
+      "skill": "woodcutting",
+      "category": "gathering",
+      "type": "resource-probe",
+      "startedAtCycle": 263,
+      "finishedAtCycle": 379,
+      "status": "failed",
+      "failureClass": "skill_action",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "Found object 1278 for 'nearest_tree' at 2621,3102."
+      ],
+      "assertions": [
+        {
+          "name": "object-plugin:1278:1",
+          "passed": true,
+          "expected": "handled",
+          "actual": "true"
+        },
+        {
+          "name": "xp:woodcutting",
+          "passed": true,
+          "expected": ">= 25.0",
+          "actual": "100.0"
+        },
+        {
+          "name": "inventory:item.logs:min",
+          "passed": true,
+          "expected": ">= 1",
+          "actual": "4"
+        },
+        {
+          "name": "messages:any",
+          "passed": false,
+          "expected": "one of configured messages",
+          "actual": "Welcome to Alter.\nYou get some item.logs.\nYou get some item.logs.\nYou get some item.logs.\nYou get some item.logs."
+        }
+      ],
+      "messages": [
+        "Welcome to Alter.",
+        "You get some item.logs.",
+        "You get some item.logs.",
+        "You get some item.logs.",
+        "You get some item.logs."
+      ]
+    },
+    {
+      "id": "mining",
+      "skill": "mining",
+      "category": "gathering",
+      "type": "resource-probe",
+      "startedAtCycle": 379,
+      "finishedAtCycle": 619,
+      "status": "failed",
+      "failureClass": "skill_action",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "Found object 11161 for 'nearest_copper_or_tin_rock' at 2630,3137."
+      ],
+      "assertions": [
+        {
+          "name": "object-plugin:11161:1",
+          "passed": true,
+          "expected": "handled",
+          "actual": "true"
+        },
+        {
+          "name": "xp:mining",
+          "passed": true,
+          "expected": ">= 17.5",
+          "actual": "105.0"
+        },
+        {
+          "name": "inventory:any",
+          "passed": true,
+          "expected": "one matching delta",
+          "actual": "inventory:item.copper_ore:min=6, inventory:item.tin_ore:min=0"
+        },
+        {
+          "name": "messages:any",
+          "passed": false,
+          "expected": "one of configured messages",
+          "actual": "You manage to mine some item.copper ore.\nYou manage to mine some item.copper ore.\nYou manage to mine some item.copper ore.\nYou manage to mine some item.copper ore.\nYou manage to mine some item.copper "
+        }
+      ],
+      "messages": [
+        "You manage to mine some item.copper ore.",
+        "You manage to mine some item.copper ore.",
+        "You manage to mine some item.copper ore.",
+        "You manage to mine some item.copper ore.",
+        "You manage to mine some item.copper ore.",
+        "You manage to mine some item.copper ore."
+      ]
+    },
+    {
+      "id": "fishing",
+      "skill": "fishing",
+      "category": "gathering",
+      "type": "npc-resource-probe",
+      "startedAtCycle": 619,
+      "finishedAtCycle": 719,
+      "status": "failed",
+      "failureClass": "interaction_failed",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "No object ids resolved for target 'nearest_net_fishing_spot'.",
+        "No target NPC found within 256 tiles.",
+        "No supported action shape found for step 'fishing'."
+      ],
+      "assertions": [
+        {
+          "name": "xp:fishing",
+          "passed": false,
+          "expected": ">= 10.0",
+          "actual": "0.0"
+        },
+        {
+          "name": "inventory:any",
+          "passed": false,
+          "expected": "one matching delta",
+          "actual": "inventory:item.raw_shrimps:min=0, inventory:item.raw_anchovies:min=0"
+        },
+        {
+          "name": "messages:any",
+          "passed": false,
+          "expected": "one of configured messages",
+          "actual": "seth wishes to trade with you."
+        }
+      ],
+      "messages": [
+        "seth wishes to trade with you."
+      ]
+    },
+    {
+      "id": "firemaking",
+      "skill": "firemaking",
+      "category": "production",
+      "type": "inventory-action-probe",
+      "startedAtCycle": 719,
+      "finishedAtCycle": 760,
+      "status": "failed",
+      "failureClass": "wrong_reward",
+      "observations": [
+        "Moved QA bot to 2606,3093,0."
+      ],
+      "assertions": [
+        {
+          "name": "item-on-item:590:1511",
+          "passed": true,
+          "expected": "handled",
+          "actual": "true"
+        },
+        {
+          "name": "xp:firemaking",
+          "passed": true,
+          "expected": ">= 40.0",
+          "actual": "40.0"
+        },
+        {
+          "name": "inventory:item.logs:max",
+          "passed": false,
+          "expected": "<= -1",
+          "actual": "0"
+        }
+      ],
+      "messages": [
+        "You light the logs."
+      ]
+    },
+    {
+      "id": "cooking",
+      "skill": "cooking",
+      "category": "production",
+      "type": "object-action-probe",
+      "startedAtCycle": 760,
+      "finishedAtCycle": 810,
+      "status": "failed",
+      "failureClass": "interaction_failed",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "No target object found for 'nearest_range_or_fire' within 96 tiles."
+      ],
+      "assertions": [
+        {
+          "name": "xp:cooking",
+          "passed": true,
+          "expected": ">= 0.0",
+          "actual": "0.0"
+        },
+        {
+          "name": "inventory:any",
+          "passed": false,
+          "expected": "one matching delta",
+          "actual": "inventory:item.shrimps:min=0, inventory:item.burnt_shrimp:min=0"
+        },
+        {
+          "name": "messages:any",
+          "passed": false,
+          "expected": "one of configured messages",
+          "actual": ""
+        }
+      ],
+      "messages": []
+    },
+    {
+      "id": "smithing",
+      "skill": "smithing",
+      "category": "production",
+      "type": "object-action-probe",
+      "startedAtCycle": 810,
+      "finishedAtCycle": 880,
+      "status": "failed",
+      "failureClass": "interaction_failed",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "No target object found for 'nearest_furnace' within 160 tiles."
+      ],
+      "assertions": [
+        {
+          "name": "xp:smithing",
+          "passed": false,
+          "expected": ">= 6.2",
+          "actual": "0.0"
+        },
+        {
+          "name": "inventory:item.bronze_bar:min",
+          "passed": false,
+          "expected": ">= 1",
+          "actual": "0"
+        },
+        {
+          "name": "messages:any",
+          "passed": false,
+          "expected": "one of configured messages",
+          "actual": ""
+        }
+      ],
+      "messages": []
+    }
+  ],
+  "observations": [
+    "Started scenario 'skills-basic' with 14 step(s).",
+    "woodcutting: Moved QA bot to 2606,3093,0.",
+    "woodcutting: Found object 1278 for 'nearest_tree' at 2621,3102.",
+    "mining: Moved QA bot to 2606,3093,0.",
+    "mining: Found object 11161 for 'nearest_copper_or_tin_rock' at 2630,3137.",
+    "fishing: Moved QA bot to 2606,3093,0.",
+    "fishing: No object ids resolved for target 'nearest_net_fishing_spot'.",
+    "fishing: No target NPC found within 256 tiles.",
+    "fishing: No supported action shape found for step 'fishing'.",
+    "firemaking: Moved QA bot to 2606,3093,0.",
+    "cooking: Moved QA bot to 2606,3093,0.",
+    "cooking: No target object found for 'nearest_range_or_fire' within 96 tiles.",
+    "smithing: Moved QA bot to 2606,3093,0.",
+    "smithing: No target object found for 'nearest_furnace' within 160 tiles."
+  ],
+  "warnings": [],
+  "assertions": [
+    {
+      "name": "object-plugin:1278:1",
+      "passed": true,
+      "expected": "handled",
+      "actual": "true"
+    },
+    {
+      "name": "xp:woodcutting",
+      "passed": true,
+      "expected": ">= 25.0",
+      "actual": "100.0"
+    },
+    {
+      "name": "inventory:item.logs:min",
+      "passed": true,
+      "expected": ">= 1",
+      "actual": "4"
+    },
+    {
+      "name": "messages:any",
+      "passed": false,
+      "expected": "one of configured messages",
+      "actual": "Welcome to Alter.\nYou get some item.logs.\nYou get some item.logs.\nYou get some item.logs.\nYou get some item.logs."
+    },
+    {
+      "name": "object-plugin:11161:1",
+      "passed": true,
+      "expected": "handled",
+      "actual": "true"
+    },
+    {
+      "name": "xp:mining",
+      "passed": true,
+      "expected": ">= 17.5",
+      "actual": "105.0"
+    },
+    {
+      "name": "inventory:any",
+      "passed": true,
+      "expected": "one matching delta",
+      "actual": "inventory:item.copper_ore:min=6, inventory:item.tin_ore:min=0"
+    },
+    {
+      "name": "messages:any",
+      "passed": false,
+      "expected": "one of configured messages",
+      "actual": "You manage to mine some item.copper ore.\nYou manage to mine some item.copper ore.\nYou manage to mine some item.copper ore.\nYou manage to mine some item.copper ore.\nYou manage to mine some item.copper "
+    },
+    {
+      "name": "xp:fishing",
+      "passed": false,
+      "expected": ">= 10.0",
+      "actual": "0.0"
+    },
+    {
+      "name": "inventory:any",
+      "passed": false,
+      "expected": "one matching delta",
+      "actual": "inventory:item.raw_shrimps:min=0, inventory:item.raw_anchovies:min=0"
+    },
+    {
+      "name": "messages:any",
+      "passed": false,
+      "expected": "one of configured messages",
+      "actual": "seth wishes to trade with you."
+    },
+    {
+      "name": "item-on-item:590:1511",
+      "passed": true,
+      "expected": "handled",
+      "actual": "true"
+    },
+    {
+      "name": "xp:firemaking",
+      "passed": true,
+      "expected": ">= 40.0",
+      "actual": "40.0"
+    },
+    {
+      "name": "inventory:item.logs:max",
+      "passed": false,
+      "expected": "<= -1",
+      "actual": "0"
+    },
+    {
+      "name": "xp:cooking",
+      "passed": true,
+      "expected": ">= 0.0",
+      "actual": "0.0"
+    },
+    {
+      "name": "inventory:any",
+      "passed": false,
+      "expected": "one matching delta",
+      "actual": "inventory:item.shrimps:min=0, inventory:item.burnt_shrimp:min=0"
+    },
+    {
+      "name": "messages:any",
+      "passed": false,
+      "expected": "one of configured messages",
+      "actual": ""
+    },
+    {
+      "name": "xp:smithing",
+      "passed": false,
+      "expected": ">= 6.2",
+      "actual": "0.0"
+    },
+    {
+      "name": "inventory:item.bronze_bar:min",
+      "passed": false,
+      "expected": ">= 1",
+      "actual": "0"
+    },
+    {
+      "name": "messages:any",
+      "passed": false,
+      "expected": "one of configured messages",
+      "actual": ""
+    }
+  ]
+}

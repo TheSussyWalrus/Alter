@@ -23,6 +23,9 @@
                 <router-link to="/npc-spawns">NPC spawn editor</router-link>
               </li>
               <li>
+                <router-link to="/qa">AI QA center</router-link>
+              </li>
+              <li>
                 <router-link to="">Event management</router-link>
               </li>
             </ul>
