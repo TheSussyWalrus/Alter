@@ -2,7 +2,7 @@
 
 Alter is a Kotlin-based OSRS private server built as a modular fork of RSMod. The core engine lives in `game-server`, most gameplay content lives in `game-plugins`, and extra support modules live under `plugins`.
 
-This README focuses on how to boot the current codebase, create accounts, and log in. For the gameplay and implementation audit, see [docs/IMPLEMENTED_GAME_GUIDE.md](docs/IMPLEMENTED_GAME_GUIDE.md).
+This README focuses on how to boot the current codebase, create accounts, and log in. For the gameplay and implementation audit, see [docs/IMPLEMENTED_GAME_GUIDE.md](docs/IMPLEMENTED_GAME_GUIDE.md). For in-game developer and admin commands, see [docs/in-game-dev-tools.md](docs/in-game-dev-tools.md).
 
 ## Requirements
 
