@@ -33,6 +33,8 @@ class Npc private constructor(val id: Int, world: World, val spawnTile: Tile) : 
         this.avatar = avatar
     }
 
+    internal fun hasAvatar(): Boolean = this::avatar.isInitialized
+
 
     /**
      * This flag indicates whether or not this npc's AI should be processed.

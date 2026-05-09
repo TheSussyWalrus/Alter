@@ -1,0 +1,54 @@
+[
+  {
+    "key": "giant_rat_3313_2609_3102_0",
+    "npcId": 3313,
+    "name": "Giant rat",
+    "x": 2609,
+    "z": 3102,
+    "height": 0,
+    "walkRadius": 0,
+    "facing": "SOUTH",
+    "active": true,
+    "enabled": true,
+    "tags": []
+  },
+  {
+    "key": "giant_rat_3313_2610_3102_0",
+    "npcId": 3313,
+    "name": "Giant rat",
+    "x": 2610,
+    "z": 3102,
+    "height": 0,
+    "walkRadius": 0,
+    "facing": "SOUTH",
+    "active": true,
+    "enabled": true,
+    "tags": []
+  },
+  {
+    "key": "giant_rat_3313_2611_3102_0",
+    "npcId": 3313,
+    "name": "Giant rat",
+    "x": 2611,
+    "z": 3102,
+    "height": 0,
+    "walkRadius": 0,
+    "facing": "SOUTH",
+    "active": true,
+    "enabled": true,
+    "tags": []
+  },
+  {
+    "key": "giant_rat_3313_2612_3102_0",
+    "npcId": 3313,
+    "name": "Giant rat",
+    "x": 2612,
+    "z": 3102,
+    "height": 0,
+    "walkRadius": 0,
+    "facing": "SOUTH",
+    "active": true,
+    "enabled": true,
+    "tags": []
+  }
+]

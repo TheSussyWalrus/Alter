@@ -83,6 +83,7 @@ These require `dev` power.
 | `::removeobj` | `::removeobj` | Removes the first static/dynamic object on your tile. |
 | `::aboutobj` | `::aboutobj` | Prints object id, type, and rotation for an object on your tile. |
 | `::removenpc` | `::removenpc` | Removes the first NPC on your tile. |
+| `::npcspawns` | `::npcspawns` | Opens the local web NPC spawn editor for JSON-backed permanent spawns. Alias: `::npcspawneditor`. |
 | `::clip` | `::clip` | Prints tile collision flags and neighboring walk/projectile blocking. |
 | `::col_grid` | `::col_grid player_name` | Logs a 25x25 collision grid around a player. Use underscores for spaces. |
 | `::reloaditems` | `::reloaditems` | Reloads item metadata definitions. |
@@ -153,8 +154,8 @@ Useful combinations while building content:
 | Find an item id and spawn it | `::find item small fishing net`, then `::item 303 1` |
 | Move to Yanille hub | `::yanille` |
 | Spawn a test NPC | `::npc npcId` |
+| Create a permanent NPC spawn | Start `http-api`, run `::npcspawns`, select an online owner/dev placement player, search/create the NPC, then `Save to disk` in the web editor. |
 | Check your current coordinates | `::pos` |
 | Set up a skill test | `::setlvl slay 50`, `::slayer mazchna` |
 | Inspect object bindings | Stand on the object tile, then `::aboutobj` |
 | Check movement blocking | `::clip` |
-

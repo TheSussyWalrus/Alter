@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import org.alter.game.model.World
 import org.alter.plugins.service.restapi.controllers.OnlinePlayersController
 import org.alter.plugins.service.restapi.controllers.PlayerController
+import org.alter.plugins.service.restapi.controllers.WorldEditorController
 import spark.Spark.*
 
 /**
@@ -14,6 +15,8 @@ class RestApiRoutes {
         world: World,
         auth: Boolean,
     ) {
+        val worldEditorController = WorldEditorController(world)
+
         get("/players") {
                 req, res ->
             Gson().toJson(OnlinePlayersController(req, res, false).init(world))
@@ -60,6 +63,46 @@ class RestApiRoutes {
             }
             // Return null as the response is handled directly by writing to the output stream
             null
+        }
+
+        get("/world-editor/npc-spawns") { _, res ->
+            worldEditorController.listNpcSpawns(res)
+        }
+
+        get("/world-editor/npcs/search") { req, res ->
+            worldEditorController.searchNpcs(req, res)
+        }
+
+        get("/world-editor/dev-players") { _, res ->
+            worldEditorController.listDevPlayers(res)
+        }
+
+        post("/world-editor/npc-spawns") { req, res ->
+            worldEditorController.createNpcSpawn(req, res)
+        }
+
+        patch("/world-editor/npc-spawns/:key") { req, res ->
+            worldEditorController.updateNpcSpawn(req, res)
+        }
+
+        post("/world-editor/npc-spawns/:key/move-to-player") { req, res ->
+            worldEditorController.moveNpcSpawnToPlayer(req, res)
+        }
+
+        post("/world-editor/npc-spawns/:key/duplicate") { req, res ->
+            worldEditorController.duplicateNpcSpawn(req, res)
+        }
+
+        delete("/world-editor/npc-spawns/:key") { req, res ->
+            worldEditorController.deleteNpcSpawn(req, res)
+        }
+
+        post("/world-editor/npc-spawns/save") { _, res ->
+            worldEditorController.saveNpcSpawns(res)
+        }
+
+        post("/world-editor/npc-spawns/reload") { _, res ->
+            worldEditorController.reloadNpcSpawns(res)
         }
     }
 }
