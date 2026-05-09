@@ -4,12 +4,10 @@
       <div>
         <p class="eyebrow">World Editor</p>
         <h1>NPC Spawn Editor</h1>
-        <p class="lede">
-          Edit JSON-backed NPC spawns live, use an online dev as your placement cursor, then save when the world looks right.
-        </p>
+        <p class="lede">Place JSON-backed NPCs, tune their reusable mechanics, attach drops and shops, then save when the world looks right.</p>
       </div>
-      <div class="status-card" :class="{ dirty }">
-        <span>{{ dirty ? 'Unsaved changes' : 'Clean' }}</span>
+      <div class="status-card" :class="{ dirty: dirty || definitionsDirty || shopsDirty }">
+        <span>{{ dirtyLabel }}</span>
         <strong>{{ entries.length }}</strong>
         <small>managed spawns</small>
       </div>
@@ -29,8 +27,10 @@
         </select>
       </label>
       <button @click="fetchAll" :disabled="loading">Refresh</button>
-      <button @click="saveSpawns" :disabled="loading || !dirty">Save to disk</button>
-      <button class="ghost" @click="reloadSpawns" :disabled="loading">Reload from disk</button>
+      <button @click="saveSpawns" :disabled="loading || !dirty">Save spawns</button>
+      <button class="ghost" @click="reloadSpawns" :disabled="loading">Reload spawns</button>
+      <button @click="saveDefinitions" :disabled="definitionLoading || (!definitionsDirty && !shopsDirty)">Save definitions</button>
+      <button class="ghost" @click="reloadDefinitions" :disabled="definitionLoading">Reload definitions</button>
     </section>
 
     <main class="workspace">
@@ -59,87 +59,165 @@
 
       <section class="panel editor-panel">
         <div class="panel-title">
-          <h2>{{ draft.key ? 'Selected Spawn' : 'Create Spawn' }}</h2>
+          <h2>{{ draft.key ? draft.name : 'Create Spawn' }}</h2>
           <span v-if="configPath" class="path">{{ configPath }}</span>
         </div>
 
-        <div class="search-box">
-          <input
-            v-model="npcQuery"
-            type="search"
-            placeholder="Search NPCs by name..."
-            @keyup.enter="searchNpcs"
-          />
-          <button @click="searchNpcs">Search NPCs</button>
-        </div>
-
-        <div v-if="npcResults.length" class="results">
-          <button v-for="npc in npcResults" :key="npc.id" @click="createSpawn(npc.id)">
-            Create {{ npc.name }} ({{ npc.id }}) at {{ selectedPlayer || 'selected player' }}
+        <nav class="tabs" aria-label="NPC editor sections">
+          <button
+            v-for="tab in tabs"
+            :key="tab.key"
+            type="button"
+            class="tab"
+            :class="{ active: activeTab === tab.key }"
+            @click="activeTab = tab.key"
+          >
+            {{ tab.label }}
           </button>
-        </div>
+        </nav>
 
-        <form v-if="draft.key" class="edit-grid" @submit.prevent="updateSpawn">
-          <label>
-            NPC id
-            <input v-model.number="draft.npcId" type="number" min="0" />
-          </label>
-          <label>
-            Name
-            <input :value="draft.name" type="text" disabled />
-          </label>
-          <label>
-            X
-            <input v-model.number="draft.x" type="number" />
-          </label>
-          <label>
-            Z
-            <input v-model.number="draft.z" type="number" />
-          </label>
-          <label>
-            Height
-            <input v-model.number="draft.height" type="number" min="0" max="3" />
-          </label>
-          <label>
-            Facing
-            <select v-model="draft.facing">
-              <option v-for="facing in facings" :key="facing" :value="facing">{{ facing }}</option>
-            </select>
-          </label>
-          <label>
-            Walk radius
-            <input v-model.number="draft.walkRadius" type="number" min="0" />
-          </label>
-          <label>
-            Tags
-            <input v-model="draft.tagsText" type="text" placeholder="yanille, slayer, shop" />
-          </label>
-          <label class="wide">
-            Notes
-            <textarea v-model="draft.notes" rows="3" placeholder="Optional notes for future builders"></textarea>
-          </label>
-
-          <div class="toggles">
-            <label><input v-model="draft.enabled" type="checkbox" /> Enabled</label>
-            <label><input v-model="draft.active" type="checkbox" /> Active AI</label>
+        <section v-if="activeTab === 'spawn'">
+          <div class="search-box">
+            <input v-model="npcQuery" type="search" placeholder="Search NPCs by name..." @keyup.enter="searchNpcs" />
+            <button @click="searchNpcs">Search NPCs</button>
           </div>
 
-          <div class="nudge">
-            <button type="button" @click="nudge(0, 1, 0)">North +1</button>
-            <button type="button" @click="nudge(1, 0, 0)">East +1</button>
-            <button type="button" @click="nudge(0, -1, 0)">South -1</button>
-            <button type="button" @click="nudge(-1, 0, 0)">West -1</button>
-            <button type="button" @click="nudge(0, 0, 1)">Height +1</button>
-            <button type="button" @click="nudge(0, 0, -1)">Height -1</button>
+          <div v-if="npcResults.length" class="results">
+            <button v-for="npc in npcResults" :key="npc.id" @click="createSpawn(npc.id)">
+              <img v-if="npc.imageUrl" :src="npc.imageUrl" alt="" />
+              Create {{ npc.name }} ({{ npc.id }}) at {{ selectedPlayer || 'selected player' }}
+            </button>
           </div>
 
-          <div class="actions">
-            <button type="submit">Apply changes</button>
-            <button type="button" @click="moveToPlayer">Move to player tile</button>
-            <button type="button" @click="duplicateSpawn">Duplicate at player tile</button>
-            <button type="button" class="danger" @click="deleteSpawn">Delete</button>
+          <form v-if="draft.key" class="edit-grid" @submit.prevent="updateSpawn">
+            <label>NPC id <input v-model.number="draft.npcId" type="number" min="0" /></label>
+            <label>Name <input :value="draft.name" type="text" disabled /></label>
+            <label>X <input v-model.number="draft.x" type="number" /></label>
+            <label>Z <input v-model.number="draft.z" type="number" /></label>
+            <label>Height <input v-model.number="draft.height" type="number" min="0" max="3" /></label>
+            <label>
+              Facing
+              <select v-model="draft.facing">
+                <option v-for="facing in facings" :key="facing" :value="facing">{{ facing }}</option>
+              </select>
+            </label>
+            <label>Walk radius <input v-model.number="draft.walkRadius" type="number" min="0" /></label>
+            <label>
+              Aggressive override
+              <select v-model="draft.aggressiveText">
+                <option value="">Use definition</option>
+                <option value="true">Aggressive</option>
+                <option value="false">Not aggressive</option>
+              </select>
+            </label>
+            <label>Aggression radius override <input v-model="draft.aggressionRadiusText" type="number" min="0" placeholder="definition" /></label>
+            <label>Follow range override <input v-model="draft.followRangeText" type="number" min="0" placeholder="definition" /></label>
+            <label>Shop override <input v-model="draft.shopKey" type="text" placeholder="Use definition/default" /></label>
+            <label>Tags <input v-model="draft.tagsText" type="text" placeholder="yanille, slayer, shop" /></label>
+            <label class="wide">Notes <textarea v-model="draft.notes" rows="3"></textarea></label>
+
+            <div class="toggles">
+              <label><input v-model="draft.enabled" type="checkbox" /> Enabled</label>
+              <label><input v-model="draft.active" type="checkbox" /> Active AI</label>
+            </div>
+
+            <div class="nudge">
+              <button type="button" @click="nudge(0, 1, 0)">North +1</button>
+              <button type="button" @click="nudge(1, 0, 0)">East +1</button>
+              <button type="button" @click="nudge(0, -1, 0)">South -1</button>
+              <button type="button" @click="nudge(-1, 0, 0)">West -1</button>
+              <button type="button" @click="nudge(0, 0, 1)">Height +1</button>
+              <button type="button" @click="nudge(0, 0, -1)">Height -1</button>
+            </div>
+
+            <div class="actions">
+              <button type="submit">Apply spawn</button>
+              <button type="button" @click="moveToPlayer">Move to player tile</button>
+              <button type="button" @click="duplicateSpawn">Duplicate at player tile</button>
+              <button type="button" class="danger" @click="deleteSpawn">Delete</button>
+            </div>
+          </form>
+        </section>
+
+        <section v-else-if="draft.key" class="definition-shell">
+          <div class="definition-banner" :class="{ dirty: definitionsDirty || shopsDirty }">
+            <div>
+              <strong>{{ definitionDraft.name || draft.name }}</strong>
+              <small>NPC {{ currentNpcId }}</small>
+            </div>
+            <div class="definition-actions">
+              <button type="button" @click="fetchNpcDefinition(currentNpcId)" :disabled="definitionLoading">Refresh</button>
+              <button type="button" @click="applyCurrentDefinition" :disabled="definitionLoading">Apply tab</button>
+            </div>
           </div>
-        </form>
+
+          <form v-if="definitionLoaded" class="edit-grid" @submit.prevent="applyCurrentDefinition">
+            <template v-if="activeTab === 'definition'">
+              <label>Name <input v-model="definitionDraft.name" type="text" /></label>
+              <label>Follow range <input v-model.number="definitionDraft.followRange" type="number" min="0" /></label>
+              <label>Shop key <input v-model="definitionDraft.shopKey" type="text" placeholder="yanille_tools" /></label>
+              <label>Tags <input v-model="definitionDraft.tagsText" type="text" placeholder="rat, shop, slayer" /></label>
+              <label class="wide">Notes <textarea v-model="definitionDraft.notes" rows="3"></textarea></label>
+            </template>
+
+            <template v-if="activeTab === 'drops'">
+              <label class="wide">Always drops JSON <textarea v-model="dropText.always" rows="6"></textarea></label>
+              <label class="wide">Main drops JSON <textarea v-model="dropText.main" rows="6"></textarea></label>
+              <label class="wide">Preroll drops JSON <textarea v-model="dropText.preroll" rows="6"></textarea></label>
+              <label class="wide">Tertiary drops JSON <textarea v-model="dropText.tertiary" rows="6"></textarea></label>
+            </template>
+
+            <template v-if="activeTab === 'aggression'">
+              <div class="toggles wide">
+                <label><input v-model="definitionDraft.aggression.aggressive" type="checkbox" /> Aggressive</label>
+                <label><input v-model="definitionDraft.aggression.alwaysAggressive" type="checkbox" /> Always aggressive</label>
+                <label><input v-model="definitionDraft.aggression.retaliates" type="checkbox" /> Retaliates</label>
+              </div>
+              <label>Radius <input v-model.number="definitionDraft.aggression.radius" type="number" min="0" /></label>
+              <label>Search delay <input v-model.number="definitionDraft.aggression.searchDelay" type="number" min="1" /></label>
+              <label>Tolerance ticks <input v-model="definitionDraft.aggression.toleranceTicksText" type="number" min="0" placeholder="default" /></label>
+            </template>
+
+            <template v-if="activeTab === 'combat'">
+              <label>Attack <input v-model.number="definitionDraft.combat.stats.attack" type="number" min="0" /></label>
+              <label>Strength <input v-model.number="definitionDraft.combat.stats.strength" type="number" min="0" /></label>
+              <label>Defence <input v-model.number="definitionDraft.combat.stats.defence" type="number" min="0" /></label>
+              <label>Ranged <input v-model.number="definitionDraft.combat.stats.ranged" type="number" min="0" /></label>
+              <label>Magic <input v-model.number="definitionDraft.combat.stats.magic" type="number" min="0" /></label>
+              <label>Hitpoints <input v-model.number="definitionDraft.combat.stats.hitpoints" type="number" min="0" /></label>
+              <label>Attack speed <input v-model="definitionDraft.combat.attackSpeedText" type="number" min="1" placeholder="default" /></label>
+              <label>Respawn delay <input v-model="definitionDraft.combat.respawnDelayText" type="number" min="0" placeholder="default" /></label>
+              <label>Attack anim <input v-model="definitionDraft.combat.animations.attackText" type="number" placeholder="default" /></label>
+              <label>Block anim <input v-model="definitionDraft.combat.animations.blockText" type="number" placeholder="default" /></label>
+              <label>Death anim <input v-model="definitionDraft.combat.animations.deathText" type="number" placeholder="default" /></label>
+            </template>
+
+            <template v-if="activeTab === 'shop'">
+              <label>Shop key <input v-model="shopDraft.id" type="text" placeholder="yanille_tools" /></label>
+              <label>Display name <input v-model="shopDraft.name" type="text" /></label>
+              <label>Currency item <input v-model.number="shopDraft.currencyItemId" type="number" min="0" /></label>
+              <label>Restock ticks <input v-model.number="shopDraft.restockTicks" type="number" min="1" /></label>
+              <label>NPC ids <input v-model="shopDraft.npcIdsText" type="text" placeholder="123, 456" /></label>
+              <div class="toggles wide">
+                <label><input v-model="shopDraft.buysItems" type="checkbox" /> Buys items</label>
+                <label><input v-model="shopDraft.sellsItems" type="checkbox" /> Sells items</label>
+              </div>
+              <label class="wide">Shop items JSON <textarea v-model="shopDraft.itemsText" rows="10"></textarea></label>
+              <label class="wide">Shop notes <textarea v-model="shopDraft.notes" rows="3"></textarea></label>
+            </template>
+
+            <template v-if="activeTab === 'image'">
+              <div class="image-preview">
+                <img :src="npcImageUrl" :alt="`${definitionDraft.name || draft.name} preview`" />
+              </div>
+              <label class="wide">Wiki image URL <input v-model="definitionDraft.imageUrl" type="url" placeholder="https://oldschool.runescape.wiki/images/..." /></label>
+            </template>
+
+            <div class="actions">
+              <button type="submit" :disabled="definitionLoading">Apply tab</button>
+            </div>
+          </form>
+        </section>
 
         <div v-else class="empty-state">
           <h3>No spawn selected</h3>
@@ -165,9 +243,64 @@ const EMPTY_DRAFT = {
   facing: 'SOUTH',
   active: true,
   enabled: true,
+  aggressiveText: '',
+  aggressionRadiusText: '',
+  followRangeText: '',
+  shopKey: '',
   tagsText: '',
   notes: ''
 };
+
+function emptyDefinition() {
+  return {
+    id: -1,
+    name: '',
+    imageUrl: '',
+    shopKey: '',
+    tagsText: '',
+    notes: '',
+    followRange: 16,
+    aggression: {
+      aggressive: false,
+      radius: 0,
+      searchDelay: 5,
+      toleranceTicksText: '',
+      alwaysAggressive: false,
+      retaliates: true
+    },
+    combat: {
+      stats: { attack: 0, strength: 0, defence: 0, ranged: 0, magic: 0, hitpoints: 0 },
+      bonuses: {},
+      animations: { attackText: '', blockText: '', deathText: '' },
+      sounds: {},
+      attackSpeedText: '',
+      respawnDelayText: '',
+      slayerReq: null,
+      slayerXp: null,
+      poisonChance: null,
+      venomChance: null,
+      immunePoison: null,
+      immuneVenom: null,
+      immuneCannons: null,
+      immuneThralls: null
+    }
+  };
+}
+
+function emptyShop() {
+  return {
+    id: '',
+    name: '',
+    npcIdsText: '',
+    currencyItemId: 995,
+    buysItems: true,
+    sellsItems: true,
+    restockTicks: 100,
+    tags: [],
+    notes: '',
+    itemsText: '[]'
+  };
+}
 
 export default {
   name: 'NpcSpawnsView',
@@ -175,37 +308,73 @@ export default {
     return {
       loading: false,
       dirty: false,
+      definitionsDirty: false,
+      shopsDirty: false,
       configPath: '',
       entries: [],
+      definitions: [],
+      shops: [],
       devPlayers: [],
       selectedPlayer: '',
       selectedKey: '',
       draft: { ...EMPTY_DRAFT },
+      definitionDraft: emptyDefinition(),
+      shopDraft: emptyShop(),
+      dropText: { always: '[]', main: '[]', preroll: '[]', tertiary: '[]' },
+      definitionLoaded: false,
+      definitionLoading: false,
       filter: '',
       npcQuery: '',
       npcResults: [],
+      npcImageUrl: '',
+      activeTab: 'spawn',
       status: '',
       error: '',
+      tabs: [
+        { key: 'spawn', label: 'Spawn' },
+        { key: 'definition', label: 'NPC Definition' },
+        { key: 'drops', label: 'Drops' },
+        { key: 'aggression', label: 'Aggression' },
+        { key: 'combat', label: 'Combat' },
+        { key: 'shop', label: 'Shop' },
+        { key: 'image', label: 'Image' }
+      ],
       facings: ['NORTH', 'NORTH_EAST', 'EAST', 'SOUTH_EAST', 'SOUTH', 'SOUTH_WEST', 'WEST', 'NORTH_WEST']
     };
   },
   computed: {
+    currentNpcId() {
+      return Number(this.draft.npcId);
+    },
+    dirtyLabel() {
+      if (this.dirty || this.definitionsDirty || this.shopsDirty) {
+        return 'Unsaved changes';
+      }
+      return 'Clean';
+    },
     filteredEntries() {
       const q = this.filter.trim().toLowerCase();
       if (!q) {
         return this.entries;
       }
       return this.entries.filter(entry => {
-        return [
-          entry.key,
-          entry.name,
-          String(entry.npcId),
-          `${entry.x},${entry.z},${entry.height}`,
-          entry.facing,
-          (entry.tags || []).join(','),
-          entry.notes || ''
-        ].some(value => value.toLowerCase().includes(q));
+        return [entry.key, entry.name, String(entry.npcId), `${entry.x},${entry.z},${entry.height}`, entry.facing, (entry.tags || []).join(','), entry.notes || '']
+          .some(value => value.toLowerCase().includes(q));
       });
+    }
+  },
+  watch: {
+    currentNpcId(id) {
+      if (id >= 0) {
+        this.fetchNpcDefinition(id);
+      } else {
+        this.resetDefinition();
+      }
+    },
+    activeTab(tab) {
+      if (tab === 'shop') {
+        this.syncShopDraft();
+      }
     }
   },
   created() {
@@ -216,11 +385,13 @@ export default {
       this.loading = true;
       this.error = '';
       try {
-        const [spawns, players] = await Promise.all([
+        const [spawns, players, definitions] = await Promise.all([
           axios.get(`${API}/world-editor/npc-spawns`),
-          axios.get(`${API}/world-editor/dev-players`)
+          axios.get(`${API}/world-editor/dev-players`),
+          axios.get(`${API}/world-editor/npc-definitions`)
         ]);
         this.ingestSpawnState(spawns.data);
+        this.ingestDefinitionState(definitions.data);
         this.devPlayers = players.data.players || [];
         if (!this.selectedPlayer && this.devPlayers.length) {
           this.selectedPlayer = this.devPlayers[0].username;
@@ -237,6 +408,23 @@ export default {
         this.devPlayers = res.data.players || [];
       } catch (err) {
         this.error = this.errorMessage(err);
+      }
+    },
+    async fetchNpcDefinition(npcId) {
+      if (npcId < 0) {
+        this.resetDefinition();
+        return;
+      }
+      this.definitionLoading = true;
+      this.error = '';
+      try {
+        const res = await axios.get(`${API}/world-editor/npc-definitions/${encodeURIComponent(npcId)}`);
+        this.ingestDefinition(res.data.definition);
+      } catch (err) {
+        this.resetDefinition();
+        this.error = this.errorMessage(err);
+      } finally {
+        this.definitionLoading = false;
       }
     },
     async searchNpcs() {
@@ -257,10 +445,7 @@ export default {
       if (!this.requirePlacementPlayer()) {
         return;
       }
-      await this.mutate(() => axios.post(`${API}/world-editor/npc-spawns`, {
-        npcId,
-        player: this.selectedPlayer
-      }), 'Spawn created.');
+      await this.mutate(() => axios.post(`${API}/world-editor/npc-spawns`, { npcId, player: this.selectedPlayer }), 'Spawn created.');
       this.npcResults = [];
     },
     async updateSpawn() {
@@ -273,17 +458,13 @@ export default {
       if (!this.requireSelection() || !this.requirePlacementPlayer()) {
         return;
       }
-      await this.mutate(() => axios.post(`${API}/world-editor/npc-spawns/${encodeURIComponent(this.draft.key)}/move-to-player`, {
-        player: this.selectedPlayer
-      }), 'Spawn moved to player tile.');
+      await this.mutate(() => axios.post(`${API}/world-editor/npc-spawns/${encodeURIComponent(this.draft.key)}/move-to-player`, { player: this.selectedPlayer }), 'Spawn moved.');
     },
     async duplicateSpawn() {
       if (!this.requireSelection() || !this.requirePlacementPlayer()) {
         return;
       }
-      await this.mutate(() => axios.post(`${API}/world-editor/npc-spawns/${encodeURIComponent(this.draft.key)}/duplicate`, {
-        player: this.selectedPlayer
-      }), 'Spawn duplicated.');
+      await this.mutate(() => axios.post(`${API}/world-editor/npc-spawns/${encodeURIComponent(this.draft.key)}/duplicate`, { player: this.selectedPlayer }), 'Spawn duplicated.');
     },
     async deleteSpawn() {
       if (!this.requireSelection()) {
@@ -295,13 +476,48 @@ export default {
       await this.mutate(() => axios.delete(`${API}/world-editor/npc-spawns/${encodeURIComponent(this.draft.key)}`), 'Spawn deleted.');
     },
     async saveSpawns() {
-      await this.mutate(() => axios.post(`${API}/world-editor/npc-spawns/save`), 'Spawns saved to disk.');
+      await this.mutate(() => axios.post(`${API}/world-editor/npc-spawns/save`), 'Spawns saved.');
     },
     async reloadSpawns() {
       if (this.dirty && !window.confirm('Discard unsaved spawn edits and reload from disk?')) {
         return;
       }
-      await this.mutate(() => axios.post(`${API}/world-editor/npc-spawns/reload`), 'Spawns reloaded from disk.');
+      await this.mutate(() => axios.post(`${API}/world-editor/npc-spawns/reload`), 'Spawns reloaded.');
+    },
+    async applyCurrentDefinition() {
+      if (this.activeTab === 'shop') {
+        await this.applyShop();
+      } else {
+        await this.applyDefinition();
+      }
+    },
+    async applyDefinition() {
+      const payload = this.payloadFromDefinition();
+      if (!payload) {
+        return;
+      }
+      await this.mutateDefinition(() => axios.patch(`${API}/world-editor/npc-definitions/${encodeURIComponent(this.currentNpcId)}`, payload), 'NPC definition applied.');
+    },
+    async applyShop() {
+      const payload = this.payloadFromShop();
+      if (!payload) {
+        return;
+      }
+      await this.mutateDefinition(() => axios.patch(`${API}/world-editor/npc-shops/${encodeURIComponent(payload.id)}`, payload), 'NPC shop applied.');
+      this.definitionDraft.shopKey = payload.id;
+      await this.applyDefinition();
+    },
+    async saveDefinitions() {
+      await this.mutateDefinition(() => axios.post(`${API}/world-editor/npc-definitions/save`), 'NPC definitions saved.');
+    },
+    async reloadDefinitions() {
+      if ((this.definitionsDirty || this.shopsDirty) && !window.confirm('Discard unsaved NPC definition/shop edits and reload from disk?')) {
+        return;
+      }
+      await this.mutateDefinition(() => axios.post(`${API}/world-editor/npc-definitions/reload`), 'NPC definitions reloaded.');
+      if (this.currentNpcId >= 0) {
+        await this.fetchNpcDefinition(this.currentNpcId);
+      }
     },
     async nudge(dx, dz, dh) {
       this.draft.x += dx;
@@ -322,6 +538,22 @@ export default {
         this.loading = false;
       }
     },
+    async mutateDefinition(request, success) {
+      this.definitionLoading = true;
+      this.error = '';
+      try {
+        const res = await request();
+        this.ingestDefinitionState(res.data);
+        if (res.data.definition) {
+          this.ingestDefinition(res.data.definition);
+        }
+        this.status = success;
+      } catch (err) {
+        this.error = this.errorMessage(err);
+      } finally {
+        this.definitionLoading = false;
+      }
+    },
     selectEntry(key) {
       this.selectedKey = key;
       const entry = this.entries.find(item => item.key === key);
@@ -331,7 +563,6 @@ export default {
       this.entries = data.entries || [];
       this.dirty = Boolean(data.dirty);
       this.configPath = data.configPath || this.configPath;
-
       const preferredKey = data.entry?.key || this.selectedKey;
       const preferred = this.entries.find(entry => entry.key === preferredKey) || this.entries[0];
       if (preferred) {
@@ -341,6 +572,13 @@ export default {
         this.syncDraft(null);
       }
     },
+    ingestDefinitionState(data) {
+      this.definitions = data.definitions || this.definitions;
+      this.shops = data.shops || this.shops;
+      this.definitionsDirty = Boolean(data.definitionsDirty);
+      this.shopsDirty = Boolean(data.shopsDirty);
+      this.syncShopDraft();
+    },
     syncDraft(entry) {
       if (!entry) {
         this.draft = { ...EMPTY_DRAFT };
@@ -348,9 +586,76 @@ export default {
       }
       this.draft = {
         ...entry,
+        aggressiveText: entry.aggressive == null ? '' : String(entry.aggressive),
+        aggressionRadiusText: entry.aggressionRadius == null ? '' : String(entry.aggressionRadius),
+        followRangeText: entry.followRange == null ? '' : String(entry.followRange),
+        shopKey: entry.shopKey || '',
         tagsText: (entry.tags || []).join(', '),
         notes: entry.notes || ''
       };
+    },
+    ingestDefinition(definition) {
+      const draft = emptyDefinition();
+      Object.assign(draft, definition || {});
+      draft.tagsText = (definition.tags || []).join(', ');
+      draft.imageUrl = definition.imageUrl || '';
+      draft.shopKey = definition.shopKey || '';
+      draft.aggression = {
+        ...draft.aggression,
+        ...(definition.aggression || {}),
+        toleranceTicksText: definition.aggression?.toleranceTicks == null ? '' : String(definition.aggression.toleranceTicks)
+      };
+      draft.combat = {
+        ...draft.combat,
+        ...(definition.combat || {}),
+        stats: { ...draft.combat.stats, ...(definition.combat?.stats || {}) },
+        bonuses: { ...(definition.combat?.bonuses || {}) },
+        animations: {
+          ...(definition.combat?.animations || {}),
+          attackText: definition.combat?.animations?.attack == null ? '' : String(definition.combat.animations.attack),
+          blockText: definition.combat?.animations?.block == null ? '' : String(definition.combat.animations.block),
+          deathText: definition.combat?.animations?.death == null ? '' : String(definition.combat.animations.death)
+        },
+        sounds: { ...(definition.combat?.sounds || {}) },
+        attackSpeedText: definition.combat?.attackSpeed == null ? '' : String(definition.combat.attackSpeed),
+        respawnDelayText: definition.combat?.respawnDelay == null ? '' : String(definition.combat.respawnDelay)
+      };
+      const drops = definition.drops || {};
+      this.dropText = {
+        always: this.formatJson(drops.always || []),
+        main: this.formatJson(drops.main || []),
+        preroll: this.formatJson(drops.preroll || []),
+        tertiary: this.formatJson(drops.tertiary || [])
+      };
+      this.definitionDraft = draft;
+      this.definitionLoaded = true;
+      this.npcImageUrl = `${API}/world-editor/npcs/${encodeURIComponent(this.currentNpcId)}/image?ts=${Date.now()}`;
+      this.syncShopDraft();
+    },
+    syncShopDraft() {
+      const key = this.definitionDraft.shopKey || this.draft.shopKey || '';
+      const shop = this.shops.find(item => item.id === key);
+      if (!shop && key) {
+        this.shopDraft = { ...emptyShop(), id: key, name: key, npcIdsText: String(this.currentNpcId) };
+        return;
+      }
+      if (!shop) {
+        this.shopDraft = { ...emptyShop(), npcIdsText: this.currentNpcId >= 0 ? String(this.currentNpcId) : '' };
+        return;
+      }
+      this.shopDraft = {
+        ...shop,
+        npcIdsText: (shop.npcIds || []).join(', '),
+        notes: shop.notes || '',
+        itemsText: this.formatJson(shop.items || [])
+      };
+    },
+    resetDefinition() {
+      this.definitionDraft = emptyDefinition();
+      this.shopDraft = emptyShop();
+      this.dropText = { always: '[]', main: '[]', preroll: '[]', tertiary: '[]' };
+      this.definitionLoaded = false;
+      this.npcImageUrl = '';
     },
     payloadFromDraft() {
       return {
@@ -362,8 +667,74 @@ export default {
         facing: this.draft.facing,
         active: Boolean(this.draft.active),
         enabled: Boolean(this.draft.enabled),
-        tags: this.draft.tagsText.split(',').map(tag => tag.trim()).filter(Boolean),
+        aggressive: this.draft.aggressiveText === '' ? null : this.draft.aggressiveText === 'true',
+        aggressionRadius: this.optionalNumber(this.draft.aggressionRadiusText),
+        followRange: this.optionalNumber(this.draft.followRangeText),
+        shopKey: this.draft.shopKey || null,
+        tags: this.csvList(this.draft.tagsText),
         notes: this.draft.notes
+      };
+    },
+    payloadFromDefinition() {
+      const drops = {
+        always: this.parseJsonField(this.dropText.always, 'Always drops JSON'),
+        main: this.parseJsonField(this.dropText.main, 'Main drops JSON'),
+        preroll: this.parseJsonField(this.dropText.preroll, 'Preroll drops JSON'),
+        tertiary: this.parseJsonField(this.dropText.tertiary, 'Tertiary drops JSON')
+      };
+      if (Object.values(drops).some(value => value === null)) {
+        return null;
+      }
+      return {
+        id: this.currentNpcId,
+        name: this.definitionDraft.name,
+        imageUrl: this.definitionDraft.imageUrl || null,
+        shopKey: this.definitionDraft.shopKey || null,
+        tags: this.csvList(this.definitionDraft.tagsText),
+        notes: this.definitionDraft.notes || null,
+        followRange: Number(this.definitionDraft.followRange),
+        aggression: {
+          aggressive: Boolean(this.definitionDraft.aggression.aggressive),
+          radius: Number(this.definitionDraft.aggression.radius),
+          searchDelay: Number(this.definitionDraft.aggression.searchDelay),
+          toleranceTicks: this.optionalNumber(this.definitionDraft.aggression.toleranceTicksText),
+          alwaysAggressive: Boolean(this.definitionDraft.aggression.alwaysAggressive),
+          retaliates: Boolean(this.definitionDraft.aggression.retaliates)
+        },
+        combat: {
+          ...this.definitionDraft.combat,
+          attackSpeed: this.optionalNumber(this.definitionDraft.combat.attackSpeedText),
+          respawnDelay: this.optionalNumber(this.definitionDraft.combat.respawnDelayText),
+          animations: {
+            attack: this.optionalNumber(this.definitionDraft.combat.animations.attackText),
+            block: this.optionalNumber(this.definitionDraft.combat.animations.blockText),
+            death: this.optionalNumber(this.definitionDraft.combat.animations.deathText)
+          }
+        },
+        drops
+      };
+    },
+    payloadFromShop() {
+      const id = this.shopDraft.id.trim();
+      if (!id) {
+        this.error = 'Shop key is required.';
+        return null;
+      }
+      const items = this.parseJsonField(this.shopDraft.itemsText, 'Shop items JSON');
+      if (items === null) {
+        return null;
+      }
+      return {
+        id,
+        name: this.shopDraft.name || id,
+        npcIds: this.csvList(this.shopDraft.npcIdsText).map(Number).filter(value => !Number.isNaN(value)),
+        currencyItemId: Number(this.shopDraft.currencyItemId),
+        buysItems: Boolean(this.shopDraft.buysItems),
+        sellsItems: Boolean(this.shopDraft.sellsItems),
+        restockTicks: Number(this.shopDraft.restockTicks),
+        tags: this.shopDraft.tags || [],
+        notes: this.shopDraft.notes || null,
+        items
       };
     },
     requireSelection() {
@@ -379,6 +750,27 @@ export default {
         return false;
       }
       return true;
+    },
+    csvList(text) {
+      return String(text || '').split(',').map(item => item.trim()).filter(Boolean);
+    },
+    optionalNumber(value) {
+      if (value === '' || value === null || value === undefined) {
+        return null;
+      }
+      const number = Number(value);
+      return Number.isNaN(number) ? null : number;
+    },
+    formatJson(value) {
+      return JSON.stringify(value, null, 2);
+    },
+    parseJsonField(text, label) {
+      try {
+        return JSON.parse(text || '[]');
+      } catch (err) {
+        this.error = `${label} is not valid JSON.`;
+        return null;
+      }
     },
     errorMessage(err) {
       return err.response?.data?.error || err.message || 'Unexpected editor error.';
@@ -492,6 +884,7 @@ h1 {
 .toolbar {
   display: flex;
   align-items: flex-end;
+  flex-wrap: wrap;
   gap: 14px;
   padding: 18px;
 }
@@ -555,14 +948,9 @@ button {
   padding: 12px 15px;
 }
 
-button:hover {
-  transform: translateY(-1px);
-}
-
 button:disabled {
   cursor: not-allowed;
   opacity: 0.48;
-  transform: none;
 }
 
 button.ghost {
@@ -615,7 +1003,8 @@ button.danger {
 .results,
 .actions,
 .nudge,
-.toggles {
+.toggles,
+.definition-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -635,7 +1024,83 @@ button.danger {
 }
 
 .results button {
+  align-items: center;
   background: #81603a;
+  display: flex;
+  gap: 10px;
+}
+
+.results img {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  object-fit: cover;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+  padding: 7px;
+  border-radius: 18px;
+  background: rgba(38, 55, 45, 0.08);
+}
+
+.tab {
+  background: transparent;
+  color: #38463c;
+}
+
+.tab.active {
+  background: #26372d;
+  color: #fff9eb;
+}
+
+.definition-shell {
+  display: grid;
+  gap: 16px;
+}
+
+.definition-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 18px;
+  background: #f6eddb;
+}
+
+.definition-banner.dirty {
+  background: #ffe8dd;
+}
+
+.definition-banner strong,
+.definition-banner small {
+  display: block;
+}
+
+.definition-banner small {
+  margin-top: 4px;
+  color: #6e786f;
+}
+
+.image-preview {
+  display: grid;
+  min-height: 280px;
+  grid-column: 1 / -1;
+  overflow: hidden;
+  place-items: center;
+  border: 1px dashed rgba(38, 55, 45, 0.3);
+  border-radius: 20px;
+  background: #fffdf7;
+}
+
+.image-preview img {
+  max-width: min(100%, 440px);
+  max-height: 320px;
+  object-fit: contain;
 }
 
 .edit-grid {

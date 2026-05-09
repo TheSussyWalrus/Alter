@@ -34,6 +34,7 @@ data class NpcCombatDef(
     val aggressiveRadius: Int,
     val aggroTargetDelay: Int,
     val aggressiveTimer: Int,
+    val followRange: Int,
     val poisonChance: Double,
     val venomChance: Double,
     val slayerReq: Int,
@@ -66,6 +67,7 @@ data class NpcCombatDef(
                 aggressiveRadius = 0,
                 aggroTargetDelay = 0,
                 aggressiveTimer = 0,
+                followRange = DEFAULT_FOLLOW_RANGE,
                 attackAnimation = DEFAULT_ATTACK_ANIMATION,
                 blockAnimation = DEFAULT_BLOCK_ANIMATION,
                 deathAnimation = listOf(DEFAULT_DEATH_ANIMATION),
@@ -94,5 +96,7 @@ data class NpcCombatDef(
                 immuneCannons = false,
                 immuneThralls = false
             )
+
+        const val DEFAULT_FOLLOW_RANGE = 16
     }
 }

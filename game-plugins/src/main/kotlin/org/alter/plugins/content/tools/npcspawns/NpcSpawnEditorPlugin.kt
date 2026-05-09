@@ -9,6 +9,7 @@ import org.alter.game.model.entity.Player
 import org.alter.game.model.priv.Privilege
 import org.alter.game.plugin.KotlinPlugin
 import org.alter.game.plugin.PluginRepository
+import org.alter.plugins.content.tools.npcdefs.NpcDefinitionService
 import org.alter.plugins.service.restapi.RestApiService
 
 class NpcSpawnEditorPlugin(
@@ -16,9 +17,11 @@ class NpcSpawnEditorPlugin(
     world: World,
     server: Server,
 ) : KotlinPlugin(r, world, server) {
+    private val definitionService = NpcDefinitionService()
     private val spawnService = NpcSpawnService()
 
     init {
+        loadService(definitionService)
         loadService(spawnService)
         loadService(RestApiService())
 

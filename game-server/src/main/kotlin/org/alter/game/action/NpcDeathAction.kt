@@ -6,6 +6,7 @@ import org.alter.game.info.NpcInfo
 import org.alter.game.model.LockState
 import org.alter.game.model.attr.KILLER_ATTR
 import org.alter.game.model.entity.AreaSound
+import org.alter.game.model.entity.GroundItem
 import org.alter.game.model.entity.Npc
 import org.alter.game.model.entity.Pawn
 import org.alter.game.model.entity.Player
@@ -67,6 +68,11 @@ object NpcDeathAction {
             wait(def.cycleLength)
         }
         world.plugins.executeNpcDeath(npc)
+        (killer as? Player)?.let { player ->
+            roll(player, npc.combatDef.LootTables).forEach { drop ->
+                world.spawn(GroundItem(drop.item, drop.amount, npc.tile, player))
+            }
+        }
         world.plugins.anyNpcDeath.forEach {
             npc.executePlugin(it)
         }

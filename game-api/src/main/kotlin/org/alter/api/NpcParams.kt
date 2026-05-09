@@ -101,6 +101,8 @@ class NpcCombatBuilder {
 
     private var aggroTimer = -1
 
+    private var followRange = NpcCombatDef.DEFAULT_FOLLOW_RANGE
+
     private var poisonChance = -1.0
 
     private var venomChance = -1.0
@@ -164,6 +166,7 @@ class NpcCombatBuilder {
             aggressiveRadius = aggroRadius,
             aggroTargetDelay = aggroTargetDelay,
             aggressiveTimer = aggroTimer,
+            followRange = followRange,
             poisonChance = poisonChance,
             venomChance = venomChance,
             slayerReq = slayerReq,
@@ -355,6 +358,12 @@ class NpcCombatBuilder {
     fun setAggroTimer(timer: Int): NpcCombatBuilder {
         check(aggroTimer == -1) { "Aggro timer already set. ${Throwable().stackTrace[2].fileName}" }
         aggroTimer = timer
+        return this
+    }
+
+    fun setFollowRange(range: Int): NpcCombatBuilder {
+        check(range >= 0) { "Follow range must be greater than or equal to 0. ${Throwable().stackTrace[2].fileName}" }
+        followRange = range
         return this
     }
 

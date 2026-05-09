@@ -64,7 +64,24 @@ class CombatPlugin(
             return false
         }
         if (pawn.entityType.isNpc) {
-            routeLogic = (pawn as Npc).routeLogic
+            val npc = pawn as Npc
+            routeLogic = npc.routeLogic
+            if (npc.combatDef.followRange >= 0 && !target.tile.isWithinRadius(npc.spawnTile, npc.combatDef.followRange)) {
+                Combat.reset(npc)
+                npc.resetFacePawn()
+                npc.stopMovement()
+                npc.walkRoute(
+                    world.smartRouteFinder.findRoute(
+                        level = npc.tile.height,
+                        srcX = npc.tile.x,
+                        srcZ = npc.tile.z,
+                        destX = npc.spawnTile.x,
+                        destZ = npc.spawnTile.z,
+                    ),
+                    StepType.NORMAL,
+                )
+                return false
+            }
         }
         var reached = world.reachStrategy.reached(
             flags = world.collision,

@@ -12,6 +12,7 @@ import org.alter.game.model.Tile
 import org.alter.game.model.World
 import org.alter.game.model.entity.Npc
 import org.alter.game.service.Service
+import org.alter.plugins.content.tools.npcdefs.NpcDefinitionService
 import java.nio.file.AtomicMoveNotSupportedException
 import java.nio.file.Files
 import java.nio.file.Path
@@ -169,6 +170,7 @@ class NpcSpawnService : Service {
             return null
         }
         applySpawnState(npc, normalized)
+        world.getService(NpcDefinitionService::class.java)?.applySpawnOverrides(npc, normalized)
         managedNpcs[normalized.key] = npc
         return npc
     }
@@ -221,6 +223,9 @@ class NpcSpawnService : Service {
         entry.name = npcName(entry.npcId) ?: entry.name.ifBlank { "Unknown NPC" }
         entry.height = entry.height.coerceIn(0, 3)
         entry.walkRadius = entry.walkRadius.coerceAtLeast(0)
+        entry.aggressionRadius = entry.aggressionRadius?.coerceAtLeast(0)
+        entry.followRange = entry.followRange?.coerceAtLeast(0)
+        entry.shopKey = entry.shopKey?.trim()?.takeIf { it.isNotBlank() }
         entry.facing = parseDirection(entry.facing).name
         entry.tags =
             entry.tags

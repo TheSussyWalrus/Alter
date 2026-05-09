@@ -73,8 +73,36 @@ class RestApiRoutes {
             worldEditorController.searchNpcs(req, res)
         }
 
+        get("/world-editor/npcs/:npcId/image") { req, res ->
+            worldEditorController.getNpcImage(req, res)
+        }
+
         get("/world-editor/dev-players") { _, res ->
             worldEditorController.listDevPlayers(res)
+        }
+
+        get("/world-editor/npc-definitions") { _, res ->
+            worldEditorController.listNpcDefinitions(res)
+        }
+
+        get("/world-editor/npc-definitions/:npcId") { req, res ->
+            worldEditorController.getNpcDefinition(req, res)
+        }
+
+        patch("/world-editor/npc-definitions/:npcId") { req, res ->
+            worldEditorController.updateNpcDefinition(req, res)
+        }
+
+        post("/world-editor/npc-definitions/save") { _, res ->
+            worldEditorController.saveNpcDefinitions(res)
+        }
+
+        post("/world-editor/npc-definitions/reload") { _, res ->
+            worldEditorController.reloadNpcDefinitions(res)
+        }
+
+        patch("/world-editor/npc-shops/:shopKey") { req, res ->
+            worldEditorController.upsertNpcShop(req, res)
         }
 
         post("/world-editor/npc-spawns") { req, res ->

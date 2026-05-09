@@ -14,6 +14,10 @@ data class NpcSpawnEntry(
     var facing: String = Direction.SOUTH.name,
     var active: Boolean = true,
     var enabled: Boolean = true,
+    var aggressive: Boolean? = null,
+    var aggressionRadius: Int? = null,
+    var followRange: Int? = null,
+    var shopKey: String? = null,
     var tags: MutableList<String>? = mutableListOf(),
     var notes: String? = null,
 ) {
