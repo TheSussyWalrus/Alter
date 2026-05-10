@@ -534,8 +534,40 @@ class QaActionDriver {
                     currentShop.contains(nameContains, ignoreCase = true)
                 } else {
                     currentShop.isNotBlank()
-                }
+            }
             assertions.add(QaAssertion("shop-open", passed, nameContains ?: expectedOpen.toString(), currentShop.ifBlank { "none" }))
+        }
+        step.expect.array("objectsAbsent")?.forEachObject { expected ->
+            val ids = expected.resolveIds("objects", "objectIds")
+            val x = expected.int("x") ?: after.tile.x
+            val z = expected.int("z") ?: after.tile.z
+            val height = expected.int("height") ?: after.tile.height
+            val radius = expected.int("radius") ?: 0
+            val found = findAnyObject(player, ids, Tile(x, z, height), radius)
+            assertions.add(
+                QaAssertion(
+                    "objects-absent:${ids.joinToString("|")}:$x:$z:$height",
+                    found == null,
+                    "absent within radius $radius",
+                    found?.let { "${it.id}@${it.tile.x},${it.tile.z},${it.tile.height}" } ?: "absent",
+                ),
+            )
+        }
+        step.expect.array("objectsPresent")?.forEachObject { expected ->
+            val ids = expected.resolveIds("objects", "objectIds")
+            val x = expected.int("x") ?: after.tile.x
+            val z = expected.int("z") ?: after.tile.z
+            val height = expected.int("height") ?: after.tile.height
+            val radius = expected.int("radius") ?: 0
+            val found = findAnyObject(player, ids, Tile(x, z, height), radius)
+            assertions.add(
+                QaAssertion(
+                    "objects-present:${ids.joinToString("|")}:$x:$z:$height",
+                    found != null,
+                    "present within radius $radius",
+                    found?.let { "${it.id}@${it.tile.x},${it.tile.z},${it.tile.height}" } ?: "missing",
+                ),
+            )
         }
         step.expect.boolean("configLoaded")?.let {
             val allExist = step.setup.array("configRefs")?.all { ref -> pathExists(ref.asString) } ?: false
@@ -600,6 +632,35 @@ class QaActionDriver {
             }
         }
         result.observations.add("No target object found for '$label' within $radius tiles.")
+        return null
+    }
+
+    private fun findAnyObject(
+        player: QaPlayer,
+        ids: List<Int>,
+        center: Tile,
+        radius: Int,
+    ): GameObject? {
+        if (ids.isEmpty()) {
+            return null
+        }
+        for (distance in 0..radius) {
+            for (dx in -distance..distance) {
+                for (dz in -distance..distance) {
+                    if (kotlin.math.abs(dx) != distance && kotlin.math.abs(dz) != distance) {
+                        continue
+                    }
+                    val tile = Tile(center.x + dx, center.z + dz, center.height)
+                    val chunk = player.world.chunks.get(tile, createIfNeeded = false) ?: continue
+                    val obj =
+                        chunk.getEntities<GameObject>(tile, EntityType.STATIC_OBJECT, EntityType.DYNAMIC_OBJECT)
+                            .firstOrNull { it.id in ids }
+                    if (obj != null) {
+                        return obj
+                    }
+                }
+            }
+        }
         return null
     }
 

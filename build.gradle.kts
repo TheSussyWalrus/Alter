@@ -1,3 +1,4 @@
+import org.gradle.api.tasks.SourceSetContainer
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
@@ -58,5 +59,22 @@ allprojects {
             languageVersion = JavaLanguageVersion.of(17)
         }
     }
+}
+
+tasks.register<JavaExec>("patchMaps") {
+    group = "cache"
+    description = "Applies source-controlled map patches from data/cfg/map_patches to the local ignored data/cache."
+
+    val toolsProject = project(":plugins:tools")
+    val toolsSourceSets = toolsProject.extensions.getByType<SourceSetContainer>()
+    dependsOn(toolsProject.tasks.named("classes"))
+    classpath = toolsSourceSets.named("main").get().runtimeClasspath
+    mainClass.set("dev.openrune.cache.tools.map.MapPatchToolKt")
+    workingDir = rootProject.projectDir
+    javaLauncher.set(
+        javaToolchains.launcherFor {
+            languageVersion.set(JavaLanguageVersion.of(17))
+        },
+    )
 }
 

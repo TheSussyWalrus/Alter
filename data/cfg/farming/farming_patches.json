@@ -2,7 +2,7 @@
   {
     "name": "herb_patch",
     "type": "herb",
-    "objects": ["herb_patch", "herb_patch_18818", "herb_patch_18819", "herb_patch_18820", "herb_patch_18821", "herb_patch_18822", "herb_patch_18823"],
+    "objects": ["herb_patch", "herb_patch_18818", "herb_patch_18819", "herb_patch_18820", "herb_patch_18821", "herb_patch_18822", "herb_patch_18823", "catherby_herb_patch"],
     "rakeExperience": 4.0,
     "plantTool": "item.seed_dibber",
     "crops": [
@@ -22,7 +22,7 @@
   {
     "name": "allotment",
     "type": "allotment",
-    "objects": ["allotment", "allotment_8574", "allotment_8575", "allotment_8576", "allotment_8577", "allotment_8578", "allotment_8579"],
+    "objects": ["allotment", "allotment_8574", "allotment_8575", "allotment_8576", "allotment_8577", "allotment_8578", "allotment_8579", "catherby_allotment_south", "catherby_allotment_north"],
     "rakeExperience": 4.0,
     "plantTool": "item.seed_dibber",
     "crops": [

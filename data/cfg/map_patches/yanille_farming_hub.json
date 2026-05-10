@@ -1,0 +1,128 @@
+{
+  "key": "yanille_farming_hub",
+  "description": "Clear the Yanille wheat field into a grass hub reserved for configurable Farming patch placement.",
+  "regionX": 40,
+  "regionY": 48,
+  "revision": 228,
+  "operations": {
+    "removeConnectedLocations": [
+      {
+        "seedTile": { "x": 2586, "z": 3104, "height": 0 },
+        "objectNamePrefixes": ["wheat", "mud_patch"],
+        "objectIds": [7517],
+        "searchRadius": 40,
+        "startSearchRadius": 6,
+        "diagonalConnections": true,
+        "fillBoundingBox": true,
+        "terrainPadding": 0,
+        "fallbackBounds": { "minX": 2580, "minZ": 3102, "maxX": 2585, "maxZ": 3106, "height": 0 }
+      },
+      {
+        "seedTile": { "x": 2580, "z": 3102, "height": 0 },
+        "objectNamePrefixes": [],
+        "objectIds": [83, 4735, 4736, 8552, 8553, 8573, 8574, 8575, 8576, 8577, 8578, 8579, 7517, 7518, 7519, 15063, 15064, 15068, 15072],
+        "searchRadius": 16,
+        "startSearchRadius": 16,
+        "diagonalConnections": true,
+        "fillBoundingBox": false,
+        "terrainPadding": 0
+      },
+      {
+        "seedTile": { "x": 2591, "z": 3103, "height": 0 },
+        "objectNamePrefixes": [],
+        "objectIds": [83, 4735, 4736, 8151, 8132, 8133, 8134, 8135, 8136, 8137, 8138, 18818, 18819, 18820, 18845, 18846, 18850, 7517, 7518, 7519],
+        "searchRadius": 8,
+        "startSearchRadius": 8,
+        "diagonalConnections": true,
+        "fillBoundingBox": false,
+        "terrainPadding": 0
+      },
+      {
+        "seedTile": { "x": 2581, "z": 3102, "height": 0 },
+        "objectNamePrefixes": [],
+        "objectIds": [83, 4735, 4736, 8151, 8132, 8133, 8134, 8135, 8136, 8137, 8138, 18818, 18819, 18820, 18845, 18846, 18850, 7517, 7518, 7519],
+        "searchRadius": 6,
+        "startSearchRadius": 6,
+        "diagonalConnections": true,
+        "fillBoundingBox": false,
+        "terrainPadding": 0
+      }
+    ],
+    "copyTerrainFromSample": {
+      "sampleTile": { "x": 2586, "z": 3118, "height": 0 },
+      "preserveHeight": true,
+      "copySettings": false,
+      "allowBlankSample": false
+    },
+    "copyTerrainRectangles": [],
+    "copySourceRectangles": [
+      {
+        "enabled": true,
+        "sourceBounds": { "minX": 2804, "minZ": 3465, "maxX": 2815, "maxZ": 3469, "height": 0 },
+        "destinationTile": { "x": 2579, "z": 3105, "height": 0 },
+        "objectIds": [83, 4735, 4736, 8552, 7517, 7518, 7519],
+        "copyTerrain": true,
+        "copyLocations": true,
+        "preserveHeight": true,
+        "copySettings": false
+      },
+      {
+        "enabled": true,
+        "sourceBounds": { "minX": 2812, "minZ": 3462, "maxX": 2815, "maxZ": 3465, "height": 0 },
+        "destinationTile": { "x": 2580, "z": 3101, "height": 0 },
+        "objectIds": [83, 4735, 4736, 8151, 7517, 7518, 7519],
+        "copyTerrain": true,
+        "copyLocations": true,
+        "preserveHeight": true,
+        "copySettings": false
+      }
+    ],
+    "addLocations": [],
+    "reservedSlots": [
+      {
+        "key": "yanille_farming_allotment_west",
+        "type": "allotment",
+        "enabled": true,
+        "x": 2580,
+        "z": 3106,
+        "height": 0,
+        "width": 10,
+        "length": 3,
+        "notes": "Catherby allotment footprint copied into the cleared Yanille farming hub, hugging the north wall."
+      },
+      {
+        "key": "yanille_farming_herb_southwest",
+        "type": "herb",
+        "enabled": true,
+        "x": 2581,
+        "z": 3102,
+        "height": 0,
+        "width": 2,
+        "length": 2,
+        "notes": "Catherby herb patch footprint copied south of the allotment patch's west side."
+      },
+      {
+        "key": "yanille_farming_flower",
+        "type": "flower",
+        "enabled": false,
+        "x": 2590,
+        "z": 3103,
+        "height": 0,
+        "width": 2,
+        "length": 2,
+        "notes": "Reserved blank hub slot for a future flower patch."
+      },
+      {
+        "key": "yanille_farming_compost",
+        "type": "compost",
+        "enabled": false,
+        "x": 2594,
+        "z": 3105,
+        "height": 0,
+        "width": 2,
+        "length": 2,
+        "notes": "Reserved blank hub slot for a future compost bin."
+      }
+    ]
+  }
+}

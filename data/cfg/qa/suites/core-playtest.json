@@ -36,6 +36,67 @@
       ]
     },
     {
+      "id": "yanille-farming-hub-sanity",
+      "name": "Yanille Farming Hub Sanity",
+      "category": "world",
+      "goals": [
+        {
+          "id": "walk-to-yanille-farming-hub",
+          "name": "Walk to cleared Yanille farming hub",
+          "category": "movement",
+          "type": "movement-probe",
+          "setup": {
+            "origin": { "area": "yanille", "x": 2606, "z": 3093, "height": 0 }
+          },
+          "action": {
+            "walkTo": { "x": 2586, "z": 3104, "height": 0 }
+          },
+          "expect": {
+            "tile": { "x": 2586, "z": 3104, "height": 0, "radius": 2 },
+            "objectsAbsent": [
+              {
+                "x": 2586,
+                "z": 3104,
+                "height": 0,
+                "radius": 12,
+                "objects": [
+                  "object.wheat",
+                  "object.wheat_5583",
+                  "object.wheat_5584",
+                  "object.wheat_5585",
+                  "object.wheat_7463",
+                  "object.wheat_7464",
+                  "object.wheat_7465",
+                  "object.null_7517",
+                  "object.mud_patch",
+                  "object.mud_patch_2531"
+                ]
+              }
+            ],
+            "objectsPresent": [
+              {
+                "x": 2580,
+                "z": 3106,
+                "height": 0,
+                "radius": 1,
+                "objects": ["object.catherby_allotment_south"]
+              },
+              {
+                "x": 2581,
+                "z": 3102,
+                "height": 0,
+                "radius": 1,
+                "objects": ["object.catherby_herb_patch"]
+              }
+            ]
+          },
+          "timeoutTicks": 90,
+          "failureClass": "missing_content",
+          "continueOnFailure": true
+        }
+      ]
+    },
+    {
       "id": "skills-economy-loop",
       "name": "Skills Economy Loop",
       "category": "skills",
