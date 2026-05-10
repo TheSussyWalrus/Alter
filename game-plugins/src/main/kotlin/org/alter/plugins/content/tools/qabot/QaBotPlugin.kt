@@ -50,7 +50,7 @@ class QaBotPlugin(
                     val id = latest?.get("id")?.asString
                     player.message(if (id != null) "Latest QA report: data/qa/sessions/$id.json" else "No QA reports have been written yet.")
                 }
-                else -> player.message("Usage: ::qabot start [scenario], ::qabot stop, ::qabot status, ::qabot report")
+                else -> player.message("Usage: ::qabot start [suite-or-scenario], ::qabot stop, ::qabot status, ::qabot report")
             }
         }
     }

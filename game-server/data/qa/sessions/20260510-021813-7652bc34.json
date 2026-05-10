@@ -1,0 +1,2644 @@
+{
+  "id": "20260510-021813-7652bc34",
+  "scenarioId": "core-playtest",
+  "scenarioName": "Core Playtest QA",
+  "seed": 20260510,
+  "requestedBy": "rest-api",
+  "startedAt": "2026-05-10T02:18:13.595048300Z",
+  "finishedAt": "2026-05-10T02:24:38.793917900Z",
+  "status": "failed",
+  "botName": "QA_Skills",
+  "botTile": {
+    "x": 2606,
+    "z": 3093,
+    "height": 0,
+    "regionId": 10288
+  },
+  "runMode": "suite",
+  "suiteId": "core-playtest",
+  "suiteName": "Core Playtest QA",
+  "repeatCount": 1,
+  "fixtureMode": "ephemeral",
+  "steps": [
+    {
+      "id": "world-sanity",
+      "skill": "none",
+      "category": "world",
+      "type": "world-sanity-probe",
+      "startedAtCycle": 235,
+      "finishedAtCycle": 235,
+      "status": "passed",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "World sanity probe executed."
+      ],
+      "assertions": [
+        {
+          "name": "world-has-players",
+          "passed": true,
+          "expected": "true",
+          "actual": "2"
+        },
+        {
+          "name": "world-has-npcs",
+          "passed": true,
+          "expected": "true",
+          "actual": "120"
+        },
+        {
+          "name": "anchor:Shop keeper",
+          "passed": true,
+          "expected": "found",
+          "actual": "true"
+        },
+        {
+          "name": "anchor:Giant rat",
+          "passed": true,
+          "expected": "found",
+          "actual": "true"
+        },
+        {
+          "name": "world-available",
+          "passed": true,
+          "expected": "true",
+          "actual": "true"
+        }
+      ],
+      "messages": [
+        "Welcome to Alter."
+      ]
+    },
+    {
+      "id": "walk-to-yanille-shop",
+      "skill": "",
+      "category": "movement",
+      "type": "movement-probe",
+      "startedAtCycle": 235,
+      "finishedAtCycle": 315,
+      "status": "failed",
+      "failureClass": "blocked_route",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "Queued walk to 2596,3105,0."
+      ],
+      "assertions": [
+        {
+          "name": "walk-to:2596:3105:0",
+          "passed": true,
+          "expected": "queued",
+          "actual": "queued"
+        },
+        {
+          "name": "tile",
+          "passed": false,
+          "expected": "2596,3105,0 radius 2",
+          "actual": "2599,3105,0"
+        }
+      ],
+      "messages": []
+    },
+    {
+      "id": "walk-to-yanille-shop",
+      "skill": "",
+      "category": "movement",
+      "type": "movement-probe",
+      "startedAtCycle": 315,
+      "finishedAtCycle": 395,
+      "status": "failed",
+      "failureClass": "blocked_route",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "Queued walk to 2596,3105,0."
+      ],
+      "assertions": [
+        {
+          "name": "walk-to:2596:3105:0",
+          "passed": true,
+          "expected": "queued",
+          "actual": "queued"
+        },
+        {
+          "name": "tile",
+          "passed": false,
+          "expected": "2596,3105,0 radius 2",
+          "actual": "2599,3105,0"
+        }
+      ],
+      "messages": []
+    },
+    {
+      "id": "walk-to-yanille-shop",
+      "skill": "",
+      "category": "movement",
+      "type": "movement-probe",
+      "startedAtCycle": 395,
+      "finishedAtCycle": 475,
+      "status": "failed",
+      "failureClass": "blocked_route",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "Queued walk to 2596,3105,0."
+      ],
+      "assertions": [
+        {
+          "name": "walk-to:2596:3105:0",
+          "passed": true,
+          "expected": "queued",
+          "actual": "queued"
+        },
+        {
+          "name": "tile",
+          "passed": false,
+          "expected": "2596,3105,0 radius 2",
+          "actual": "2599,3105,0"
+        }
+      ],
+      "messages": []
+    },
+    {
+      "id": "woodcutting",
+      "skill": "woodcutting",
+      "category": "gathering",
+      "type": "resource-probe",
+      "startedAtCycle": 475,
+      "finishedAtCycle": 505,
+      "status": "passed",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "Found object 1278 for 'nearest_tree' at 2621,3102."
+      ],
+      "assertions": [
+        {
+          "name": "object-route:1278:1",
+          "passed": true,
+          "expected": "queued",
+          "actual": "queued"
+        },
+        {
+          "name": "xp:woodcutting",
+          "passed": true,
+          "expected": ">= 25.0",
+          "actual": "25.0"
+        },
+        {
+          "name": "inventory:item.logs:min",
+          "passed": true,
+          "expected": ">= 1",
+          "actual": "1"
+        },
+        {
+          "name": "messages:any",
+          "passed": true,
+          "expected": "one of configured messages",
+          "actual": "You get some logs."
+        }
+      ],
+      "messages": [
+        "You get some logs."
+      ]
+    },
+    {
+      "id": "firemaking",
+      "skill": "firemaking",
+      "category": "production",
+      "type": "inventory-action-probe",
+      "startedAtCycle": 505,
+      "finishedAtCycle": 507,
+      "status": "passed",
+      "observations": [
+        "Moved QA bot to 2606,3093,0."
+      ],
+      "assertions": [
+        {
+          "name": "item-on-item:590:1511",
+          "passed": true,
+          "expected": "handled",
+          "actual": "true"
+        },
+        {
+          "name": "xp:firemaking",
+          "passed": true,
+          "expected": ">= 40.0",
+          "actual": "40.0"
+        },
+        {
+          "name": "inventory:item.logs:max",
+          "passed": true,
+          "expected": "<= -1",
+          "actual": "-1"
+        }
+      ],
+      "messages": [
+        "You light the logs."
+      ]
+    },
+    {
+      "id": "mining",
+      "skill": "mining",
+      "category": "gathering",
+      "type": "resource-probe",
+      "startedAtCycle": 507,
+      "finishedAtCycle": 571,
+      "status": "passed",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "Found object 11161 for 'nearest_copper_or_tin_rock' at 2630,3137."
+      ],
+      "assertions": [
+        {
+          "name": "object-route:11161:1",
+          "passed": true,
+          "expected": "queued",
+          "actual": "queued"
+        },
+        {
+          "name": "xp:mining",
+          "passed": true,
+          "expected": ">= 17.5",
+          "actual": "17.5"
+        },
+        {
+          "name": "inventory:any",
+          "passed": true,
+          "expected": "one matching delta",
+          "actual": "inventory:item.copper_ore:min=1, inventory:item.tin_ore:min=0"
+        },
+        {
+          "name": "messages:any",
+          "passed": false,
+          "expected": "one of configured messages",
+          "actual": "You manage to mine some copper ore."
+        }
+      ],
+      "messages": [
+        "You manage to mine some copper ore."
+      ]
+    },
+    {
+      "id": "smithing",
+      "skill": "smithing",
+      "category": "production",
+      "type": "object-action-probe",
+      "startedAtCycle": 571,
+      "finishedAtCycle": 641,
+      "status": "failed",
+      "failureClass": "interaction_failed",
+      "observations": [
+        "Moved QA bot to 3109,3499,0.",
+        "No target object found for 'nearest_furnace' within 32 tiles."
+      ],
+      "assertions": [
+        {
+          "name": "xp:smithing",
+          "passed": false,
+          "expected": ">= 6.2",
+          "actual": "0.0"
+        },
+        {
+          "name": "inventory:item.bronze_bar:min",
+          "passed": false,
+          "expected": ">= 1",
+          "actual": "0"
+        },
+        {
+          "name": "messages:any",
+          "passed": false,
+          "expected": "one of configured messages",
+          "actual": "You manage to mine some copper ore.\nYou manage to mine some copper ore.\nYou manage to mine some copper ore.\nYou manage to mine some copper ore.\nYou manage to mine some copper ore.\nYou manage to mine s"
+        }
+      ],
+      "messages": [
+        "You manage to mine some copper ore.",
+        "You manage to mine some copper ore.",
+        "You manage to mine some copper ore.",
+        "You manage to mine some copper ore.",
+        "You manage to mine some copper ore.",
+        "You manage to mine some copper ore."
+      ]
+    },
+    {
+      "id": "smithing",
+      "skill": "smithing",
+      "category": "production",
+      "type": "object-action-probe",
+      "startedAtCycle": 641,
+      "finishedAtCycle": 711,
+      "status": "failed",
+      "failureClass": "interaction_failed",
+      "observations": [
+        "Moved QA bot to 3109,3499,0.",
+        "No target object found for 'nearest_furnace' within 32 tiles."
+      ],
+      "assertions": [
+        {
+          "name": "xp:smithing",
+          "passed": false,
+          "expected": ">= 6.2",
+          "actual": "0.0"
+        },
+        {
+          "name": "inventory:item.bronze_bar:min",
+          "passed": false,
+          "expected": ">= 1",
+          "actual": "0"
+        },
+        {
+          "name": "messages:any",
+          "passed": false,
+          "expected": "one of configured messages",
+          "actual": ""
+        }
+      ],
+      "messages": []
+    },
+    {
+      "id": "smithing",
+      "skill": "smithing",
+      "category": "production",
+      "type": "object-action-probe",
+      "startedAtCycle": 711,
+      "finishedAtCycle": 781,
+      "status": "failed",
+      "failureClass": "interaction_failed",
+      "observations": [
+        "Moved QA bot to 3109,3499,0.",
+        "No target object found for 'nearest_furnace' within 32 tiles."
+      ],
+      "assertions": [
+        {
+          "name": "xp:smithing",
+          "passed": false,
+          "expected": ">= 6.2",
+          "actual": "0.0"
+        },
+        {
+          "name": "inventory:item.bronze_bar:min",
+          "passed": false,
+          "expected": ">= 1",
+          "actual": "0"
+        },
+        {
+          "name": "messages:any",
+          "passed": false,
+          "expected": "one of configured messages",
+          "actual": ""
+        }
+      ],
+      "messages": []
+    },
+    {
+      "id": "crafting",
+      "skill": "crafting",
+      "category": "production",
+      "type": "inventory-action-probe",
+      "startedAtCycle": 781,
+      "finishedAtCycle": 784,
+      "status": "passed",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "Selected recipe item.leather_gloves from skill menu."
+      ],
+      "assertions": [
+        {
+          "name": "item-on-item:1733:1741",
+          "passed": true,
+          "expected": "handled",
+          "actual": "true"
+        },
+        {
+          "name": "xp:crafting",
+          "passed": true,
+          "expected": ">= 13.8",
+          "actual": "13.8"
+        },
+        {
+          "name": "inventory:item.leather_gloves:min",
+          "passed": true,
+          "expected": ">= 1",
+          "actual": "1"
+        },
+        {
+          "name": "messages:any",
+          "passed": true,
+          "expected": "one of configured messages",
+          "actual": "You make a pair of leather gloves."
+        }
+      ],
+      "messages": [
+        "You make a pair of leather gloves."
+      ]
+    },
+    {
+      "id": "fletching",
+      "skill": "fletching",
+      "category": "production",
+      "type": "inventory-action-probe",
+      "startedAtCycle": 784,
+      "finishedAtCycle": 787,
+      "status": "passed",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "Selected recipe item.arrow_shaft from skill menu."
+      ],
+      "assertions": [
+        {
+          "name": "item-on-item:946:1511",
+          "passed": true,
+          "expected": "handled",
+          "actual": "true"
+        },
+        {
+          "name": "xp:fletching",
+          "passed": true,
+          "expected": ">= 5.0",
+          "actual": "5.0"
+        },
+        {
+          "name": "inventory:item.arrow_shaft:min",
+          "passed": true,
+          "expected": ">= 15",
+          "actual": "15"
+        },
+        {
+          "name": "messages:any",
+          "passed": true,
+          "expected": "one of configured messages",
+          "actual": "You fletch some arrow shafts."
+        }
+      ],
+      "messages": [
+        "You fletch some arrow shafts."
+      ]
+    },
+    {
+      "id": "herblore",
+      "skill": "herblore",
+      "category": "production",
+      "type": "inventory-action-probe",
+      "startedAtCycle": 787,
+      "finishedAtCycle": 788,
+      "status": "passed",
+      "observations": [
+        "Moved QA bot to 2606,3093,0."
+      ],
+      "assertions": [
+        {
+          "name": "item-plugin:199:1",
+          "passed": true,
+          "expected": "handled",
+          "actual": "true"
+        },
+        {
+          "name": "xp:herblore",
+          "passed": true,
+          "expected": ">= 2.5",
+          "actual": "2.5"
+        },
+        {
+          "name": "inventory:item.guam_leaf:min",
+          "passed": true,
+          "expected": ">= 1",
+          "actual": "1"
+        },
+        {
+          "name": "messages:any",
+          "passed": true,
+          "expected": "one of configured messages",
+          "actual": "You clean the guam leaf."
+        }
+      ],
+      "messages": [
+        "You clean the guam leaf."
+      ]
+    },
+    {
+      "id": "open-yanille-shop",
+      "skill": "",
+      "category": "shops",
+      "type": "shop-probe",
+      "startedAtCycle": 788,
+      "finishedAtCycle": 790,
+      "status": "passed",
+      "observations": [
+        "Moved QA bot to 2596,3103,0.",
+        "No object ids resolved for target 'yanille_shop_keeper'.",
+        "Found NPC 2813 at 2596,3105."
+      ],
+      "assertions": [
+        {
+          "name": "npc-route:2813:3",
+          "passed": true,
+          "expected": "queued",
+          "actual": "queued"
+        },
+        {
+          "name": "shop-open",
+          "passed": true,
+          "expected": "Shop Keeper",
+          "actual": "Shop Keeper 1"
+        }
+      ],
+      "messages": []
+    },
+    {
+      "id": "buy-small-net",
+      "skill": "",
+      "category": "shops",
+      "type": "shop-probe",
+      "startedAtCycle": 790,
+      "finishedAtCycle": 791,
+      "status": "passed",
+      "observations": [],
+      "assertions": [
+        {
+          "name": "shop-buy:303",
+          "passed": true,
+          "expected": "handled",
+          "actual": "true"
+        },
+        {
+          "name": "inventory:item.small_fishing_net:min",
+          "passed": true,
+          "expected": ">= 1",
+          "actual": "1"
+        }
+      ],
+      "messages": []
+    },
+    {
+      "id": "sell-small-net",
+      "skill": "",
+      "category": "shops",
+      "type": "shop-probe",
+      "startedAtCycle": 791,
+      "finishedAtCycle": 792,
+      "status": "passed",
+      "observations": [],
+      "assertions": [
+        {
+          "name": "shop-sell:303",
+          "passed": true,
+          "expected": "handled",
+          "actual": "true"
+        },
+        {
+          "name": "inventory:item.small_fishing_net:max",
+          "passed": true,
+          "expected": "<= -1",
+          "actual": "-1"
+        }
+      ],
+      "messages": []
+    },
+    {
+      "id": "attack-yanille-rat",
+      "skill": "",
+      "category": "combat",
+      "type": "combat-probe",
+      "startedAtCycle": 792,
+      "finishedAtCycle": 793,
+      "status": "passed",
+      "observations": [
+        "Moved QA bot to 2608,3102,0.",
+        "Found NPC 3313 at 2609,3102.",
+        "Started combat with NPC 3313 at 2609,3102."
+      ],
+      "assertions": [
+        {
+          "name": "combat-start:3313",
+          "passed": true,
+          "expected": "started",
+          "actual": "started"
+        },
+        {
+          "name": "xp:attack",
+          "passed": true,
+          "expected": ">= 0.0",
+          "actual": "0.0"
+        }
+      ],
+      "messages": []
+    },
+    {
+      "id": "pickup-bones-if-present",
+      "skill": "",
+      "category": "drops",
+      "type": "drop-probe",
+      "startedAtCycle": 793,
+      "finishedAtCycle": 873,
+      "status": "failed",
+      "failureClass": "interaction_failed",
+      "observations": [
+        "No target ground item found within 12 tiles."
+      ],
+      "assertions": [
+        {
+          "name": "inventory:item.bones:min",
+          "passed": false,
+          "expected": ">= 1",
+          "actual": "0"
+        }
+      ],
+      "messages": [
+        "seth wishes to trade with you."
+      ]
+    },
+    {
+      "id": "slayer-check",
+      "skill": "slayer",
+      "category": "service",
+      "type": "config-availability-probe",
+      "startedAtCycle": 873,
+      "finishedAtCycle": 874,
+      "status": "passed",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "Config availability probe executed."
+      ],
+      "assertions": [
+        {
+          "name": "config:data/cfg/slayer/slayer_masters.json",
+          "passed": true,
+          "expected": "exists",
+          "actual": "true"
+        },
+        {
+          "name": "config:data/cfg/slayer/slayer_tasks.json",
+          "passed": true,
+          "expected": "exists",
+          "actual": "true"
+        },
+        {
+          "name": "slayer-command",
+          "passed": true,
+          "expected": "handled",
+          "actual": "true"
+        },
+        {
+          "name": "config-loaded",
+          "passed": true,
+          "expected": "true",
+          "actual": "true"
+        }
+      ],
+      "messages": [
+        "New Slayer assignment from Turael: zombies (15 remaining)."
+      ]
+    },
+    {
+      "id": "agility-check",
+      "skill": "agility",
+      "category": "movement",
+      "type": "config-availability-probe",
+      "startedAtCycle": 874,
+      "finishedAtCycle": 875,
+      "status": "passed",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "Config availability probe executed."
+      ],
+      "assertions": [
+        {
+          "name": "config:data/cfg/agility/courses.json",
+          "passed": true,
+          "expected": "exists",
+          "actual": "true"
+        },
+        {
+          "name": "config-loaded",
+          "passed": true,
+          "expected": "true",
+          "actual": "true"
+        }
+      ],
+      "messages": []
+    },
+    {
+      "id": "farming-check",
+      "skill": "farming",
+      "category": "service",
+      "type": "config-availability-probe",
+      "startedAtCycle": 875,
+      "finishedAtCycle": 876,
+      "status": "passed",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "Config availability probe executed."
+      ],
+      "assertions": [
+        {
+          "name": "config:data/cfg/farming/farming_patches.json",
+          "passed": true,
+          "expected": "exists",
+          "actual": "true"
+        },
+        {
+          "name": "config:data/cfg/farming/farming_state.json",
+          "passed": true,
+          "expected": "exists",
+          "actual": "true"
+        },
+        {
+          "name": "config-loaded",
+          "passed": true,
+          "expected": "true",
+          "actual": "true"
+        }
+      ],
+      "messages": []
+    },
+    {
+      "id": "runecrafting-missing",
+      "skill": "runecrafting",
+      "category": "negative",
+      "type": "missing-content-probe",
+      "startedAtCycle": 876,
+      "finishedAtCycle": 877,
+      "status": "passed",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "Marked missing-content probe; no interaction executed."
+      ],
+      "assertions": [
+        {
+          "name": "missing-content-expected",
+          "passed": true,
+          "expected": "missing",
+          "actual": "true"
+        }
+      ],
+      "messages": []
+    }
+  ],
+  "journeys": [
+    {
+      "id": "yanille-new-player-smoke",
+      "name": "Yanille New Player Smoke",
+      "category": "world",
+      "startedAtCycle": 235,
+      "finishedAtCycle": 475,
+      "status": "failed",
+      "failureClass": "blocked_route",
+      "goals": [
+        {
+          "id": "world-sanity",
+          "name": "world-sanity",
+          "attempt": 1,
+          "maxAttempts": 3,
+          "step": {
+            "id": "world-sanity",
+            "skill": "none",
+            "category": "world",
+            "type": "world-sanity-probe",
+            "startedAtCycle": 235,
+            "finishedAtCycle": 235,
+            "status": "passed",
+            "observations": [
+              "Moved QA bot to 2606,3093,0.",
+              "World sanity probe executed."
+            ],
+            "assertions": [
+              {
+                "name": "world-has-players",
+                "passed": true,
+                "expected": "true",
+                "actual": "2"
+              },
+              {
+                "name": "world-has-npcs",
+                "passed": true,
+                "expected": "true",
+                "actual": "120"
+              },
+              {
+                "name": "anchor:Shop keeper",
+                "passed": true,
+                "expected": "found",
+                "actual": "true"
+              },
+              {
+                "name": "anchor:Giant rat",
+                "passed": true,
+                "expected": "found",
+                "actual": "true"
+              },
+              {
+                "name": "world-available",
+                "passed": true,
+                "expected": "true",
+                "actual": "true"
+              }
+            ],
+            "messages": [
+              "Welcome to Alter."
+            ]
+          }
+        },
+        {
+          "id": "walk-to-yanille-shop",
+          "name": "Walk to Yanille shop",
+          "attempt": 1,
+          "maxAttempts": 3,
+          "step": {
+            "id": "walk-to-yanille-shop",
+            "skill": "",
+            "category": "movement",
+            "type": "movement-probe",
+            "startedAtCycle": 235,
+            "finishedAtCycle": 315,
+            "status": "failed",
+            "failureClass": "blocked_route",
+            "observations": [
+              "Moved QA bot to 2606,3093,0.",
+              "Queued walk to 2596,3105,0."
+            ],
+            "assertions": [
+              {
+                "name": "walk-to:2596:3105:0",
+                "passed": true,
+                "expected": "queued",
+                "actual": "queued"
+              },
+              {
+                "name": "tile",
+                "passed": false,
+                "expected": "2596,3105,0 radius 2",
+                "actual": "2599,3105,0"
+              }
+            ],
+            "messages": []
+          }
+        },
+        {
+          "id": "walk-to-yanille-shop",
+          "name": "Walk to Yanille shop",
+          "attempt": 2,
+          "maxAttempts": 3,
+          "step": {
+            "id": "walk-to-yanille-shop",
+            "skill": "",
+            "category": "movement",
+            "type": "movement-probe",
+            "startedAtCycle": 315,
+            "finishedAtCycle": 395,
+            "status": "failed",
+            "failureClass": "blocked_route",
+            "observations": [
+              "Moved QA bot to 2606,3093,0.",
+              "Queued walk to 2596,3105,0."
+            ],
+            "assertions": [
+              {
+                "name": "walk-to:2596:3105:0",
+                "passed": true,
+                "expected": "queued",
+                "actual": "queued"
+              },
+              {
+                "name": "tile",
+                "passed": false,
+                "expected": "2596,3105,0 radius 2",
+                "actual": "2599,3105,0"
+              }
+            ],
+            "messages": []
+          }
+        },
+        {
+          "id": "walk-to-yanille-shop",
+          "name": "Walk to Yanille shop",
+          "attempt": 3,
+          "maxAttempts": 3,
+          "step": {
+            "id": "walk-to-yanille-shop",
+            "skill": "",
+            "category": "movement",
+            "type": "movement-probe",
+            "startedAtCycle": 395,
+            "finishedAtCycle": 475,
+            "status": "failed",
+            "failureClass": "blocked_route",
+            "observations": [
+              "Moved QA bot to 2606,3093,0.",
+              "Queued walk to 2596,3105,0."
+            ],
+            "assertions": [
+              {
+                "name": "walk-to:2596:3105:0",
+                "passed": true,
+                "expected": "queued",
+                "actual": "queued"
+              },
+              {
+                "name": "tile",
+                "passed": false,
+                "expected": "2596,3105,0 radius 2",
+                "actual": "2599,3105,0"
+              }
+            ],
+            "messages": []
+          }
+        }
+      ],
+      "observations": [
+        "Reset fixtures after failed attempt 1 of 'walk-to-yanille-shop'.",
+        "Reset fixtures after failed attempt 2 of 'walk-to-yanille-shop'."
+      ],
+      "cleanup": {
+        "removedNpcs": 0,
+        "removedObjects": 0,
+        "clearedInventory": true,
+        "interruptedQueues": true,
+        "closedInterfaces": false,
+        "warnings": []
+      }
+    },
+    {
+      "id": "skills-economy-loop",
+      "name": "Skills Economy Loop",
+      "category": "skills",
+      "startedAtCycle": 475,
+      "finishedAtCycle": 788,
+      "status": "failed",
+      "failureClass": "interaction_failed",
+      "goals": [
+        {
+          "id": "woodcutting",
+          "name": "woodcutting",
+          "attempt": 1,
+          "maxAttempts": 3,
+          "step": {
+            "id": "woodcutting",
+            "skill": "woodcutting",
+            "category": "gathering",
+            "type": "resource-probe",
+            "startedAtCycle": 475,
+            "finishedAtCycle": 505,
+            "status": "passed",
+            "observations": [
+              "Moved QA bot to 2606,3093,0.",
+              "Found object 1278 for 'nearest_tree' at 2621,3102."
+            ],
+            "assertions": [
+              {
+                "name": "object-route:1278:1",
+                "passed": true,
+                "expected": "queued",
+                "actual": "queued"
+              },
+              {
+                "name": "xp:woodcutting",
+                "passed": true,
+                "expected": ">= 25.0",
+                "actual": "25.0"
+              },
+              {
+                "name": "inventory:item.logs:min",
+                "passed": true,
+                "expected": ">= 1",
+                "actual": "1"
+              },
+              {
+                "name": "messages:any",
+                "passed": true,
+                "expected": "one of configured messages",
+                "actual": "You get some logs."
+              }
+            ],
+            "messages": [
+              "You get some logs."
+            ]
+          }
+        },
+        {
+          "id": "firemaking",
+          "name": "firemaking",
+          "attempt": 1,
+          "maxAttempts": 3,
+          "step": {
+            "id": "firemaking",
+            "skill": "firemaking",
+            "category": "production",
+            "type": "inventory-action-probe",
+            "startedAtCycle": 505,
+            "finishedAtCycle": 507,
+            "status": "passed",
+            "observations": [
+              "Moved QA bot to 2606,3093,0."
+            ],
+            "assertions": [
+              {
+                "name": "item-on-item:590:1511",
+                "passed": true,
+                "expected": "handled",
+                "actual": "true"
+              },
+              {
+                "name": "xp:firemaking",
+                "passed": true,
+                "expected": ">= 40.0",
+                "actual": "40.0"
+              },
+              {
+                "name": "inventory:item.logs:max",
+                "passed": true,
+                "expected": "<= -1",
+                "actual": "-1"
+              }
+            ],
+            "messages": [
+              "You light the logs."
+            ]
+          }
+        },
+        {
+          "id": "mining",
+          "name": "mining",
+          "attempt": 1,
+          "maxAttempts": 3,
+          "step": {
+            "id": "mining",
+            "skill": "mining",
+            "category": "gathering",
+            "type": "resource-probe",
+            "startedAtCycle": 507,
+            "finishedAtCycle": 571,
+            "status": "passed",
+            "observations": [
+              "Moved QA bot to 2606,3093,0.",
+              "Found object 11161 for 'nearest_copper_or_tin_rock' at 2630,3137."
+            ],
+            "assertions": [
+              {
+                "name": "object-route:11161:1",
+                "passed": true,
+                "expected": "queued",
+                "actual": "queued"
+              },
+              {
+                "name": "xp:mining",
+                "passed": true,
+                "expected": ">= 17.5",
+                "actual": "17.5"
+              },
+              {
+                "name": "inventory:any",
+                "passed": true,
+                "expected": "one matching delta",
+                "actual": "inventory:item.copper_ore:min=1, inventory:item.tin_ore:min=0"
+              },
+              {
+                "name": "messages:any",
+                "passed": false,
+                "expected": "one of configured messages",
+                "actual": "You manage to mine some copper ore."
+              }
+            ],
+            "messages": [
+              "You manage to mine some copper ore."
+            ]
+          }
+        },
+        {
+          "id": "smithing",
+          "name": "smithing",
+          "attempt": 1,
+          "maxAttempts": 3,
+          "step": {
+            "id": "smithing",
+            "skill": "smithing",
+            "category": "production",
+            "type": "object-action-probe",
+            "startedAtCycle": 571,
+            "finishedAtCycle": 641,
+            "status": "failed",
+            "failureClass": "interaction_failed",
+            "observations": [
+              "Moved QA bot to 3109,3499,0.",
+              "No target object found for 'nearest_furnace' within 32 tiles."
+            ],
+            "assertions": [
+              {
+                "name": "xp:smithing",
+                "passed": false,
+                "expected": ">= 6.2",
+                "actual": "0.0"
+              },
+              {
+                "name": "inventory:item.bronze_bar:min",
+                "passed": false,
+                "expected": ">= 1",
+                "actual": "0"
+              },
+              {
+                "name": "messages:any",
+                "passed": false,
+                "expected": "one of configured messages",
+                "actual": "You manage to mine some copper ore.\nYou manage to mine some copper ore.\nYou manage to mine some copper ore.\nYou manage to mine some copper ore.\nYou manage to mine some copper ore.\nYou manage to mine s"
+              }
+            ],
+            "messages": [
+              "You manage to mine some copper ore.",
+              "You manage to mine some copper ore.",
+              "You manage to mine some copper ore.",
+              "You manage to mine some copper ore.",
+              "You manage to mine some copper ore.",
+              "You manage to mine some copper ore."
+            ]
+          }
+        },
+        {
+          "id": "smithing",
+          "name": "smithing",
+          "attempt": 2,
+          "maxAttempts": 3,
+          "step": {
+            "id": "smithing",
+            "skill": "smithing",
+            "category": "production",
+            "type": "object-action-probe",
+            "startedAtCycle": 641,
+            "finishedAtCycle": 711,
+            "status": "failed",
+            "failureClass": "interaction_failed",
+            "observations": [
+              "Moved QA bot to 3109,3499,0.",
+              "No target object found for 'nearest_furnace' within 32 tiles."
+            ],
+            "assertions": [
+              {
+                "name": "xp:smithing",
+                "passed": false,
+                "expected": ">= 6.2",
+                "actual": "0.0"
+              },
+              {
+                "name": "inventory:item.bronze_bar:min",
+                "passed": false,
+                "expected": ">= 1",
+                "actual": "0"
+              },
+              {
+                "name": "messages:any",
+                "passed": false,
+                "expected": "one of configured messages",
+                "actual": ""
+              }
+            ],
+            "messages": []
+          }
+        },
+        {
+          "id": "smithing",
+          "name": "smithing",
+          "attempt": 3,
+          "maxAttempts": 3,
+          "step": {
+            "id": "smithing",
+            "skill": "smithing",
+            "category": "production",
+            "type": "object-action-probe",
+            "startedAtCycle": 711,
+            "finishedAtCycle": 781,
+            "status": "failed",
+            "failureClass": "interaction_failed",
+            "observations": [
+              "Moved QA bot to 3109,3499,0.",
+              "No target object found for 'nearest_furnace' within 32 tiles."
+            ],
+            "assertions": [
+              {
+                "name": "xp:smithing",
+                "passed": false,
+                "expected": ">= 6.2",
+                "actual": "0.0"
+              },
+              {
+                "name": "inventory:item.bronze_bar:min",
+                "passed": false,
+                "expected": ">= 1",
+                "actual": "0"
+              },
+              {
+                "name": "messages:any",
+                "passed": false,
+                "expected": "one of configured messages",
+                "actual": ""
+              }
+            ],
+            "messages": []
+          }
+        },
+        {
+          "id": "crafting",
+          "name": "crafting",
+          "attempt": 1,
+          "maxAttempts": 3,
+          "step": {
+            "id": "crafting",
+            "skill": "crafting",
+            "category": "production",
+            "type": "inventory-action-probe",
+            "startedAtCycle": 781,
+            "finishedAtCycle": 784,
+            "status": "passed",
+            "observations": [
+              "Moved QA bot to 2606,3093,0.",
+              "Selected recipe item.leather_gloves from skill menu."
+            ],
+            "assertions": [
+              {
+                "name": "item-on-item:1733:1741",
+                "passed": true,
+                "expected": "handled",
+                "actual": "true"
+              },
+              {
+                "name": "xp:crafting",
+                "passed": true,
+                "expected": ">= 13.8",
+                "actual": "13.8"
+              },
+              {
+                "name": "inventory:item.leather_gloves:min",
+                "passed": true,
+                "expected": ">= 1",
+                "actual": "1"
+              },
+              {
+                "name": "messages:any",
+                "passed": true,
+                "expected": "one of configured messages",
+                "actual": "You make a pair of leather gloves."
+              }
+            ],
+            "messages": [
+              "You make a pair of leather gloves."
+            ]
+          }
+        },
+        {
+          "id": "fletching",
+          "name": "fletching",
+          "attempt": 1,
+          "maxAttempts": 3,
+          "step": {
+            "id": "fletching",
+            "skill": "fletching",
+            "category": "production",
+            "type": "inventory-action-probe",
+            "startedAtCycle": 784,
+            "finishedAtCycle": 787,
+            "status": "passed",
+            "observations": [
+              "Moved QA bot to 2606,3093,0.",
+              "Selected recipe item.arrow_shaft from skill menu."
+            ],
+            "assertions": [
+              {
+                "name": "item-on-item:946:1511",
+                "passed": true,
+                "expected": "handled",
+                "actual": "true"
+              },
+              {
+                "name": "xp:fletching",
+                "passed": true,
+                "expected": ">= 5.0",
+                "actual": "5.0"
+              },
+              {
+                "name": "inventory:item.arrow_shaft:min",
+                "passed": true,
+                "expected": ">= 15",
+                "actual": "15"
+              },
+              {
+                "name": "messages:any",
+                "passed": true,
+                "expected": "one of configured messages",
+                "actual": "You fletch some arrow shafts."
+              }
+            ],
+            "messages": [
+              "You fletch some arrow shafts."
+            ]
+          }
+        },
+        {
+          "id": "herblore",
+          "name": "herblore",
+          "attempt": 1,
+          "maxAttempts": 3,
+          "step": {
+            "id": "herblore",
+            "skill": "herblore",
+            "category": "production",
+            "type": "inventory-action-probe",
+            "startedAtCycle": 787,
+            "finishedAtCycle": 788,
+            "status": "passed",
+            "observations": [
+              "Moved QA bot to 2606,3093,0."
+            ],
+            "assertions": [
+              {
+                "name": "item-plugin:199:1",
+                "passed": true,
+                "expected": "handled",
+                "actual": "true"
+              },
+              {
+                "name": "xp:herblore",
+                "passed": true,
+                "expected": ">= 2.5",
+                "actual": "2.5"
+              },
+              {
+                "name": "inventory:item.guam_leaf:min",
+                "passed": true,
+                "expected": ">= 1",
+                "actual": "1"
+              },
+              {
+                "name": "messages:any",
+                "passed": true,
+                "expected": "one of configured messages",
+                "actual": "You clean the guam leaf."
+              }
+            ],
+            "messages": [
+              "You clean the guam leaf."
+            ]
+          }
+        }
+      ],
+      "observations": [
+        "Reset fixtures after failed attempt 1 of 'smithing'.",
+        "Reset fixtures after failed attempt 2 of 'smithing'."
+      ],
+      "cleanup": {
+        "removedNpcs": 0,
+        "removedObjects": 0,
+        "clearedInventory": true,
+        "interruptedQueues": true,
+        "closedInterfaces": false,
+        "warnings": []
+      }
+    },
+    {
+      "id": "shop-buy-sell-basic",
+      "name": "Shop Buy/Sell Basic",
+      "category": "shops",
+      "startedAtCycle": 788,
+      "finishedAtCycle": 792,
+      "status": "passed",
+      "goals": [
+        {
+          "id": "open-yanille-shop",
+          "name": "Open Yanille shop",
+          "attempt": 1,
+          "maxAttempts": 3,
+          "step": {
+            "id": "open-yanille-shop",
+            "skill": "",
+            "category": "shops",
+            "type": "shop-probe",
+            "startedAtCycle": 788,
+            "finishedAtCycle": 790,
+            "status": "passed",
+            "observations": [
+              "Moved QA bot to 2596,3103,0.",
+              "No object ids resolved for target 'yanille_shop_keeper'.",
+              "Found NPC 2813 at 2596,3105."
+            ],
+            "assertions": [
+              {
+                "name": "npc-route:2813:3",
+                "passed": true,
+                "expected": "queued",
+                "actual": "queued"
+              },
+              {
+                "name": "shop-open",
+                "passed": true,
+                "expected": "Shop Keeper",
+                "actual": "Shop Keeper 1"
+              }
+            ],
+            "messages": []
+          }
+        },
+        {
+          "id": "buy-small-net",
+          "name": "Buy a small fishing net",
+          "attempt": 1,
+          "maxAttempts": 3,
+          "step": {
+            "id": "buy-small-net",
+            "skill": "",
+            "category": "shops",
+            "type": "shop-probe",
+            "startedAtCycle": 790,
+            "finishedAtCycle": 791,
+            "status": "passed",
+            "observations": [],
+            "assertions": [
+              {
+                "name": "shop-buy:303",
+                "passed": true,
+                "expected": "handled",
+                "actual": "true"
+              },
+              {
+                "name": "inventory:item.small_fishing_net:min",
+                "passed": true,
+                "expected": ">= 1",
+                "actual": "1"
+              }
+            ],
+            "messages": []
+          }
+        },
+        {
+          "id": "sell-small-net",
+          "name": "Sell the small fishing net",
+          "attempt": 1,
+          "maxAttempts": 3,
+          "step": {
+            "id": "sell-small-net",
+            "skill": "",
+            "category": "shops",
+            "type": "shop-probe",
+            "startedAtCycle": 791,
+            "finishedAtCycle": 792,
+            "status": "passed",
+            "observations": [],
+            "assertions": [
+              {
+                "name": "shop-sell:303",
+                "passed": true,
+                "expected": "handled",
+                "actual": "true"
+              },
+              {
+                "name": "inventory:item.small_fishing_net:max",
+                "passed": true,
+                "expected": "<= -1",
+                "actual": "-1"
+              }
+            ],
+            "messages": []
+          }
+        }
+      ],
+      "observations": [],
+      "cleanup": {
+        "removedNpcs": 0,
+        "removedObjects": 0,
+        "clearedInventory": true,
+        "interruptedQueues": true,
+        "closedInterfaces": false,
+        "warnings": []
+      }
+    },
+    {
+      "id": "combat-drops-basic",
+      "name": "Combat And Drop Probe",
+      "category": "combat",
+      "startedAtCycle": 792,
+      "finishedAtCycle": 873,
+      "status": "failed",
+      "failureClass": "interaction_failed",
+      "goals": [
+        {
+          "id": "attack-yanille-rat",
+          "name": "Attack a Yanille rat",
+          "attempt": 1,
+          "maxAttempts": 3,
+          "step": {
+            "id": "attack-yanille-rat",
+            "skill": "",
+            "category": "combat",
+            "type": "combat-probe",
+            "startedAtCycle": 792,
+            "finishedAtCycle": 793,
+            "status": "passed",
+            "observations": [
+              "Moved QA bot to 2608,3102,0.",
+              "Found NPC 3313 at 2609,3102.",
+              "Started combat with NPC 3313 at 2609,3102."
+            ],
+            "assertions": [
+              {
+                "name": "combat-start:3313",
+                "passed": true,
+                "expected": "started",
+                "actual": "started"
+              },
+              {
+                "name": "xp:attack",
+                "passed": true,
+                "expected": ">= 0.0",
+                "actual": "0.0"
+              }
+            ],
+            "messages": []
+          }
+        },
+        {
+          "id": "pickup-bones-if-present",
+          "name": "Pick up bones if the rat dropped them",
+          "attempt": 1,
+          "maxAttempts": 1,
+          "step": {
+            "id": "pickup-bones-if-present",
+            "skill": "",
+            "category": "drops",
+            "type": "drop-probe",
+            "startedAtCycle": 793,
+            "finishedAtCycle": 873,
+            "status": "failed",
+            "failureClass": "interaction_failed",
+            "observations": [
+              "No target ground item found within 12 tiles."
+            ],
+            "assertions": [
+              {
+                "name": "inventory:item.bones:min",
+                "passed": false,
+                "expected": ">= 1",
+                "actual": "0"
+              }
+            ],
+            "messages": [
+              "seth wishes to trade with you."
+            ]
+          }
+        }
+      ],
+      "observations": [],
+      "cleanup": {
+        "removedNpcs": 0,
+        "removedObjects": 0,
+        "clearedInventory": true,
+        "interruptedQueues": true,
+        "closedInterfaces": false,
+        "warnings": []
+      }
+    },
+    {
+      "id": "content-availability-checks",
+      "name": "Content Availability Checks",
+      "category": "content",
+      "startedAtCycle": 873,
+      "finishedAtCycle": 877,
+      "status": "passed",
+      "goals": [
+        {
+          "id": "slayer-check",
+          "name": "slayer-check",
+          "attempt": 1,
+          "maxAttempts": 3,
+          "step": {
+            "id": "slayer-check",
+            "skill": "slayer",
+            "category": "service",
+            "type": "config-availability-probe",
+            "startedAtCycle": 873,
+            "finishedAtCycle": 874,
+            "status": "passed",
+            "observations": [
+              "Moved QA bot to 2606,3093,0.",
+              "Config availability probe executed."
+            ],
+            "assertions": [
+              {
+                "name": "config:data/cfg/slayer/slayer_masters.json",
+                "passed": true,
+                "expected": "exists",
+                "actual": "true"
+              },
+              {
+                "name": "config:data/cfg/slayer/slayer_tasks.json",
+                "passed": true,
+                "expected": "exists",
+                "actual": "true"
+              },
+              {
+                "name": "slayer-command",
+                "passed": true,
+                "expected": "handled",
+                "actual": "true"
+              },
+              {
+                "name": "config-loaded",
+                "passed": true,
+                "expected": "true",
+                "actual": "true"
+              }
+            ],
+            "messages": [
+              "New Slayer assignment from Turael: zombies (15 remaining)."
+            ]
+          }
+        },
+        {
+          "id": "agility-check",
+          "name": "agility-check",
+          "attempt": 1,
+          "maxAttempts": 3,
+          "step": {
+            "id": "agility-check",
+            "skill": "agility",
+            "category": "movement",
+            "type": "config-availability-probe",
+            "startedAtCycle": 874,
+            "finishedAtCycle": 875,
+            "status": "passed",
+            "observations": [
+              "Moved QA bot to 2606,3093,0.",
+              "Config availability probe executed."
+            ],
+            "assertions": [
+              {
+                "name": "config:data/cfg/agility/courses.json",
+                "passed": true,
+                "expected": "exists",
+                "actual": "true"
+              },
+              {
+                "name": "config-loaded",
+                "passed": true,
+                "expected": "true",
+                "actual": "true"
+              }
+            ],
+            "messages": []
+          }
+        },
+        {
+          "id": "farming-check",
+          "name": "farming-check",
+          "attempt": 1,
+          "maxAttempts": 3,
+          "step": {
+            "id": "farming-check",
+            "skill": "farming",
+            "category": "service",
+            "type": "config-availability-probe",
+            "startedAtCycle": 875,
+            "finishedAtCycle": 876,
+            "status": "passed",
+            "observations": [
+              "Moved QA bot to 2606,3093,0.",
+              "Config availability probe executed."
+            ],
+            "assertions": [
+              {
+                "name": "config:data/cfg/farming/farming_patches.json",
+                "passed": true,
+                "expected": "exists",
+                "actual": "true"
+              },
+              {
+                "name": "config:data/cfg/farming/farming_state.json",
+                "passed": true,
+                "expected": "exists",
+                "actual": "true"
+              },
+              {
+                "name": "config-loaded",
+                "passed": true,
+                "expected": "true",
+                "actual": "true"
+              }
+            ],
+            "messages": []
+          }
+        },
+        {
+          "id": "runecrafting-missing",
+          "name": "runecrafting-missing",
+          "attempt": 1,
+          "maxAttempts": 3,
+          "step": {
+            "id": "runecrafting-missing",
+            "skill": "runecrafting",
+            "category": "negative",
+            "type": "missing-content-probe",
+            "startedAtCycle": 876,
+            "finishedAtCycle": 877,
+            "status": "passed",
+            "observations": [
+              "Moved QA bot to 2606,3093,0.",
+              "Marked missing-content probe; no interaction executed."
+            ],
+            "assertions": [
+              {
+                "name": "missing-content-expected",
+                "passed": true,
+                "expected": "missing",
+                "actual": "true"
+              }
+            ],
+            "messages": []
+          }
+        }
+      ],
+      "observations": [],
+      "cleanup": {
+        "removedNpcs": 0,
+        "removedObjects": 0,
+        "clearedInventory": true,
+        "interruptedQueues": true,
+        "closedInterfaces": false,
+        "warnings": []
+      }
+    }
+  ],
+  "events": [
+    {
+      "cycle": 235,
+      "type": "suite_started",
+      "message": "Started suite 'core-playtest'.",
+      "status": "running"
+    },
+    {
+      "cycle": 235,
+      "type": "journey_started",
+      "message": "Started journey 'yanille-new-player-smoke'.",
+      "journeyId": "yanille-new-player-smoke"
+    },
+    {
+      "cycle": 235,
+      "type": "goal_started",
+      "message": "Started goal 'world-sanity' attempt 1 of 3.",
+      "journeyId": "yanille-new-player-smoke",
+      "goalId": "world-sanity"
+    },
+    {
+      "cycle": 235,
+      "type": "goal_finished",
+      "message": "Finished goal 'world-sanity' with status passed.",
+      "journeyId": "yanille-new-player-smoke",
+      "goalId": "world-sanity",
+      "status": "passed"
+    },
+    {
+      "cycle": 235,
+      "type": "goal_started",
+      "message": "Started goal 'walk-to-yanille-shop' attempt 1 of 3.",
+      "journeyId": "yanille-new-player-smoke",
+      "goalId": "walk-to-yanille-shop"
+    },
+    {
+      "cycle": 315,
+      "type": "goal_finished",
+      "message": "Finished goal 'walk-to-yanille-shop' with status failed.",
+      "journeyId": "yanille-new-player-smoke",
+      "goalId": "walk-to-yanille-shop",
+      "status": "failed"
+    },
+    {
+      "cycle": 315,
+      "type": "goal_started",
+      "message": "Started goal 'walk-to-yanille-shop' attempt 2 of 3.",
+      "journeyId": "yanille-new-player-smoke",
+      "goalId": "walk-to-yanille-shop"
+    },
+    {
+      "cycle": 395,
+      "type": "goal_finished",
+      "message": "Finished goal 'walk-to-yanille-shop' with status failed.",
+      "journeyId": "yanille-new-player-smoke",
+      "goalId": "walk-to-yanille-shop",
+      "status": "failed"
+    },
+    {
+      "cycle": 395,
+      "type": "goal_started",
+      "message": "Started goal 'walk-to-yanille-shop' attempt 3 of 3.",
+      "journeyId": "yanille-new-player-smoke",
+      "goalId": "walk-to-yanille-shop"
+    },
+    {
+      "cycle": 475,
+      "type": "goal_finished",
+      "message": "Finished goal 'walk-to-yanille-shop' with status failed.",
+      "journeyId": "yanille-new-player-smoke",
+      "goalId": "walk-to-yanille-shop",
+      "status": "failed"
+    },
+    {
+      "cycle": 475,
+      "type": "journey_finished",
+      "message": "Finished journey 'yanille-new-player-smoke' with status failed.",
+      "journeyId": "yanille-new-player-smoke",
+      "status": "failed"
+    },
+    {
+      "cycle": 475,
+      "type": "journey_started",
+      "message": "Started journey 'skills-economy-loop'.",
+      "journeyId": "skills-economy-loop"
+    },
+    {
+      "cycle": 475,
+      "type": "goal_started",
+      "message": "Started goal 'woodcutting' attempt 1 of 3.",
+      "journeyId": "skills-economy-loop",
+      "goalId": "woodcutting"
+    },
+    {
+      "cycle": 505,
+      "type": "goal_finished",
+      "message": "Finished goal 'woodcutting' with status passed.",
+      "journeyId": "skills-economy-loop",
+      "goalId": "woodcutting",
+      "status": "passed"
+    },
+    {
+      "cycle": 505,
+      "type": "goal_started",
+      "message": "Started goal 'firemaking' attempt 1 of 3.",
+      "journeyId": "skills-economy-loop",
+      "goalId": "firemaking"
+    },
+    {
+      "cycle": 507,
+      "type": "goal_finished",
+      "message": "Finished goal 'firemaking' with status passed.",
+      "journeyId": "skills-economy-loop",
+      "goalId": "firemaking",
+      "status": "passed"
+    },
+    {
+      "cycle": 507,
+      "type": "goal_started",
+      "message": "Started goal 'mining' attempt 1 of 3.",
+      "journeyId": "skills-economy-loop",
+      "goalId": "mining"
+    },
+    {
+      "cycle": 571,
+      "type": "goal_finished",
+      "message": "Finished goal 'mining' with status passed.",
+      "journeyId": "skills-economy-loop",
+      "goalId": "mining",
+      "status": "passed"
+    },
+    {
+      "cycle": 571,
+      "type": "goal_started",
+      "message": "Started goal 'smithing' attempt 1 of 3.",
+      "journeyId": "skills-economy-loop",
+      "goalId": "smithing"
+    },
+    {
+      "cycle": 641,
+      "type": "goal_finished",
+      "message": "Finished goal 'smithing' with status failed.",
+      "journeyId": "skills-economy-loop",
+      "goalId": "smithing",
+      "status": "failed"
+    },
+    {
+      "cycle": 641,
+      "type": "goal_started",
+      "message": "Started goal 'smithing' attempt 2 of 3.",
+      "journeyId": "skills-economy-loop",
+      "goalId": "smithing"
+    },
+    {
+      "cycle": 711,
+      "type": "goal_finished",
+      "message": "Finished goal 'smithing' with status failed.",
+      "journeyId": "skills-economy-loop",
+      "goalId": "smithing",
+      "status": "failed"
+    },
+    {
+      "cycle": 711,
+      "type": "goal_started",
+      "message": "Started goal 'smithing' attempt 3 of 3.",
+      "journeyId": "skills-economy-loop",
+      "goalId": "smithing"
+    },
+    {
+      "cycle": 781,
+      "type": "goal_finished",
+      "message": "Finished goal 'smithing' with status failed.",
+      "journeyId": "skills-economy-loop",
+      "goalId": "smithing",
+      "status": "failed"
+    },
+    {
+      "cycle": 781,
+      "type": "goal_started",
+      "message": "Started goal 'crafting' attempt 1 of 3.",
+      "journeyId": "skills-economy-loop",
+      "goalId": "crafting"
+    },
+    {
+      "cycle": 784,
+      "type": "goal_finished",
+      "message": "Finished goal 'crafting' with status passed.",
+      "journeyId": "skills-economy-loop",
+      "goalId": "crafting",
+      "status": "passed"
+    },
+    {
+      "cycle": 784,
+      "type": "goal_started",
+      "message": "Started goal 'fletching' attempt 1 of 3.",
+      "journeyId": "skills-economy-loop",
+      "goalId": "fletching"
+    },
+    {
+      "cycle": 787,
+      "type": "goal_finished",
+      "message": "Finished goal 'fletching' with status passed.",
+      "journeyId": "skills-economy-loop",
+      "goalId": "fletching",
+      "status": "passed"
+    },
+    {
+      "cycle": 787,
+      "type": "goal_started",
+      "message": "Started goal 'herblore' attempt 1 of 3.",
+      "journeyId": "skills-economy-loop",
+      "goalId": "herblore"
+    },
+    {
+      "cycle": 788,
+      "type": "goal_finished",
+      "message": "Finished goal 'herblore' with status passed.",
+      "journeyId": "skills-economy-loop",
+      "goalId": "herblore",
+      "status": "passed"
+    },
+    {
+      "cycle": 788,
+      "type": "journey_finished",
+      "message": "Finished journey 'skills-economy-loop' with status failed.",
+      "journeyId": "skills-economy-loop",
+      "status": "failed"
+    },
+    {
+      "cycle": 788,
+      "type": "journey_started",
+      "message": "Started journey 'shop-buy-sell-basic'.",
+      "journeyId": "shop-buy-sell-basic"
+    },
+    {
+      "cycle": 788,
+      "type": "goal_started",
+      "message": "Started goal 'open-yanille-shop' attempt 1 of 3.",
+      "journeyId": "shop-buy-sell-basic",
+      "goalId": "open-yanille-shop"
+    },
+    {
+      "cycle": 790,
+      "type": "goal_finished",
+      "message": "Finished goal 'open-yanille-shop' with status passed.",
+      "journeyId": "shop-buy-sell-basic",
+      "goalId": "open-yanille-shop",
+      "status": "passed"
+    },
+    {
+      "cycle": 790,
+      "type": "goal_started",
+      "message": "Started goal 'buy-small-net' attempt 1 of 3.",
+      "journeyId": "shop-buy-sell-basic",
+      "goalId": "buy-small-net"
+    },
+    {
+      "cycle": 791,
+      "type": "goal_finished",
+      "message": "Finished goal 'buy-small-net' with status passed.",
+      "journeyId": "shop-buy-sell-basic",
+      "goalId": "buy-small-net",
+      "status": "passed"
+    },
+    {
+      "cycle": 791,
+      "type": "goal_started",
+      "message": "Started goal 'sell-small-net' attempt 1 of 3.",
+      "journeyId": "shop-buy-sell-basic",
+      "goalId": "sell-small-net"
+    },
+    {
+      "cycle": 792,
+      "type": "goal_finished",
+      "message": "Finished goal 'sell-small-net' with status passed.",
+      "journeyId": "shop-buy-sell-basic",
+      "goalId": "sell-small-net",
+      "status": "passed"
+    },
+    {
+      "cycle": 792,
+      "type": "journey_finished",
+      "message": "Finished journey 'shop-buy-sell-basic' with status passed.",
+      "journeyId": "shop-buy-sell-basic",
+      "status": "passed"
+    },
+    {
+      "cycle": 792,
+      "type": "journey_started",
+      "message": "Started journey 'combat-drops-basic'.",
+      "journeyId": "combat-drops-basic"
+    },
+    {
+      "cycle": 792,
+      "type": "goal_started",
+      "message": "Started goal 'attack-yanille-rat' attempt 1 of 3.",
+      "journeyId": "combat-drops-basic",
+      "goalId": "attack-yanille-rat"
+    },
+    {
+      "cycle": 793,
+      "type": "goal_finished",
+      "message": "Finished goal 'attack-yanille-rat' with status passed.",
+      "journeyId": "combat-drops-basic",
+      "goalId": "attack-yanille-rat",
+      "status": "passed"
+    },
+    {
+      "cycle": 793,
+      "type": "goal_started",
+      "message": "Started goal 'pickup-bones-if-present' attempt 1 of 1.",
+      "journeyId": "combat-drops-basic",
+      "goalId": "pickup-bones-if-present"
+    },
+    {
+      "cycle": 873,
+      "type": "goal_finished",
+      "message": "Finished goal 'pickup-bones-if-present' with status failed.",
+      "journeyId": "combat-drops-basic",
+      "goalId": "pickup-bones-if-present",
+      "status": "failed"
+    },
+    {
+      "cycle": 873,
+      "type": "journey_finished",
+      "message": "Finished journey 'combat-drops-basic' with status failed.",
+      "journeyId": "combat-drops-basic",
+      "status": "failed"
+    },
+    {
+      "cycle": 873,
+      "type": "journey_started",
+      "message": "Started journey 'content-availability-checks'.",
+      "journeyId": "content-availability-checks"
+    },
+    {
+      "cycle": 873,
+      "type": "goal_started",
+      "message": "Started goal 'slayer-check' attempt 1 of 3.",
+      "journeyId": "content-availability-checks",
+      "goalId": "slayer-check"
+    },
+    {
+      "cycle": 874,
+      "type": "goal_finished",
+      "message": "Finished goal 'slayer-check' with status passed.",
+      "journeyId": "content-availability-checks",
+      "goalId": "slayer-check",
+      "status": "passed"
+    },
+    {
+      "cycle": 874,
+      "type": "goal_started",
+      "message": "Started goal 'agility-check' attempt 1 of 3.",
+      "journeyId": "content-availability-checks",
+      "goalId": "agility-check"
+    },
+    {
+      "cycle": 875,
+      "type": "goal_finished",
+      "message": "Finished goal 'agility-check' with status passed.",
+      "journeyId": "content-availability-checks",
+      "goalId": "agility-check",
+      "status": "passed"
+    },
+    {
+      "cycle": 875,
+      "type": "goal_started",
+      "message": "Started goal 'farming-check' attempt 1 of 3.",
+      "journeyId": "content-availability-checks",
+      "goalId": "farming-check"
+    },
+    {
+      "cycle": 876,
+      "type": "goal_finished",
+      "message": "Finished goal 'farming-check' with status passed.",
+      "journeyId": "content-availability-checks",
+      "goalId": "farming-check",
+      "status": "passed"
+    },
+    {
+      "cycle": 876,
+      "type": "goal_started",
+      "message": "Started goal 'runecrafting-missing' attempt 1 of 3.",
+      "journeyId": "content-availability-checks",
+      "goalId": "runecrafting-missing"
+    },
+    {
+      "cycle": 877,
+      "type": "goal_finished",
+      "message": "Finished goal 'runecrafting-missing' with status passed.",
+      "journeyId": "content-availability-checks",
+      "goalId": "runecrafting-missing",
+      "status": "passed"
+    },
+    {
+      "cycle": 877,
+      "type": "journey_finished",
+      "message": "Finished journey 'content-availability-checks' with status passed.",
+      "journeyId": "content-availability-checks",
+      "status": "passed"
+    },
+    {
+      "cycle": 877,
+      "type": "suite_finished",
+      "message": "Finished suite 'core-playtest'."
+    }
+  ],
+  "failures": [
+    {
+      "journeyId": "yanille-new-player-smoke",
+      "goalId": "walk-to-yanille-shop",
+      "failureClass": "blocked_route",
+      "message": "Queued walk to 2596,3105,0.",
+      "attempt": 1
+    },
+    {
+      "journeyId": "yanille-new-player-smoke",
+      "goalId": "walk-to-yanille-shop",
+      "failureClass": "blocked_route",
+      "message": "Queued walk to 2596,3105,0.",
+      "attempt": 2
+    },
+    {
+      "journeyId": "yanille-new-player-smoke",
+      "goalId": "walk-to-yanille-shop",
+      "failureClass": "blocked_route",
+      "message": "Queued walk to 2596,3105,0.",
+      "attempt": 3
+    },
+    {
+      "journeyId": "skills-economy-loop",
+      "goalId": "smithing",
+      "failureClass": "interaction_failed",
+      "message": "No target object found for 'nearest_furnace' within 32 tiles.",
+      "attempt": 1
+    },
+    {
+      "journeyId": "skills-economy-loop",
+      "goalId": "smithing",
+      "failureClass": "interaction_failed",
+      "message": "No target object found for 'nearest_furnace' within 32 tiles.",
+      "attempt": 2
+    },
+    {
+      "journeyId": "skills-economy-loop",
+      "goalId": "smithing",
+      "failureClass": "interaction_failed",
+      "message": "No target object found for 'nearest_furnace' within 32 tiles.",
+      "attempt": 3
+    },
+    {
+      "journeyId": "combat-drops-basic",
+      "goalId": "pickup-bones-if-present",
+      "failureClass": "interaction_failed",
+      "message": "No target ground item found within 12 tiles.",
+      "attempt": 1
+    }
+  ],
+  "observations": [
+    "Started suite 'core-playtest' with 5 journey(s).",
+    "yanille-new-player-smoke/world-sanity: Moved QA bot to 2606,3093,0.",
+    "yanille-new-player-smoke/world-sanity: World sanity probe executed.",
+    "yanille-new-player-smoke/walk-to-yanille-shop: Moved QA bot to 2606,3093,0.",
+    "yanille-new-player-smoke/walk-to-yanille-shop: Queued walk to 2596,3105,0.",
+    "yanille-new-player-smoke/walk-to-yanille-shop: Moved QA bot to 2606,3093,0.",
+    "yanille-new-player-smoke/walk-to-yanille-shop: Queued walk to 2596,3105,0.",
+    "yanille-new-player-smoke/walk-to-yanille-shop: Moved QA bot to 2606,3093,0.",
+    "yanille-new-player-smoke/walk-to-yanille-shop: Queued walk to 2596,3105,0.",
+    "skills-economy-loop/woodcutting: Moved QA bot to 2606,3093,0.",
+    "skills-economy-loop/woodcutting: Found object 1278 for 'nearest_tree' at 2621,3102.",
+    "skills-economy-loop/firemaking: Moved QA bot to 2606,3093,0.",
+    "skills-economy-loop/mining: Moved QA bot to 2606,3093,0.",
+    "skills-economy-loop/mining: Found object 11161 for 'nearest_copper_or_tin_rock' at 2630,3137.",
+    "skills-economy-loop/smithing: Moved QA bot to 3109,3499,0.",
+    "skills-economy-loop/smithing: No target object found for 'nearest_furnace' within 32 tiles.",
+    "skills-economy-loop/smithing: Moved QA bot to 3109,3499,0.",
+    "skills-economy-loop/smithing: No target object found for 'nearest_furnace' within 32 tiles.",
+    "skills-economy-loop/smithing: Moved QA bot to 3109,3499,0.",
+    "skills-economy-loop/smithing: No target object found for 'nearest_furnace' within 32 tiles.",
+    "skills-economy-loop/crafting: Moved QA bot to 2606,3093,0.",
+    "skills-economy-loop/crafting: Selected recipe item.leather_gloves from skill menu.",
+    "skills-economy-loop/fletching: Moved QA bot to 2606,3093,0.",
+    "skills-economy-loop/fletching: Selected recipe item.arrow_shaft from skill menu.",
+    "skills-economy-loop/herblore: Moved QA bot to 2606,3093,0.",
+    "shop-buy-sell-basic/open-yanille-shop: Moved QA bot to 2596,3103,0.",
+    "shop-buy-sell-basic/open-yanille-shop: No object ids resolved for target 'yanille_shop_keeper'.",
+    "shop-buy-sell-basic/open-yanille-shop: Found NPC 2813 at 2596,3105.",
+    "combat-drops-basic/attack-yanille-rat: Moved QA bot to 2608,3102,0.",
+    "combat-drops-basic/attack-yanille-rat: Found NPC 3313 at 2609,3102.",
+    "combat-drops-basic/attack-yanille-rat: Started combat with NPC 3313 at 2609,3102.",
+    "combat-drops-basic/pickup-bones-if-present: No target ground item found within 12 tiles.",
+    "content-availability-checks/slayer-check: Moved QA bot to 2606,3093,0.",
+    "content-availability-checks/slayer-check: Config availability probe executed.",
+    "content-availability-checks/agility-check: Moved QA bot to 2606,3093,0.",
+    "content-availability-checks/agility-check: Config availability probe executed.",
+    "content-availability-checks/farming-check: Moved QA bot to 2606,3093,0.",
+    "content-availability-checks/farming-check: Config availability probe executed.",
+    "content-availability-checks/runecrafting-missing: Moved QA bot to 2606,3093,0.",
+    "content-availability-checks/runecrafting-missing: Marked missing-content probe; no interaction executed."
+  ],
+  "warnings": [],
+  "assertions": [
+    {
+      "name": "world-has-players",
+      "passed": true,
+      "expected": "true",
+      "actual": "2"
+    },
+    {
+      "name": "world-has-npcs",
+      "passed": true,
+      "expected": "true",
+      "actual": "120"
+    },
+    {
+      "name": "anchor:Shop keeper",
+      "passed": true,
+      "expected": "found",
+      "actual": "true"
+    },
+    {
+      "name": "anchor:Giant rat",
+      "passed": true,
+      "expected": "found",
+      "actual": "true"
+    },
+    {
+      "name": "world-available",
+      "passed": true,
+      "expected": "true",
+      "actual": "true"
+    },
+    {
+      "name": "walk-to:2596:3105:0",
+      "passed": true,
+      "expected": "queued",
+      "actual": "queued"
+    },
+    {
+      "name": "tile",
+      "passed": false,
+      "expected": "2596,3105,0 radius 2",
+      "actual": "2599,3105,0"
+    },
+    {
+      "name": "walk-to:2596:3105:0",
+      "passed": true,
+      "expected": "queued",
+      "actual": "queued"
+    },
+    {
+      "name": "tile",
+      "passed": false,
+      "expected": "2596,3105,0 radius 2",
+      "actual": "2599,3105,0"
+    },
+    {
+      "name": "walk-to:2596:3105:0",
+      "passed": true,
+      "expected": "queued",
+      "actual": "queued"
+    },
+    {
+      "name": "tile",
+      "passed": false,
+      "expected": "2596,3105,0 radius 2",
+      "actual": "2599,3105,0"
+    },
+    {
+      "name": "object-route:1278:1",
+      "passed": true,
+      "expected": "queued",
+      "actual": "queued"
+    },
+    {
+      "name": "xp:woodcutting",
+      "passed": true,
+      "expected": ">= 25.0",
+      "actual": "25.0"
+    },
+    {
+      "name": "inventory:item.logs:min",
+      "passed": true,
+      "expected": ">= 1",
+      "actual": "1"
+    },
+    {
+      "name": "messages:any",
+      "passed": true,
+      "expected": "one of configured messages",
+      "actual": "You get some logs."
+    },
+    {
+      "name": "item-on-item:590:1511",
+      "passed": true,
+      "expected": "handled",
+      "actual": "true"
+    },
+    {
+      "name": "xp:firemaking",
+      "passed": true,
+      "expected": ">= 40.0",
+      "actual": "40.0"
+    },
+    {
+      "name": "inventory:item.logs:max",
+      "passed": true,
+      "expected": "<= -1",
+      "actual": "-1"
+    },
+    {
+      "name": "object-route:11161:1",
+      "passed": true,
+      "expected": "queued",
+      "actual": "queued"
+    },
+    {
+      "name": "xp:mining",
+      "passed": true,
+      "expected": ">= 17.5",
+      "actual": "17.5"
+    },
+    {
+      "name": "inventory:any",
+      "passed": true,
+      "expected": "one matching delta",
+      "actual": "inventory:item.copper_ore:min=1, inventory:item.tin_ore:min=0"
+    },
+    {
+      "name": "messages:any",
+      "passed": false,
+      "expected": "one of configured messages",
+      "actual": "You manage to mine some copper ore."
+    },
+    {
+      "name": "xp:smithing",
+      "passed": false,
+      "expected": ">= 6.2",
+      "actual": "0.0"
+    },
+    {
+      "name": "inventory:item.bronze_bar:min",
+      "passed": false,
+      "expected": ">= 1",
+      "actual": "0"
+    },
+    {
+      "name": "messages:any",
+      "passed": false,
+      "expected": "one of configured messages",
+      "actual": "You manage to mine some copper ore.\nYou manage to mine some copper ore.\nYou manage to mine some copper ore.\nYou manage to mine some copper ore.\nYou manage to mine some copper ore.\nYou manage to mine s"
+    },
+    {
+      "name": "xp:smithing",
+      "passed": false,
+      "expected": ">= 6.2",
+      "actual": "0.0"
+    },
+    {
+      "name": "inventory:item.bronze_bar:min",
+      "passed": false,
+      "expected": ">= 1",
+      "actual": "0"
+    },
+    {
+      "name": "messages:any",
+      "passed": false,
+      "expected": "one of configured messages",
+      "actual": ""
+    },
+    {
+      "name": "xp:smithing",
+      "passed": false,
+      "expected": ">= 6.2",
+      "actual": "0.0"
+    },
+    {
+      "name": "inventory:item.bronze_bar:min",
+      "passed": false,
+      "expected": ">= 1",
+      "actual": "0"
+    },
+    {
+      "name": "messages:any",
+      "passed": false,
+      "expected": "one of configured messages",
+      "actual": ""
+    },
+    {
+      "name": "item-on-item:1733:1741",
+      "passed": true,
+      "expected": "handled",
+      "actual": "true"
+    },
+    {
+      "name": "xp:crafting",
+      "passed": true,
+      "expected": ">= 13.8",
+      "actual": "13.8"
+    },
+    {
+      "name": "inventory:item.leather_gloves:min",
+      "passed": true,
+      "expected": ">= 1",
+      "actual": "1"
+    },
+    {
+      "name": "messages:any",
+      "passed": true,
+      "expected": "one of configured messages",
+      "actual": "You make a pair of leather gloves."
+    },
+    {
+      "name": "item-on-item:946:1511",
+      "passed": true,
+      "expected": "handled",
+      "actual": "true"
+    },
+    {
+      "name": "xp:fletching",
+      "passed": true,
+      "expected": ">= 5.0",
+      "actual": "5.0"
+    },
+    {
+      "name": "inventory:item.arrow_shaft:min",
+      "passed": true,
+      "expected": ">= 15",
+      "actual": "15"
+    },
+    {
+      "name": "messages:any",
+      "passed": true,
+      "expected": "one of configured messages",
+      "actual": "You fletch some arrow shafts."
+    },
+    {
+      "name": "item-plugin:199:1",
+      "passed": true,
+      "expected": "handled",
+      "actual": "true"
+    },
+    {
+      "name": "xp:herblore",
+      "passed": true,
+      "expected": ">= 2.5",
+      "actual": "2.5"
+    },
+    {
+      "name": "inventory:item.guam_leaf:min",
+      "passed": true,
+      "expected": ">= 1",
+      "actual": "1"
+    },
+    {
+      "name": "messages:any",
+      "passed": true,
+      "expected": "one of configured messages",
+      "actual": "You clean the guam leaf."
+    },
+    {
+      "name": "npc-route:2813:3",
+      "passed": true,
+      "expected": "queued",
+      "actual": "queued"
+    },
+    {
+      "name": "shop-open",
+      "passed": true,
+      "expected": "Shop Keeper",
+      "actual": "Shop Keeper 1"
+    },
+    {
+      "name": "shop-buy:303",
+      "passed": true,
+      "expected": "handled",
+      "actual": "true"
+    },
+    {
+      "name": "inventory:item.small_fishing_net:min",
+      "passed": true,
+      "expected": ">= 1",
+      "actual": "1"
+    },
+    {
+      "name": "shop-sell:303",
+      "passed": true,
+      "expected": "handled",
+      "actual": "true"
+    },
+    {
+      "name": "inventory:item.small_fishing_net:max",
+      "passed": true,
+      "expected": "<= -1",
+      "actual": "-1"
+    },
+    {
+      "name": "combat-start:3313",
+      "passed": true,
+      "expected": "started",
+      "actual": "started"
+    },
+    {
+      "name": "xp:attack",
+      "passed": true,
+      "expected": ">= 0.0",
+      "actual": "0.0"
+    },
+    {
+      "name": "inventory:item.bones:min",
+      "passed": false,
+      "expected": ">= 1",
+      "actual": "0"
+    },
+    {
+      "name": "config:data/cfg/slayer/slayer_masters.json",
+      "passed": true,
+      "expected": "exists",
+      "actual": "true"
+    },
+    {
+      "name": "config:data/cfg/slayer/slayer_tasks.json",
+      "passed": true,
+      "expected": "exists",
+      "actual": "true"
+    },
+    {
+      "name": "slayer-command",
+      "passed": true,
+      "expected": "handled",
+      "actual": "true"
+    },
+    {
+      "name": "config-loaded",
+      "passed": true,
+      "expected": "true",
+      "actual": "true"
+    },
+    {
+      "name": "config:data/cfg/agility/courses.json",
+      "passed": true,
+      "expected": "exists",
+      "actual": "true"
+    },
+    {
+      "name": "config-loaded",
+      "passed": true,
+      "expected": "true",
+      "actual": "true"
+    },
+    {
+      "name": "config:data/cfg/farming/farming_patches.json",
+      "passed": true,
+      "expected": "exists",
+      "actual": "true"
+    },
+    {
+      "name": "config:data/cfg/farming/farming_state.json",
+      "passed": true,
+      "expected": "exists",
+      "actual": "true"
+    },
+    {
+      "name": "config-loaded",
+      "passed": true,
+      "expected": "true",
+      "actual": "true"
+    },
+    {
+      "name": "missing-content-expected",
+      "passed": true,
+      "expected": "missing",
+      "actual": "true"
+    }
+  ],
+  "cleanup": {
+    "removedNpcs": 0,
+    "removedObjects": 0,
+    "clearedInventory": true,
+    "interruptedQueues": true,
+    "closedInterfaces": false,
+    "warnings": []
+  }
+}

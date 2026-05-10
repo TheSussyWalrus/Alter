@@ -21,7 +21,7 @@
     <section class="qa-banner">
       <div>
         <strong>QA Control Center</strong>
-        <small>{{ qaScenarios.length }} scenarios / {{ qaSessions.length }} recent sessions</small>
+        <small>{{ qaSuites.length }} suites / {{ qaScenarios.length }} scenarios / {{ qaSessions.length }} recent sessions</small>
       </div>
       <div class="banner-actions">
         <button type="button" @click="fetchQaPanel" :disabled="qaLoading">Refresh QA</button>
@@ -51,18 +51,35 @@
               <strong>{{ qaScenarios.length }}</strong>
               <small>Scenarios</small>
             </span>
+            <span>
+              <strong>{{ qaSuites.length }}</strong>
+              <small>Suites</small>
+            </span>
           </div>
           <p v-if="qaStatusMessage" class="qa-muted">{{ qaStatusMessage }}</p>
           <p v-if="qaSessionsPath" class="qa-path">{{ qaSessionsPath }}</p>
+          <p v-if="qaFixtureSummary" class="qa-muted">{{ qaFixtureSummary }}</p>
         </article>
 
         <article class="qa-card">
           <div class="qa-card-title">
-            <h3>Start Scenario</h3>
+            <h3>Start Playtest</h3>
           </div>
           <label>
-            Scenario
-            <select v-model="qaSelectedScenarioId">
+            Playtest suite
+            <select v-model="qaSelectedSuiteId">
+              <option value="">Use legacy scenario instead</option>
+              <option v-for="suite in qaSuites" :key="qaSuiteId(suite)" :value="qaSuiteId(suite)">
+                {{ qaSuiteLabel(suite) }}
+              </option>
+            </select>
+          </label>
+          <div v-if="qaSelectedSuite" class="qa-scenario-note">
+            {{ qaSelectedSuite.description || 'No suite description provided.' }}
+          </div>
+          <label>
+            Legacy scenario
+            <select v-model="qaSelectedScenarioId" :disabled="!!qaSelectedSuiteId">
               <option value="skills-basic">skills-basic</option>
               <option v-for="scenario in qaVisibleScenarios" :key="qaScenarioId(scenario)" :value="qaScenarioId(scenario)">
                 {{ qaScenarioLabel(scenario) }}
@@ -72,8 +89,18 @@
           <div v-if="qaSelectedScenario" class="qa-scenario-note">
             {{ qaSelectedScenario.description || qaSelectedScenario.summary || 'No description provided.' }}
           </div>
+          <div class="qa-options-row">
+            <label>
+              Repeat count
+              <input v-model.number="qaRepeatCount" type="number" min="1" max="25">
+            </label>
+            <label class="qa-check">
+              <input v-model="qaContinueOnFailure" type="checkbox">
+              Continue after failures
+            </label>
+          </div>
           <div class="actions">
-            <button type="button" @click="startQaSession" :disabled="qaLoading">Start QA character</button>
+            <button type="button" @click="startQaSession" :disabled="qaLoading">Start QA playtest</button>
           </div>
         </article>
       </section>
@@ -115,6 +142,45 @@
               <span><strong>{{ qaSelectedSession.startedAt || qaSelectedSession.createdAt || '-' }}</strong><small>Started</small></span>
               <span><strong>{{ qaSelectedSession.finishedAt || '-' }}</strong><small>Finished</small></span>
             </div>
+            <div class="actions">
+              <button type="button" class="ghost" @click="downloadQaReport" :disabled="!qaSelectedSession">Download JSON report</button>
+            </div>
+
+            <section v-if="qaSelectedSessionJourneys.length" class="qa-section qa-journeys-section">
+              <div class="qa-section-heading">
+                <h4>Journeys</h4>
+                <div class="qa-step-summary">
+                  <span class="passed">{{ qaPassedJourneyCount }} passed</span>
+                  <span class="failed">{{ qaFailedJourneyCount }} failed</span>
+                </div>
+              </div>
+              <div class="qa-journey-cards">
+                <article
+                  v-for="journey in qaSelectedSessionJourneys"
+                  :key="journey.id"
+                  class="qa-journey-card"
+                  :class="qaStatusClass(journey.status)"
+                >
+                  <header class="qa-step-header">
+                    <div>
+                      <strong>{{ journey.name || journey.id }}</strong>
+                      <small>{{ journey.category || 'journey' }} / {{ journey.goals ? journey.goals.length : 0 }} goals</small>
+                    </div>
+                    <span class="qa-badge" :class="qaStatusClass(journey.status)">{{ journey.status || 'unknown' }}</span>
+                  </header>
+                  <p v-if="journey.failureClass" class="qa-muted">Failure: {{ journey.failureClass }}</p>
+                  <div v-if="journey.goals && journey.goals.length" class="qa-mini-goals">
+                    <span
+                      v-for="goal in journey.goals"
+                      :key="`${journey.id}-${goal.id}-${goal.attempt}`"
+                      :class="qaStatusClass(goal.status)"
+                    >
+                      {{ goal.id }} · attempt {{ goal.attempt }}/{{ goal.maxAttempts }}
+                    </span>
+                  </div>
+                </article>
+              </div>
+            </section>
 
             <section class="qa-section qa-steps-section">
               <div class="qa-section-heading">
@@ -199,6 +265,17 @@
               </ul>
               <p v-else class="qa-empty">No warnings recorded.</p>
             </section>
+
+            <section class="qa-section">
+              <h4>Event Timeline</h4>
+              <ul v-if="qaSelectedSessionEvents.length" class="qa-list qa-events">
+                <li v-for="(event, index) in qaSelectedSessionEvents" :key="`event-${index}`">
+                  <strong>{{ event.type || 'event' }}</strong>
+                  <span>{{ event.message || formatQaItem(event) }}</span>
+                </li>
+              </ul>
+              <p v-else class="qa-empty">No events recorded.</p>
+            </section>
           </div>
           <p v-else class="qa-empty">Select a session to inspect its run details.</p>
         </article>
@@ -222,10 +299,15 @@ export default {
       qaDetailLoading: false,
       qaStatus: null,
       qaScenarios: [],
+      qaSuites: [],
       qaSessions: [],
       qaSelectedScenarioId: 'skills-basic',
+      qaSelectedSuiteId: 'core-playtest',
       qaSelectedSessionId: '',
-      qaSelectedSession: null
+      qaSelectedSession: null,
+      qaFixtureStatus: null,
+      qaRepeatCount: 1,
+      qaContinueOnFailure: true
     };
   },
   computed: {
@@ -234,6 +316,9 @@ export default {
     },
     qaSelectedScenario() {
       return this.qaScenarios.find(scenario => this.qaScenarioId(scenario) === this.qaSelectedScenarioId);
+    },
+    qaSelectedSuite() {
+      return this.qaSuites.find(suite => this.qaSuiteId(suite) === this.qaSelectedSuiteId);
     },
     qaVisibleScenarios() {
       return this.qaScenarios.filter(scenario => this.qaScenarioId(scenario) !== 'skills-basic');
@@ -256,6 +341,19 @@ export default {
     qaSessionsPath() {
       return this.qaStatus?.sessionsPath || '';
     },
+    qaFixtureSummary() {
+      const fixtures = this.qaFixtureStatus || this.qaStatus?.fixtures;
+      if (!fixtures) {
+        return '';
+      }
+      return `Fixtures: ${fixtures.tempNpcs || 0} temp NPCs / ${fixtures.tempObjects || 0} temp objects active.`;
+    },
+    qaSelectedSessionJourneys() {
+      return this.qaSelectedSession?.journeys || [];
+    },
+    qaSelectedSessionEvents() {
+      return this.qaSelectedSession?.events || [];
+    },
     qaSelectedSessionSteps() {
       return this.qaSelectedSession?.steps || [];
     },
@@ -273,6 +371,12 @@ export default {
     },
     qaRunningStepCount() {
       return this.qaSelectedSessionSteps.filter(step => ['running', 'active', 'starting'].includes(String(step.status || '').toLowerCase())).length;
+    },
+    qaPassedJourneyCount() {
+      return this.qaSelectedSessionJourneys.filter(journey => String(journey.status || '').toLowerCase() === 'passed').length;
+    },
+    qaFailedJourneyCount() {
+      return this.qaSelectedSessionJourneys.filter(journey => String(journey.status || '').toLowerCase() === 'failed').length;
     }
   },
   created() {
@@ -283,14 +387,18 @@ export default {
       this.qaLoading = true;
       this.error = '';
       try {
-        const [status, scenarios, sessions] = await Promise.all([
+        const [status, scenarios, suites, sessions, fixtures] = await Promise.all([
           axios.get(`${API}/world-editor/qa/status`),
           axios.get(`${API}/world-editor/qa/scenarios`),
-          axios.get(`${API}/world-editor/qa/sessions`)
+          axios.get(`${API}/world-editor/qa/suites`),
+          axios.get(`${API}/world-editor/qa/sessions`),
+          axios.get(`${API}/world-editor/qa/fixtures/status`)
         ]);
         this.qaStatus = status.data || null;
         this.qaScenarios = this.qaArrayFromResponse(scenarios.data, 'scenarios');
+        this.qaSuites = this.qaArrayFromResponse(suites.data, 'suites');
         this.qaSessions = this.qaArrayFromResponse(sessions.data, 'sessions');
+        this.qaFixtureStatus = fixtures.data || null;
         this.ensureQaSelection();
         if (this.qaSelectedSessionId) {
           await this.fetchQaSession(this.qaSelectedSessionId);
@@ -318,10 +426,19 @@ export default {
       this.qaLoading = true;
       this.error = '';
       try {
-        const scenarioId = this.qaSelectedScenarioId || 'skills-basic';
-        const res = await axios.post(`${API}/world-editor/qa/sessions`, { scenarioId });
+        const payload = {
+          repeatCount: Math.max(1, Math.min(25, Number(this.qaRepeatCount) || 1)),
+          continueOnFailure: !!this.qaContinueOnFailure,
+          fixtureMode: 'ephemeral'
+        };
+        if (this.qaSelectedSuiteId) {
+          payload.suiteId = this.qaSelectedSuiteId;
+        } else {
+          payload.scenarioId = this.qaSelectedScenarioId || 'skills-basic';
+        }
+        const res = await axios.post(`${API}/world-editor/qa/sessions`, payload);
         const session = res.data?.session || res.data;
-        this.status = `Started QA scenario ${scenarioId}.`;
+        this.status = `Started QA ${this.qaSelectedSuiteId ? 'suite' : 'scenario'} ${this.qaSelectedSuiteId || this.qaSelectedScenarioId}.`;
         if (session && this.qaSessionId(session)) {
           this.qaSelectedSessionId = this.qaSessionId(session);
           this.qaSelectedSession = session;
@@ -371,6 +488,9 @@ export default {
       }
     },
     ensureQaSelection() {
+      if (this.qaSelectedSuiteId && !this.qaSuites.some(suite => this.qaSuiteId(suite) === this.qaSelectedSuiteId)) {
+        this.qaSelectedSuiteId = this.qaSuites[0] ? this.qaSuiteId(this.qaSuites[0]) : '';
+      }
       if (!this.qaSelectedScenarioId) {
         this.qaSelectedScenarioId = 'skills-basic';
       }
@@ -406,6 +526,14 @@ export default {
     qaScenarioLabel(scenario) {
       const id = this.qaScenarioId(scenario);
       const name = scenario?.name || scenario?.title || id;
+      return id && name !== id ? `${name} (${id})` : name;
+    },
+    qaSuiteId(suite) {
+      return String(suite?.id || suite?.suiteId || suite?.key || suite?.name || '');
+    },
+    qaSuiteLabel(suite) {
+      const id = this.qaSuiteId(suite);
+      const name = suite?.name || suite?.title || id;
       return id && name !== id ? `${name} (${id})` : name;
     },
     qaSessionId(session) {
@@ -459,6 +587,19 @@ export default {
       const expected = assertion && assertion.expected != null ? assertion.expected : '-';
       const actual = assertion && assertion.actual != null ? assertion.actual : '-';
       return `Expected ${expected} / Actual ${actual}`;
+    },
+    downloadQaReport() {
+      if (!this.qaSelectedSession) {
+        return;
+      }
+      const id = this.qaSessionId(this.qaSelectedSession) || 'qa-report';
+      const blob = new Blob([JSON.stringify(this.qaSelectedSession, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${id}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
     },
     errorMessage(err) {
       return err?.response?.data?.error || err?.response?.data?.message || err?.message || String(err);
@@ -639,7 +780,8 @@ label {
   gap: 8px;
 }
 
-select {
+select,
+input[type="number"] {
   width: 100%;
   border: 1px solid rgba(38, 55, 45, 0.22);
   border-radius: 14px;
@@ -647,6 +789,26 @@ select {
   background: #fffdf7;
   color: #26372d;
   font: inherit;
+}
+
+.qa-options-row {
+  display: grid;
+  grid-template-columns: minmax(120px, 180px) 1fr;
+  gap: 12px;
+  align-items: end;
+}
+
+.qa-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 46px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.qa-check input {
+  width: auto;
 }
 
 .inline-status {
@@ -762,12 +924,14 @@ select {
   color: #26372d;
 }
 
-.qa-step-cards {
+.qa-step-cards,
+.qa-journey-cards {
   display: grid;
   gap: 12px;
 }
 
-.qa-step-card {
+.qa-step-card,
+.qa-journey-card {
   display: grid;
   gap: 12px;
   padding: 14px;
@@ -776,11 +940,13 @@ select {
   background: #fffdf7;
 }
 
-.qa-step-card.failed {
+.qa-step-card.failed,
+.qa-journey-card.failed {
   border-color: rgba(159, 49, 23, 0.38);
 }
 
-.qa-step-card.passed {
+.qa-step-card.passed,
+.qa-journey-card.passed {
   border-color: rgba(31, 91, 53, 0.24);
 }
 
@@ -855,6 +1021,31 @@ select {
   line-height: 1.45;
 }
 
+.qa-mini-goals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.qa-mini-goals span {
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: #f6eddb;
+  color: #4f5d50;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.qa-mini-goals span.passed {
+  background: #dfe8d8;
+  color: #1f5b35;
+}
+
+.qa-mini-goals span.failed {
+  background: #ffe1d7;
+  color: #9f3117;
+}
+
 .qa-list,
 .qa-ordered {
   display: grid;
@@ -871,6 +1062,15 @@ select {
   font-weight: 800;
 }
 
+.qa-events li {
+  display: grid;
+  gap: 2px;
+}
+
+.qa-events span {
+  color: #435044;
+}
+
 @media (max-width: 960px) {
   .hero,
   .qa-banner {
@@ -879,7 +1079,8 @@ select {
   }
 
   .qa-grid,
-  .qa-layout {
+  .qa-layout,
+  .qa-options-row {
     grid-template-columns: 1fr;
   }
 

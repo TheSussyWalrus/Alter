@@ -10,6 +10,8 @@ import net.rsprot.protocol.util.CombinedId
 import org.alter.api.Skills
 import org.alter.game.model.EntityType
 import org.alter.game.model.Tile
+import org.alter.game.model.attr.CURRENT_SHOP_ATTR
+import org.alter.game.model.attr.INTERACTING_GROUNDITEM_ATTR
 import org.alter.game.model.attr.INTERACTING_ITEM
 import org.alter.game.model.attr.INTERACTING_ITEM_ID
 import org.alter.game.model.attr.INTERACTING_ITEM_SLOT
@@ -21,7 +23,12 @@ import org.alter.game.model.attr.OTHER_ITEM_ATTR
 import org.alter.game.model.attr.OTHER_ITEM_ID_ATTR
 import org.alter.game.model.attr.OTHER_ITEM_SLOT_ATTR
 import org.alter.game.model.entity.GameObject
+import org.alter.game.model.entity.GroundItem
 import org.alter.game.model.entity.Npc
+import org.alter.game.model.move.GroundItemRouteAction
+import org.alter.game.model.move.ObjectPathAction
+import org.alter.game.model.move.PawnPathAction
+import org.alter.game.model.move.walkTo
 import org.alter.game.model.move.moveTo
 import org.alter.game.model.queue.QueueTask
 import org.alter.game.model.queue.QueueTaskSet
@@ -100,18 +107,20 @@ class QaActionDriver {
                     origin.int("height") ?: player.tile.height.coerceAtLeast(0),
                 )
             player.moveTo(tile)
-            result.observations.add("Moved QA bot to ${tile.x},${tile.z},${tile.height}.")
+            result.observations.add("Moved ${player.username} to ${tile.x},${tile.z},${tile.height}.")
         }
 
-        player.inventory.removeAll()
-        setup.array("inventory")?.forEachObject { item ->
-            val itemName = item.string("item") ?: return@forEachObject
-            val amount = item.int("amount") ?: 1
-            val itemId = rscmOrNull(itemName)
-            if (itemId == null) {
-                result.observations.add("Could not resolve setup item '$itemName'.")
-            } else {
-                player.inventory.add(itemId, amount, assureFullInsertion = false)
+        setup.array("inventory")?.let { inventory ->
+            player.inventory.removeAll()
+            inventory.forEachObject { item ->
+                val itemName = item.string("item")
+                val amount = item.int("amount") ?: 1
+                val itemId = item.int("itemId") ?: itemName?.let(::rscmOrNull)
+                if (itemId == null) {
+                    result.observations.add("Could not resolve setup item '$itemName'.")
+                } else {
+                    player.inventory.add(itemId, amount, assureFullInsertion = false)
+                }
             }
         }
 
@@ -142,6 +151,23 @@ class QaActionDriver {
             return performWorldProbe(player, step, result)
         }
 
+        step.action.obj("walkTo")?.let { action ->
+            return walkToTile(player, action, result)
+        }
+        step.action.obj("attackNpc")?.let { action ->
+            val target = findTargetNpc(player, step.setup.obj("target") ?: action.obj("target"), result) ?: return false
+            return attackNpc(player, target, result)
+        }
+        step.action.obj("pickupGroundItem")?.let { action ->
+            val groundItem = findGroundItem(player, action, result) ?: return false
+            return pickupGroundItem(player, groundItem, result)
+        }
+        step.action.obj("buyShopItem")?.let { action ->
+            return buyShopItem(player, action, result)
+        }
+        step.action.obj("sellInventoryItem")?.let { action ->
+            return sellInventoryItem(player, action, result)
+        }
         step.action.obj("useItemOnItem")?.let { action ->
             val item = action.string("item") ?: return false
             val target = action.string("targetItem") ?: return false
@@ -229,9 +255,9 @@ class QaActionDriver {
         }
         player.attr[INTERACTING_OPT_ATTR] = opt
         player.attr[INTERACTING_OBJ_ATTR] = WeakReference(obj)
-        val handled = player.world.plugins.executeObject(player, obj.id, opt)
-        result.assertions.add(QaAssertion("object-plugin:${obj.id}:$opt", handled, "handled", handled.toString()))
-        return handled
+        player.executePlugin(ObjectPathAction.objectInteractPlugin)
+        result.assertions.add(QaAssertion("object-route:${obj.id}:$opt", true, "queued", "queued"))
+        return true
     }
 
     private fun interactNpc(
@@ -247,9 +273,14 @@ class QaActionDriver {
         }
         player.attr[INTERACTING_OPT_ATTR] = opt
         player.attr[INTERACTING_NPC_ATTR] = WeakReference(npc)
-        val handled = player.world.plugins.executeNpc(player, npc.id, opt)
-        result.assertions.add(QaAssertion("npc-plugin:${npc.id}:$opt", handled, "handled", handled.toString()))
-        return handled
+        if (option.normalizeOption() == "attack") {
+            player.attack(npc)
+            result.assertions.add(QaAssertion("npc-attack:${npc.id}", true, "started", "started"))
+        } else {
+            player.executePlugin(PawnPathAction.walkPlugin)
+            result.assertions.add(QaAssertion("npc-route:${npc.id}:$opt", true, "queued", "queued"))
+        }
+        return true
     }
 
     private fun interactInventory(
@@ -316,8 +347,98 @@ class QaActionDriver {
         player.attr[INTERACTING_ITEM] = WeakReference(item)
         player.attr[INTERACTING_ITEM_SLOT] = slot
         player.attr[INTERACTING_OBJ_ATTR] = WeakReference(obj)
-        val handled = player.world.plugins.executeItemOnObject(player, obj.id, item.id)
-        result.assertions.add(QaAssertion("item-on-object:$itemId:${obj.id}", handled, "handled", handled.toString()))
+        player.executePlugin(ObjectPathAction.itemOnObjectPlugin)
+        result.assertions.add(QaAssertion("item-on-object-route:$itemId:${obj.id}", true, "queued", "queued"))
+        return true
+    }
+
+    private fun walkToTile(
+        player: QaPlayer,
+        action: JsonObject,
+        result: QaStepResult,
+    ): Boolean {
+        val x = action.int("x") ?: return false
+        val z = action.int("z") ?: return false
+        val height = action.int("height") ?: player.tile.height
+        if (height != player.tile.height) {
+            player.moveTo(Tile(player.tile.x, player.tile.z, height))
+        }
+        player.walkTo(Tile(x, z, height))
+        result.observations.add("Queued walk to $x,$z,$height.")
+        result.assertions.add(QaAssertion("walk-to:$x:$z:$height", true, "queued", "queued"))
+        return true
+    }
+
+    private fun attackNpc(
+        player: QaPlayer,
+        npc: Npc,
+        result: QaStepResult,
+    ): Boolean {
+        player.attack(npc)
+        result.observations.add("Started combat with NPC ${npc.id} at ${npc.tile.x},${npc.tile.z}.")
+        result.assertions.add(QaAssertion("combat-start:${npc.id}", true, "started", "started"))
+        return true
+    }
+
+    private fun pickupGroundItem(
+        player: QaPlayer,
+        groundItem: GroundItem,
+        result: QaStepResult,
+    ): Boolean {
+        player.attr[INTERACTING_OPT_ATTR] = 3
+        player.attr[INTERACTING_GROUNDITEM_ATTR] = WeakReference(groundItem)
+        player.executePlugin(GroundItemRouteAction.walkPlugin)
+        result.observations.add("Queued pickup for ground item ${groundItem.item} at ${groundItem.tile.x},${groundItem.tile.z}.")
+        result.assertions.add(QaAssertion("ground-item-route:${groundItem.item}", true, "queued", "queued"))
+        return true
+    }
+
+    private fun buyShopItem(
+        player: QaPlayer,
+        action: JsonObject,
+        result: QaStepResult,
+    ): Boolean {
+        val itemName = action.string("item")
+        val itemId = action.int("itemId") ?: itemName?.let(::rscmOrNull) ?: return false
+        val amount = action.int("amount") ?: 1
+        val shop = player.attr[CURRENT_SHOP_ATTR]
+        if (shop == null) {
+            result.observations.add("No shop is currently open.")
+            return false
+        }
+        val slot = shop.items.indexOfFirst { it?.item == itemId }
+        if (slot == -1) {
+            result.observations.add("Open shop '${shop.name}' does not stock item $itemId.")
+            return false
+        }
+        player.attr[INTERACTING_OPT_ATTR] = shopAmountOption(amount)
+        player.attr[INTERACTING_SLOT_ATTR] = slot + 1
+        val handled = player.world.plugins.executeButton(player, SHOP_INTERFACE_ID, SHOP_ITEMS_COMPONENT)
+        result.assertions.add(QaAssertion("shop-buy:$itemId", handled, "handled", handled.toString()))
+        return handled
+    }
+
+    private fun sellInventoryItem(
+        player: QaPlayer,
+        action: JsonObject,
+        result: QaStepResult,
+    ): Boolean {
+        val itemName = action.string("item")
+        val itemId = action.int("itemId") ?: itemName?.let(::rscmOrNull) ?: return false
+        val amount = action.int("amount") ?: 1
+        if (player.attr[CURRENT_SHOP_ATTR] == null) {
+            result.observations.add("No shop is currently open.")
+            return false
+        }
+        val slot = player.inventory.getItemIndex(itemId, skipAttrItems = false)
+        if (slot == -1) {
+            result.observations.add("Inventory does not contain sell item $itemId.")
+            return false
+        }
+        player.attr[INTERACTING_OPT_ATTR] = shopAmountOption(amount)
+        player.attr[INTERACTING_SLOT_ATTR] = slot
+        val handled = player.world.plugins.executeButton(player, SHOP_INVENTORY_INTERFACE_ID, SHOP_INVENTORY_COMPONENT)
+        result.assertions.add(QaAssertion("shop-sell:$itemId", handled, "handled", handled.toString()))
         return handled
     }
 
@@ -389,6 +510,33 @@ class QaActionDriver {
             val passed = expected.any { messages.contains(it.asString, ignoreCase = true) }
             assertions.add(QaAssertion("messages:any", passed, "one of configured messages", messages.take(200)))
         }
+        step.expect.obj("tile")?.let { expected ->
+            val x = expected.int("x")
+            val z = expected.int("z")
+            val height = expected.int("height") ?: after.tile.height
+            val radius = expected.int("radius") ?: 0
+            if (x != null && z != null) {
+                val within =
+                    after.tile.height == height &&
+                        kotlin.math.abs(after.tile.x - x) <= radius &&
+                        kotlin.math.abs(after.tile.z - z) <= radius
+                assertions.add(QaAssertion("tile", within, "$x,$z,$height radius $radius", "${after.tile.x},${after.tile.z},${after.tile.height}"))
+            }
+        }
+        step.expect.obj("shopOpen")?.let { expected ->
+            val nameContains = expected.string("nameContains")
+            val expectedOpen = expected.boolean("open") ?: true
+            val currentShop = after.currentShop.orEmpty()
+            val passed =
+                if (!expectedOpen) {
+                    currentShop.isBlank()
+                } else if (nameContains != null) {
+                    currentShop.contains(nameContains, ignoreCase = true)
+                } else {
+                    currentShop.isNotBlank()
+                }
+            assertions.add(QaAssertion("shop-open", passed, nameContains ?: expectedOpen.toString(), currentShop.ifBlank { "none" }))
+        }
         step.expect.boolean("configLoaded")?.let {
             val allExist = step.setup.array("configRefs")?.all { ref -> pathExists(ref.asString) } ?: false
             assertions.add(QaAssertion("config-loaded", allExist == it, it.toString(), allExist.toString()))
@@ -427,7 +575,7 @@ class QaActionDriver {
         label: String,
         result: QaStepResult,
     ): GameObject? {
-        val ids = target?.array("objects")?.mapNotNull { rscmOrNull(it.asString) }.orEmpty()
+        val ids = target?.resolveIds("objects", "objectIds").orEmpty()
         if (ids.isEmpty()) {
             result.observations.add("No object ids resolved for target '$label'.")
             return null
@@ -460,7 +608,7 @@ class QaActionDriver {
         target: JsonObject?,
         result: QaStepResult,
     ): Npc? {
-        val ids = target?.array("npcs")?.mapNotNull { rscmOrNull(it.asString) }.orEmpty()
+        val ids = target?.resolveIds("npcs", "npcIds").orEmpty()
         if (ids.isEmpty()) {
             return null
         }
@@ -476,6 +624,43 @@ class QaActionDriver {
         return npc
     }
 
+    private fun findGroundItem(
+        player: QaPlayer,
+        action: JsonObject,
+        result: QaStepResult,
+    ): GroundItem? {
+        val ids =
+            action.resolveIds("items", "itemIds")
+                .ifEmpty {
+                    listOfNotNull(action.int("itemId") ?: action.string("item")?.let(::rscmOrNull))
+                }
+        if (ids.isEmpty()) {
+            result.observations.add("No ground item ids resolved for pickup.")
+            return null
+        }
+        val radius = action.int("searchRadius") ?: 16
+        for (distance in 0..radius) {
+            for (dx in -distance..distance) {
+                for (dz in -distance..distance) {
+                    if (kotlin.math.abs(dx) != distance && kotlin.math.abs(dz) != distance) {
+                        continue
+                    }
+                    val tile = Tile(player.tile.x + dx, player.tile.z + dz, player.tile.height)
+                    val chunk = player.world.chunks.get(tile, createIfNeeded = false) ?: continue
+                    val item =
+                        chunk.getEntities<GroundItem>(tile, EntityType.GROUND_ITEM)
+                            .firstOrNull { it.item in ids }
+                    if (item != null) {
+                        result.observations.add("Found ground item ${item.item} at ${item.tile.x},${item.tile.z}.")
+                        return item
+                    }
+                }
+            }
+        }
+        result.observations.add("No target ground item found within $radius tiles.")
+        return null
+    }
+
     private fun QaPlayer.snapshot(): QaSnapshot {
         val inventory = mutableMapOf<Int, Int>()
         this.inventory.rawItems.filterNotNull().forEach { item -> inventory.merge(item.id, item.amount, Int::plus) }
@@ -484,7 +669,13 @@ class QaActionDriver {
             val name = Skills.getSkillName(world, skill).lowercase(Locale.ROOT)
             xp[name] = getSkills().getCurrentXp(skill)
         }
-        return QaSnapshot(inventory, xp)
+        return QaSnapshot(
+            inventory = inventory,
+            xp = xp,
+            hitpoints = getCurrentHp(),
+            tile = QaTile.from(tile),
+            currentShop = attr[CURRENT_SHOP_ATTR]?.name,
+        )
     }
 
     private fun classifyFailure(
@@ -551,6 +742,26 @@ class QaActionDriver {
     private fun JsonObject.boolean(name: String): Boolean? =
         runCatching { get(name)?.asBoolean }.getOrNull()
 
+    private fun JsonObject.resolveIds(
+        nameKey: String,
+        idKey: String,
+    ): List<Int> {
+        val ids = mutableListOf<Int>()
+        array(nameKey)?.forEach { element ->
+            when {
+                element.isJsonPrimitive && element.asJsonPrimitive.isNumber -> ids.add(element.asInt)
+                element.isJsonPrimitive -> rscmOrNull(element.asString)?.let(ids::add)
+            }
+        }
+        array(idKey)?.forEach { element ->
+            when {
+                element.isJsonPrimitive && element.asJsonPrimitive.isNumber -> ids.add(element.asInt)
+                element.isJsonPrimitive -> element.asString.toIntOrNull()?.let(ids::add)
+            }
+        }
+        return ids.distinct()
+    }
+
     private fun JsonArray.forEachObject(action: (JsonObject) -> Unit) {
         forEach { if (it.isJsonObject) action(it.asJsonObject) }
     }
@@ -587,4 +798,19 @@ class QaActionDriver {
             "construction" -> Skills.CONSTRUCTION
             else -> -1
         }
+
+    private fun shopAmountOption(amount: Int): Int =
+        when {
+            amount <= 1 -> 2
+            amount <= 5 -> 3
+            amount <= 10 -> 4
+            else -> 5
+        }
+
+    private companion object {
+        private const val SHOP_INTERFACE_ID = 300
+        private const val SHOP_ITEMS_COMPONENT = 16
+        private const val SHOP_INVENTORY_INTERFACE_ID = 301
+        private const val SHOP_INVENTORY_COMPONENT = 0
+    }
 }

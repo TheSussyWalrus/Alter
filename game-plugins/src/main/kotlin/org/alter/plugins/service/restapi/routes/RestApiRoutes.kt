@@ -89,6 +89,14 @@ class RestApiRoutes {
             worldEditorController.listQaScenarios(res)
         }
 
+        get("/world-editor/qa/suites") { _, res ->
+            worldEditorController.listQaSuites(res)
+        }
+
+        get("/world-editor/qa/fixtures/status") { _, res ->
+            worldEditorController.qaFixtureStatus(res)
+        }
+
         post("/world-editor/qa/sessions") { req, res ->
             worldEditorController.startQaSession(req, res)
         }
@@ -99,6 +107,14 @@ class RestApiRoutes {
 
         get("/world-editor/qa/sessions") { req, res ->
             worldEditorController.listQaSessions(req, res)
+        }
+
+        get("/world-editor/qa/sessions/:id/events") { req, res ->
+            worldEditorController.getQaSessionEvents(req, res)
+        }
+
+        get("/world-editor/qa/sessions/:id/report") { req, res ->
+            worldEditorController.getQaSessionReport(req, res)
         }
 
         get("/world-editor/qa/sessions/:id") { req, res ->

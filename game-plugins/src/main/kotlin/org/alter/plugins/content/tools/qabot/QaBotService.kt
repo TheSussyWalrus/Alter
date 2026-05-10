@@ -27,7 +27,10 @@ import java.util.UUID
 class QaBotService : Service {
     private val gson: Gson = GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create()
     private val driver = QaActionDriver()
+    private val fixtureService = QaFixtureService()
+    private val planner = QaPlanner(driver, fixtureService)
     private val scenarios: MutableMap<String, QaScenario> = linkedMapOf()
+    private val suites: MutableMap<String, QaSuite> = linkedMapOf()
     private var activeSession: QaSession? = null
     private var activeBot: QaPlayer? = null
     private var stopRequested = false
@@ -35,22 +38,39 @@ class QaBotService : Service {
     lateinit var scenariosPath: Path
         private set
 
+    lateinit var suitesPath: Path
+        private set
+
     lateinit var sessionsPath: Path
         private set
 
     override fun init(server: Server, world: World, serviceProperties: ServerProperties) {
         scenariosPath = resolvePath(serviceProperties.get("qa.scenarios") ?: DEFAULT_SCENARIOS_PATH)
+        suitesPath = resolvePath(serviceProperties.get("qa.suites") ?: DEFAULT_SUITES_PATH)
         sessionsPath = resolvePath(serviceProperties.get("qa.sessions") ?: DEFAULT_SESSIONS_PATH)
         loadScenarios()
+        loadSuites()
         Files.createDirectories(sessionsPath)
-        Server.logger.info { "Loaded ${scenarios.size} QA scenario${if (scenarios.size == 1) "" else "s"}." }
+        Server.logger.info {
+            "Loaded ${scenarios.size} QA scenario${if (scenarios.size == 1) "" else "s"} and " +
+                "${suites.size} QA suite${if (suites.size == 1) "" else "s"}."
+        }
     }
 
     @Synchronized
     fun listScenarios(): List<QaScenario> = scenarios.values.sortedBy { it.id }
 
     @Synchronized
+    fun listSuites(): List<QaSuite> = suites.values.sortedBy { it.id }
+
+    @Synchronized
     fun getScenario(id: String): QaScenario? = scenarios[id]
+
+    @Synchronized
+    fun getSuite(id: String): QaSuite? = suites[id]
+
+    @Synchronized
+    fun fixtureStatus(): JsonObject = fixtureService.status()
 
     @Synchronized
     fun status(): JsonObject =
@@ -59,7 +79,10 @@ class QaBotService : Service {
             addProperty("activeSessionId", activeSession?.id)
             addProperty("botName", activeBot?.username ?: DEFAULT_BOT_NAME)
             addProperty("scenarioCount", scenarios.size)
+            addProperty("suiteCount", suites.size)
             addProperty("sessionsPath", sessionsPath.toString())
+            addProperty("suitesPath", suitesPath.toString())
+            add("fixtures", fixtureService.status())
             add("activeSession", activeSession?.let { gson.toJsonTree(it) } ?: com.google.gson.JsonNull.INSTANCE)
         }
 
@@ -90,27 +113,53 @@ class QaBotService : Service {
     }
 
     @Synchronized
+    fun getSessionEvents(id: String): JsonArray? =
+        getSessionReport(id)?.getAsJsonArray("events")
+
+    @Synchronized
     fun startSession(
         world: World,
         scenarioId: String? = null,
         requestedBy: Player? = null,
+    ): QaSession = startSession(world, QaStartOptions(scenarioId = scenarioId), requestedBy)
+
+    @Synchronized
+    fun startSession(
+        world: World,
+        options: QaStartOptions,
+        requestedBy: Player? = null,
     ): QaSession {
-        val scenario = scenarios[scenarioId?.takeIf { it.isNotBlank() } ?: DEFAULT_SCENARIO_ID]
-            ?: scenarios.values.firstOrNull()
-            ?: error("No QA scenarios are loaded.")
         activeSession?.takeIf { it.status == QaStatus.RUNNING.value }?.let {
             error("QA session '${it.id}' is already running.")
         }
+
+        val requestedId = options.suiteId?.takeIf { it.isNotBlank() } ?: options.scenarioId?.takeIf { it.isNotBlank() }
+        val suite =
+            requestedId?.let { suites[it] }
+                ?: options.suiteId?.takeIf { it.isNotBlank() }?.let { error("QA suite '$it' was not found.") }
+        val scenario =
+            if (suite == null) {
+                scenarios[requestedId ?: DEFAULT_SCENARIO_ID]
+                    ?: scenarios.values.firstOrNull()
+                    ?: error("No QA scenarios are loaded.")
+            } else {
+                null
+            }
 
         stopRequested = false
         val session =
             QaSession(
                 id = "${DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss").withZone(java.time.ZoneOffset.UTC).format(Instant.now())}-${UUID.randomUUID().toString().take(8)}",
-                scenarioId = scenario.id,
-                scenarioName = scenario.name,
-                seed = scenario.seed,
+                scenarioId = scenario?.id ?: suite!!.id,
+                scenarioName = scenario?.name ?: suite!!.name,
+                seed = options.seed ?: scenario?.seed ?: suite!!.seed,
                 requestedBy = requestedBy?.username ?: "rest-api",
                 startedAt = now(),
+                runMode = if (suite != null) "suite" else "scenario",
+                suiteId = suite?.id,
+                suiteName = suite?.name,
+                repeatCount = options.repeatCount.coerceIn(1, 25),
+                fixtureMode = options.fixtureMode,
             )
         activeSession = session
         val bot = createBot(world, session)
@@ -120,12 +169,18 @@ class QaBotService : Service {
 
         world.queue {
             try {
-                runScenario(this, world, bot, scenario, session)
+                if (suite != null) {
+                    runSuite(this, world, bot, suite, session, options)
+                } else if (scenario != null) {
+                    runScenario(this, world, bot, scenario, session)
+                }
             } catch (t: Throwable) {
                 synchronized(this@QaBotService) {
                     session.status = QaStatus.FAILED.value
                     session.finishedAt = now()
                     session.warnings.add(t.message ?: t::class.java.simpleName)
+                    session.events.add(QaEvent(world.currentCycle, "session_error", t.message ?: t::class.java.simpleName, status = QaStatus.FAILED.value))
+                    session.cleanup = fixtureService.cleanupJourney(world, bot)
                     writeSession(session)
                     cleanupBot(world)
                 }
@@ -147,10 +202,39 @@ class QaBotService : Service {
         session.status = QaStatus.STOPPED.value
         session.finishedAt = session.finishedAt ?: now()
         session.warnings.add("Stop requested.")
+        session.events.add(QaEvent(world.currentCycle, "session_stopped", "Stop requested.", status = QaStatus.STOPPED.value))
         activeBot?.interruptQueues()
+        session.cleanup = fixtureService.cleanupJourney(world, activeBot)
         writeSession(session)
         cleanupBot(world)
         return session
+    }
+
+    private suspend fun runSuite(
+        task: org.alter.game.model.queue.QueueTask,
+        world: World,
+        bot: QaPlayer,
+        suite: QaSuite,
+        session: QaSession,
+        options: QaStartOptions,
+    ) {
+        session.observations.add("Started suite '${suite.id}' with ${suite.journeys.size} journey(s).")
+        planner.runSuite(task, world, bot, suite, scenarios, session, options) {
+            synchronized(this@QaBotService) {
+                session.botTile = QaTile.from(bot.tile)
+                writeSession(session)
+            }
+        }
+        synchronized(this) {
+            val failed = session.journeys.any { it.status == QaStatus.FAILED.value } || session.steps.any { it.status == QaStatus.FAILED.value }
+            session.status = if (failed) QaStatus.FAILED.value else QaStatus.PASSED.value
+            session.finishedAt = now()
+            session.currentStepId = null
+            session.currentJourneyId = null
+            session.botTile = QaTile.from(bot.tile)
+            writeSession(session)
+            cleanupBot(world)
+        }
     }
 
     private suspend fun runScenario(
@@ -171,6 +255,7 @@ class QaBotService : Service {
                     return
                 }
                 session.currentStepId = step.id
+                session.events.add(QaEvent(world.currentCycle, "step_started", "Started scenario step '${step.id}'.", goalId = step.id))
                 session.botTile = QaTile.from(bot.tile)
                 writeSession(session)
             }
@@ -180,6 +265,7 @@ class QaBotService : Service {
                 session.steps.add(result)
                 session.assertions.addAll(result.assertions)
                 session.observations.addAll(result.observations.map { "${step.id}: $it" })
+                session.events.add(QaEvent(world.currentCycle, "step_finished", "Finished scenario step '${step.id}' with status ${result.status}.", goalId = step.id, status = result.status))
                 session.botTile = QaTile.from(bot.tile)
                 writeSession(session)
             }
@@ -191,6 +277,7 @@ class QaBotService : Service {
             session.finishedAt = now()
             session.currentStepId = null
             session.botTile = QaTile.from(bot.tile)
+            session.cleanup = fixtureService.cleanupJourney(world, bot)
             writeSession(session)
             cleanupBot(world)
         }
@@ -219,6 +306,7 @@ class QaBotService : Service {
 
     private fun cleanupBot(world: World) {
         val bot = activeBot ?: return
+        fixtureService.cleanupJourney(world, bot)
         if (bot.index != -1 && world.players.contains(bot)) {
             bot.interruptQueues()
             world.unregister(bot)
@@ -270,6 +358,47 @@ class QaBotService : Service {
         }
     }
 
+    private fun loadSuites() {
+        suites.clear()
+        if (!Files.exists(suitesPath)) {
+            Files.createDirectories(suitesPath)
+            return
+        }
+        val files =
+            if (Files.isDirectory(suitesPath)) {
+                Files.list(suitesPath).use { stream ->
+                    stream.filter { it.fileName.toString().endsWith(".json") }.toList()
+                }
+            } else {
+                listOf(suitesPath)
+            }
+        files.forEach { path ->
+            runCatching {
+                Files.newBufferedReader(path).use { reader ->
+                    val element = com.google.gson.JsonParser.parseReader(reader)
+                    when {
+                        element.isJsonArray -> {
+                            val type = object : TypeToken<List<QaSuite>>() {}.type
+                            gson.fromJson<List<QaSuite>>(element, type).forEach { suite ->
+                                if (suite.id.isNotBlank()) {
+                                    suites[suite.id] = suite
+                                }
+                            }
+                        }
+                        element.isJsonObject -> {
+                            val suite = gson.fromJson(element, QaSuite::class.java)
+                            if (suite.id.isNotBlank()) {
+                                suites[suite.id] = suite
+                            }
+                        }
+                    }
+                }
+            }.onFailure { t ->
+                Server.logger.warn(t) { "Failed to load QA suite config $path." }
+            }
+        }
+    }
+
     private fun readSession(path: Path): JsonObject? =
         runCatching {
             if (!Files.exists(path)) {
@@ -312,9 +441,10 @@ class QaBotService : Service {
     private fun now(): String = Instant.now().toString()
 
     companion object {
-        const val DEFAULT_BOT_NAME = "QA_Skills"
+        const val DEFAULT_BOT_NAME = "Tannie Bot"
         private const val DEFAULT_SCENARIO_ID = "skills-basic"
         private const val DEFAULT_SCENARIOS_PATH = "data/cfg/qa/scenarios"
+        private const val DEFAULT_SUITES_PATH = "data/cfg/qa/suites"
         private const val DEFAULT_SESSIONS_PATH = "data/qa/sessions"
         private val DEFAULT_START_TILE = Tile(2606, 3093, 0)
     }

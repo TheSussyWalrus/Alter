@@ -17,6 +17,7 @@ import org.alter.plugins.content.tools.npcdefs.NpcDefinitionEntry
 import org.alter.plugins.content.tools.npcdefs.NpcDefinitionService
 import org.alter.plugins.content.tools.npcdefs.NpcShopDefinition
 import org.alter.plugins.content.tools.qabot.QaBotService
+import org.alter.plugins.content.tools.qabot.QaStartOptions
 import spark.Request
 import spark.Response
 import java.nio.charset.StandardCharsets
@@ -311,14 +312,34 @@ class WorldEditorController(private val world: World) {
         )
     }
 
+    fun listQaSuites(res: Response): String {
+        val service = qaBotService(res) ?: return currentResponse(res)
+        return ok(
+            res,
+            JsonObject().apply {
+                val suites = service.listSuites()
+                addProperty("count", suites.size)
+                add("suites", gson.toJsonTree(suites))
+            },
+        )
+    }
+
     fun startQaSession(req: Request, res: Response): String {
         val service = qaBotService(res) ?: return currentResponse(res)
         val body = parseBody(req, res) ?: return currentResponse(res)
-        val scenarioId = body.optionalString("scenarioId") ?: body.optionalString("scenario")
+        val options =
+            QaStartOptions(
+                scenarioId = body.optionalString("scenarioId") ?: body.optionalString("scenario"),
+                suiteId = body.optionalString("suiteId") ?: body.optionalString("suite"),
+                seed = body.optionalLong("seed"),
+                repeatCount = body.optionalInt("repeatCount") ?: 1,
+                continueOnFailure = body.optionalBoolean("continueOnFailure") ?: true,
+                fixtureMode = body.optionalString("fixtureMode") ?: "ephemeral",
+            )
         val requestedBy = body.optionalString("player")?.let { world.getPlayerForName(it) }
         return runOnGameThread(res) {
             try {
-                val session = service.startSession(world, scenarioId, requestedBy)
+                val session = service.startSession(world, options, requestedBy)
                 ok(
                     res,
                     service.status().apply {
@@ -361,6 +382,38 @@ class WorldEditorController(private val world: World) {
                 add("sessions", sessions.fold(JsonArray()) { arr, session -> arr.add(session); arr })
             },
         )
+    }
+
+    fun getQaSessionEvents(req: Request, res: Response): String {
+        val service = qaBotService(res) ?: return currentResponse(res)
+        val id = req.params("id")
+        val events = service.getSessionEvents(id)
+            ?: return error(res, 404, "QA session '$id' was not found.")
+        return ok(
+            res,
+            JsonObject().apply {
+                addProperty("count", events.size())
+                add("events", events)
+            },
+        )
+    }
+
+    fun getQaSessionReport(req: Request, res: Response): String {
+        val service = qaBotService(res) ?: return currentResponse(res)
+        val id = req.params("id")
+        val session = service.getSessionReport(id)
+            ?: return error(res, 404, "QA session '$id' was not found.")
+        return ok(
+            res,
+            JsonObject().apply {
+                add("report", session)
+            },
+        )
+    }
+
+    fun qaFixtureStatus(res: Response): String {
+        val service = qaBotService(res) ?: return currentResponse(res)
+        return ok(res, service.fixtureStatus())
     }
 
     fun getQaSession(req: Request, res: Response): String {
@@ -623,6 +676,13 @@ class WorldEditorController(private val world: World) {
             return null
         }
         return runCatching { get(name).asInt }.getOrNull()
+    }
+
+    private fun JsonObject.optionalLong(name: String): Long? {
+        if (!hasValue(name)) {
+            return null
+        }
+        return runCatching { get(name).asLong }.getOrNull()
     }
 
     private fun JsonObject.optionalBoolean(name: String): Boolean? {
