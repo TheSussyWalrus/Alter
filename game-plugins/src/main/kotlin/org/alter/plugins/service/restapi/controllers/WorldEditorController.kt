@@ -11,6 +11,7 @@ import org.alter.game.model.World
 import org.alter.game.model.entity.Player
 import org.alter.game.model.priv.Privilege
 import org.alter.game.service.GameService
+import org.alter.plugins.content.tools.client.ClientManifestService
 import org.alter.plugins.content.tools.npcspawns.NpcSpawnEntry
 import org.alter.plugins.content.tools.npcspawns.NpcSpawnService
 import org.alter.plugins.content.tools.npcdefs.NpcDefinitionEntry
@@ -29,6 +30,16 @@ import java.util.concurrent.TimeoutException
 
 class WorldEditorController(private val world: World) {
     private val gson = Gson()
+
+    fun clientManifest(res: Response): String {
+        val service = clientManifestService(res) ?: return currentResponse(res)
+        return ok(res, service.manifest(world))
+    }
+
+    fun clientManifestSchema(res: Response): String {
+        val service = clientManifestService(res) ?: return currentResponse(res)
+        return ok(res, service.schema())
+    }
 
     fun listNpcSpawns(res: Response): String {
         val service = npcSpawnService(res) ?: return currentResponse(res)
@@ -510,6 +521,10 @@ class WorldEditorController(private val world: World) {
     private fun qaBotService(res: Response): QaBotService? =
         world.getService(QaBotService::class.java)
             ?: errorAndNull(res, 503, "QaBotService is not loaded.")
+
+    private fun clientManifestService(res: Response): ClientManifestService? =
+        world.getService(ClientManifestService::class.java)
+            ?: errorAndNull(res, 503, "ClientManifestService is not loaded.")
 
     private fun placementPlayer(body: JsonObject, res: Response): Player? {
         val name = body.optionalString("player") ?: body.optionalString("playerName")

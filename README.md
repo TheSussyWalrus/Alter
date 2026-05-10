@@ -89,6 +89,10 @@ If you are using RSProx or another proxy/redirection setup, make sure:
 - the client points at your local game port
 - the modulus matches the RSA material generated during install
 
+### Official client direction
+
+Alter is preparing for an official desktop client that no longer requires user-facing RSProx setup. The server publishes the launcher/client contract at `http://127.0.0.1:4567/client_manifest.json` and the schema at `http://127.0.0.1:4567/client_manifest.schema.json` when the REST tooling service is loaded. See [docs/client-strategy.md](docs/client-strategy.md) and [tools/client/README.md](tools/client/README.md) for the phased desktop-client, curated-plugin, cache-visual, and future-webclient plan.
+
 ## Useful defaults for local testing
 
 The example config currently uses:

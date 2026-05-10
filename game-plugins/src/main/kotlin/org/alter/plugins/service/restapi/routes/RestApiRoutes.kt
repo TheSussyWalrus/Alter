@@ -26,6 +26,23 @@ class RestApiRoutes {
                 req, res ->
             Gson().toJson(PlayerController(req, res, false).init(world))
         }
+
+        get("/client_manifest.json") { _, res ->
+            worldEditorController.clientManifest(res)
+        }
+
+        get("/client_manifest.schema.json") { _, res ->
+            worldEditorController.clientManifestSchema(res)
+        }
+
+        get("/world-editor/client-manifest") { _, res ->
+            worldEditorController.clientManifest(res)
+        }
+
+        get("/world-editor/client-manifest/schema") { _, res ->
+            worldEditorController.clientManifestSchema(res)
+        }
+
         get("/jav_config.ws") { req, res ->
             val filePath = "../jav_config.ws"
             res.type("application/octet-stream")

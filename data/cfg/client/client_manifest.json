@@ -1,0 +1,25 @@
+{
+  "environment": "local",
+  "loginHost": "127.0.0.1",
+  "loginPort": 43594,
+  "js5Host": "127.0.0.1",
+  "js5Ports": [43594],
+  "worldListUrl": "http://127.0.0.1:4567/world_list.ws",
+  "restApiBaseUrl": "http://127.0.0.1:4567",
+  "minimumClientVersion": "0.1.0",
+  "bootstrapVersion": "0.1.0",
+  "downloadUrl": null,
+  "pluginHubEnabled": false,
+  "pluginAllowlistVersion": "2026.05.10",
+  "pluginAllowlist": [
+    "alter-world-teleports",
+    "alter-boss-helpers",
+    "alter-drop-overlay",
+    "alter-map-markers",
+    "alter-web-editor-links",
+    "alter-qa-tools"
+  ],
+  "webClientEnabled": false,
+  "webSocketGatewayUrl": "ws://127.0.0.1:4568/game",
+  "notes": "Local development manifest for the official Alter desktop client bootstrap."
+}
