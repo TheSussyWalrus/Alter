@@ -118,7 +118,7 @@ class QaBotService : Service {
         session.botTile = QaTile.from(bot.tile)
         writeSession(session)
 
-        bot.queue {
+        world.queue {
             try {
                 runScenario(this, world, bot, scenario, session)
             } catch (t: Throwable) {

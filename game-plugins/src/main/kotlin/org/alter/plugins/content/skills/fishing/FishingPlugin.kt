@@ -51,7 +51,7 @@ class FishingPlugin(
             return
         }
         if (entry.bait != null && !player.inventory.contains(entry.bait.item)) {
-            player.message("You need ${entry.bait.item.replace('_', ' ')} to fish here.")
+            player.message("You need ${entry.bait.item.displayItemName()} to fish here.")
             return
         }
 
@@ -63,7 +63,7 @@ class FishingPlugin(
                     break
                 }
                 if (entry.bait != null && !player.inventory.contains(entry.bait.item)) {
-                    player.message("You have run out of ${entry.bait.item.replace('_', ' ')}.")
+                    player.message("You have run out of ${entry.bait.item.displayItemName()}.")
                     break
                 }
 
@@ -76,7 +76,7 @@ class FishingPlugin(
                     entry.bait?.let { player.inventory.remove(it.item, it.amount, assureFullRemoval = true) }
                     player.addXp(Skills.FISHING, entry.experience)
                     player.addOrDrop(reward.item, reward.amount, "The fish falls to the floor.")
-                    player.message("You catch some ${reward.item.replace('_', ' ')}.")
+                    player.message("You catch some ${reward.item.displayItemName()}.")
                 }
             }
         } finally {
@@ -131,4 +131,6 @@ class FishingPlugin(
     }
 
     private data class CaughtFish(val item: String, val amount: Int)
+
+    private fun String.displayItemName(): String = substringAfter("item.").replace('_', ' ')
 }

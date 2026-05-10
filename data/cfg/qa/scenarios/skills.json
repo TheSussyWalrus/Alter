@@ -119,8 +119,8 @@
         "skills": { "cooking": 1 },
         "target": {
           "semantic": "nearest_range_or_fire",
-          "objects": ["object.range", "object.cooking_range", "object.fire"],
-          "searchRadius": 96
+          "objects": ["object.cooking_range", "object.cooking_range_4172", "object.cooking_range_8750", "object.fire_26185"],
+          "searchRadius": 32
         }
       },
       "action": {
@@ -129,7 +129,7 @@
       "expect": {
         "inventoryDeltaAny": [{ "item": "item.shrimps", "minAmount": 1 }, { "item": "item.burnt_shrimp", "minAmount": 1 }],
         "experienceDelta": { "skill": "cooking", "min": 0.0 },
-        "messagesAny": ["You successfully cook the shrimps.", "You accidentally burn the shrimps."]
+        "messagesAny": ["You successfully cook the shrimps.", "You accidentally burn the food."]
       },
       "timeoutTicks": 50,
       "failureClass": "skill-action"
@@ -140,13 +140,13 @@
       "category": "production",
       "type": "object-action-probe",
       "setup": {
-        "origin": { "area": "yanille", "x": 2606, "z": 3093, "height": 0 },
+        "origin": { "area": "edgeville", "x": 3109, "z": 3499, "height": 0 },
         "inventory": [{ "item": "item.copper_ore", "amount": 1 }, { "item": "item.tin_ore", "amount": 1 }],
         "skills": { "smithing": 1 },
         "target": {
           "semantic": "nearest_furnace",
           "objects": ["object.furnace"],
-          "searchRadius": 160
+          "searchRadius": 32
         }
       },
       "action": {

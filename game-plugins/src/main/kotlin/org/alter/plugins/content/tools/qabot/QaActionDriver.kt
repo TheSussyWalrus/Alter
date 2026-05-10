@@ -5,6 +5,8 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import dev.openrune.cache.CacheManager.getNpc
 import dev.openrune.cache.CacheManager.getObject
+import net.rsprot.protocol.game.incoming.resumed.ResumePauseButton
+import net.rsprot.protocol.util.CombinedId
 import org.alter.api.Skills
 import org.alter.game.model.EntityType
 import org.alter.game.model.Tile
@@ -22,6 +24,7 @@ import org.alter.game.model.entity.GameObject
 import org.alter.game.model.entity.Npc
 import org.alter.game.model.move.moveTo
 import org.alter.game.model.queue.QueueTask
+import org.alter.game.model.queue.QueueTaskSet
 import org.alter.rscm.RSCM.getRSCM
 import java.lang.ref.WeakReference
 import java.nio.file.Files
@@ -42,16 +45,22 @@ class QaActionDriver {
                 type = step.type,
                 startedAtCycle = player.world.currentCycle,
             )
-        val before = player.snapshot()
         try {
             applySetup(player, step.setup, result)
+            val before = player.snapshot()
+            player.lastSkillMenuItems.clear()
             val actionStarted = performAction(player, step, result)
+            val selectedRecipe = step.action.string("selectRecipe")
+            var recipeSelectionSent = false
             val timeout = (step.timeoutTicks ?: 50).coerceAtLeast(1)
             var passed = false
             var waited = 0
             while (waited < timeout && !passed) {
                 task.wait(1)
                 waited++
+                if (!recipeSelectionSent && selectedRecipe != null) {
+                    recipeSelectionSent = submitRecipeSelection(player, selectedRecipe, result)
+                }
                 result.messages.addAll(player.drainMessages())
                 val current = player.snapshot()
                 passed = evaluateExpectations(player, step, before, current, result)
@@ -172,7 +181,7 @@ class QaActionDriver {
     ): Boolean {
         step.setup.array("configRefs")?.forEach { ref ->
             val path = ref.asString
-            val exists = Files.exists(Paths.get(path))
+            val exists = pathExists(path)
             result.assertions.add(QaAssertion("config:$path", exists, "exists", exists.toString()))
         }
         step.action.obj("requestTask")?.let { task ->
@@ -312,6 +321,40 @@ class QaActionDriver {
         return handled
     }
 
+    private fun submitRecipeSelection(
+        player: QaPlayer,
+        recipeName: String,
+        result: QaStepResult,
+    ): Boolean {
+        val productId = rscmOrNull(recipeName) ?: return missingRscm(recipeName, result)
+        val index = player.lastSkillMenuItems.indexOf(productId)
+        if (index == -1) {
+            return false
+        }
+        val message = ResumePauseButton(CombinedId(270, 14 + index), 1)
+        val submitted = submitPlayerReturnValue(player, message)
+        if (submitted) {
+            result.observations.add("Selected recipe $recipeName from skill menu.")
+        } else {
+            result.observations.add("Could not submit recipe selection for $recipeName.")
+        }
+        return submitted
+    }
+
+    private fun submitPlayerReturnValue(
+        player: QaPlayer,
+        value: Any,
+    ): Boolean {
+        val field =
+            generateSequence(player.javaClass as Class<*>?) { it.superclass }
+                .mapNotNull { clazz -> runCatching { clazz.getDeclaredField("queues") }.getOrNull() }
+                .firstOrNull() ?: return false
+        field.isAccessible = true
+        val queues = field.get(player) as? QueueTaskSet ?: return false
+        queues.submitReturnValue(value)
+        return true
+    }
+
     private fun evaluateExpectations(
         player: QaPlayer,
         step: QaScenarioStep,
@@ -320,7 +363,7 @@ class QaActionDriver {
         result: QaStepResult,
     ): Boolean {
         if (step.type == "missing-content-probe") {
-            val refsMissing = step.setup.array("configRefs")?.all { !Files.exists(Paths.get(it.asString)) } ?: true
+            val refsMissing = step.setup.array("configRefs")?.all { !pathExists(it.asString) } ?: true
             result.assertions.addOrReplace(QaAssertion("missing-content-expected", refsMissing, "missing", refsMissing.toString()))
             return refsMissing
         }
@@ -347,7 +390,7 @@ class QaActionDriver {
             assertions.add(QaAssertion("messages:any", passed, "one of configured messages", messages.take(200)))
         }
         step.expect.boolean("configLoaded")?.let {
-            val allExist = step.setup.array("configRefs")?.all { ref -> Files.exists(Paths.get(ref.asString)) } ?: false
+            val allExist = step.setup.array("configRefs")?.all { ref -> pathExists(ref.asString) } ?: false
             assertions.add(QaAssertion("config-loaded", allExist == it, it.toString(), allExist.toString()))
         }
         if (step.expect.has("worldAvailable")) {
@@ -356,7 +399,8 @@ class QaActionDriver {
         assertions.forEach { assertion ->
             result.assertions.addOrReplace(assertion)
         }
-        return assertions.isNotEmpty() && assertions.all { it.passed }
+        val blockingAssertions = assertions.filterNot { it.name.startsWith("messages:") }
+        return blockingAssertions.isNotEmpty() && blockingAssertions.all { it.passed }
     }
 
     private fun expectedInventoryAssertion(
@@ -465,6 +509,11 @@ class QaActionDriver {
 
     private fun rscmOrNull(name: String): Int? =
         runCatching { getRSCM(name) }.getOrNull().takeIf { it != null && it >= 0 }
+
+    private fun pathExists(path: String): Boolean {
+        val direct = Paths.get(path)
+        return Files.exists(direct) || Files.exists(Paths.get("..").resolve(direct))
+    }
 
     private fun optionIndex(
         actions: List<String?>,

@@ -79,7 +79,7 @@ class MiningPlugin(
                     val reward = world.roll(entry.outputs)
                     player.addXp(Skills.MINING, entry.experience)
                     player.addOrDrop(reward.item, reward.amount, "The ore drops to the floor.")
-                    player.message("You manage to mine some ${reward.item.replace('_', ' ')}.")
+                    player.message("You manage to mine some ${reward.item.displayItemName()}.")
                     if (world.randomDouble() <= entry.depletionChance) {
                         world.replaceWithRespawn(liveObj, entry.depletedObjectId, entry.respawnTicks)
                         break
@@ -107,4 +107,6 @@ class MiningPlugin(
             "iron_pickaxe" -> Animation.MINING_IRON_PICKAXE
             else -> Animation.MINING_BRONZE_PICKAXE
         }
+
+    private fun String.displayItemName(): String = substringAfter("item.").replace('_', ' ')
 }

@@ -113,22 +113,73 @@
               <span><strong>{{ qaSelectedSession.status || qaSelectedSession.state || 'unknown' }}</strong><small>Status</small></span>
               <span><strong>{{ qaSelectedSession.scenarioId || qaSelectedSession.scenario || 'unknown' }}</strong><small>Scenario</small></span>
               <span><strong>{{ qaSelectedSession.startedAt || qaSelectedSession.createdAt || '-' }}</strong><small>Started</small></span>
+              <span><strong>{{ qaSelectedSession.finishedAt || '-' }}</strong><small>Finished</small></span>
             </div>
 
-            <section class="qa-section">
-              <h4>Steps</h4>
-              <ol v-if="qaSelectedSessionSteps.length" class="qa-ordered">
-                <li v-for="(step, index) in qaSelectedSessionSteps" :key="`step-${index}`">{{ formatQaItem(step) }}</li>
-              </ol>
-              <p v-else class="qa-empty">No steps recorded.</p>
-            </section>
+            <section class="qa-section qa-steps-section">
+              <div class="qa-section-heading">
+                <h4>Steps</h4>
+                <div class="qa-step-summary">
+                  <span class="passed">{{ qaPassedStepCount }} passed</span>
+                  <span class="failed">{{ qaFailedStepCount }} failed</span>
+                  <span>{{ qaRunningStepCount }} running</span>
+                </div>
+              </div>
+              <div v-if="qaSelectedSessionSteps.length" class="qa-step-cards">
+                <article
+                  v-for="(step, index) in qaSelectedSessionSteps"
+                  :key="`step-${index}`"
+                  class="qa-step-card"
+                  :class="qaStatusClass(step.status)"
+                >
+                  <header class="qa-step-header">
+                    <div>
+                      <strong>{{ qaStepTitle(step, index) }}</strong>
+                      <small>{{ step.skill || 'no skill' }} / {{ step.category || step.type || 'probe' }}</small>
+                    </div>
+                    <span class="qa-badge" :class="qaStatusClass(step.status)">{{ step.status || 'unknown' }}</span>
+                  </header>
 
-            <section class="qa-section">
-              <h4>Observations</h4>
-              <ul v-if="qaSelectedSessionObservations.length" class="qa-list">
-                <li v-for="(item, index) in qaSelectedSessionObservations" :key="`observation-${index}`">{{ formatQaItem(item) }}</li>
-              </ul>
-              <p v-else class="qa-empty">No observations recorded.</p>
+                  <div class="qa-step-meta">
+                    <span v-if="step.failureClass" class="failure">Failure: {{ step.failureClass }}</span>
+                    <span v-if="qaStepDuration(step)">Duration: {{ qaStepDuration(step) }}</span>
+                    <span v-if="step.type">Type: {{ step.type }}</span>
+                  </div>
+
+                  <div v-if="step.assertions && step.assertions.length" class="qa-assertion-table">
+                    <div
+                      v-for="(assertion, assertionIndex) in step.assertions"
+                      :key="`step-${index}-assertion-${assertionIndex}`"
+                      class="qa-assertion-row"
+                      :class="{ failed: qaAssertionFailed(assertion), passed: !qaAssertionFailed(assertion) }"
+                    >
+                      <span class="qa-assertion-state">{{ qaAssertionFailed(assertion) ? 'Fail' : 'Pass' }}</span>
+                      <span class="qa-assertion-name">{{ assertion.name || assertion.id || 'assertion' }}</span>
+                      <span class="qa-assertion-detail">{{ qaAssertionDetail(assertion) }}</span>
+                    </div>
+                  </div>
+                  <p v-else class="qa-empty">No assertions recorded for this step.</p>
+
+                  <details v-if="step.observations && step.observations.length" class="qa-details">
+                    <summary>Observations</summary>
+                    <ul>
+                      <li v-for="(item, observationIndex) in step.observations" :key="`step-${index}-observation-${observationIndex}`">
+                        {{ formatQaItem(item) }}
+                      </li>
+                    </ul>
+                  </details>
+
+                  <details v-if="step.messages && step.messages.length" class="qa-details">
+                    <summary>Captured messages</summary>
+                    <ul>
+                      <li v-for="(message, messageIndex) in step.messages" :key="`step-${index}-message-${messageIndex}`">
+                        {{ message }}
+                      </li>
+                    </ul>
+                  </details>
+                </article>
+              </div>
+              <p v-else class="qa-empty">No steps recorded.</p>
             </section>
 
             <section class="qa-section">
@@ -208,14 +259,20 @@ export default {
     qaSelectedSessionSteps() {
       return this.qaSelectedSession?.steps || [];
     },
-    qaSelectedSessionObservations() {
-      return this.qaSelectedSession?.observations || [];
-    },
     qaSelectedSessionAssertions() {
       return this.qaSelectedSession?.assertions || [];
     },
     qaSelectedSessionWarnings() {
       return this.qaSelectedSession?.warnings || [];
+    },
+    qaPassedStepCount() {
+      return this.qaSelectedSessionSteps.filter(step => String(step.status || '').toLowerCase() === 'passed').length;
+    },
+    qaFailedStepCount() {
+      return this.qaSelectedSessionSteps.filter(step => String(step.status || '').toLowerCase() === 'failed').length;
+    },
+    qaRunningStepCount() {
+      return this.qaSelectedSessionSteps.filter(step => ['running', 'active', 'starting'].includes(String(step.status || '').toLowerCase())).length;
     }
   },
   created() {
@@ -363,11 +420,45 @@ export default {
       }
       return item.message || item.description || item.summary || item.name || JSON.stringify(item);
     },
+    qaStepTitle(step, index) {
+      const id = step?.id || step?.stepId || `Step ${index + 1}`;
+      return `${index + 1}. ${id}`;
+    },
+    qaStepDuration(step) {
+      const start = Number(step?.startedAtCycle);
+      const finish = Number(step?.finishedAtCycle);
+      if (!Number.isFinite(start) || !Number.isFinite(finish) || finish < start) {
+        return '';
+      }
+      const ticks = finish - start;
+      return `${ticks} tick${ticks === 1 ? '' : 's'}`;
+    },
+    qaStatusClass(status) {
+      const value = String(status || 'unknown').toLowerCase();
+      if (['passed', 'pass', 'success'].includes(value)) {
+        return 'passed';
+      }
+      if (['failed', 'fail', 'error'].includes(value)) {
+        return 'failed';
+      }
+      if (['running', 'active', 'starting'].includes(value)) {
+        return 'running';
+      }
+      if (['stopped', 'skipped'].includes(value)) {
+        return 'stopped';
+      }
+      return 'unknown';
+    },
     qaAssertionFailed(item) {
       if (!item || typeof item === 'string') {
         return false;
       }
       return item.passed === false || item.success === false || String(item.status || '').toLowerCase() === 'failed';
+    },
+    qaAssertionDetail(assertion) {
+      const expected = assertion && assertion.expected != null ? assertion.expected : '-';
+      const actual = assertion && assertion.actual != null ? assertion.actual : '-';
+      return `Expected ${expected} / Actual ${actual}`;
     },
     errorMessage(err) {
       return err?.response?.data?.error || err?.response?.data?.message || err?.message || String(err);
@@ -615,6 +706,155 @@ select {
   background: #f6eddb;
 }
 
+.qa-section-heading,
+.qa-step-header,
+.qa-step-meta,
+.qa-assertion-row,
+.qa-step-summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.qa-section-heading,
+.qa-step-header,
+.qa-assertion-row {
+  justify-content: space-between;
+}
+
+.qa-step-summary {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.qa-step-summary span,
+.qa-badge,
+.qa-step-meta span {
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: #fff9eb;
+  color: #4f5d50;
+}
+
+.qa-step-summary .passed,
+.qa-badge.passed {
+  background: #dfe8d8;
+  color: #1f5b35;
+}
+
+.qa-step-summary .failed,
+.qa-badge.failed {
+  background: #ffe1d7;
+  color: #9f3117;
+}
+
+.qa-badge.running {
+  background: #26372d;
+  color: #fff9eb;
+}
+
+.qa-badge.stopped,
+.qa-badge.unknown {
+  background: #d9c8aa;
+  color: #26372d;
+}
+
+.qa-step-cards {
+  display: grid;
+  gap: 12px;
+}
+
+.qa-step-card {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid rgba(38, 55, 45, 0.12);
+  border-radius: 16px;
+  background: #fffdf7;
+}
+
+.qa-step-card.failed {
+  border-color: rgba(159, 49, 23, 0.38);
+}
+
+.qa-step-card.passed {
+  border-color: rgba(31, 91, 53, 0.24);
+}
+
+.qa-step-header small {
+  display: block;
+  margin-top: 4px;
+  color: #6e786f;
+}
+
+.qa-step-meta {
+  flex-wrap: wrap;
+  font-size: 12px;
+}
+
+.qa-step-meta .failure {
+  background: #ffe1d7;
+  color: #9f3117;
+  font-weight: 800;
+}
+
+.qa-assertion-table {
+  display: grid;
+  gap: 8px;
+}
+
+.qa-assertion-row {
+  align-items: flex-start;
+  display: grid;
+  grid-template-columns: 56px minmax(150px, 0.7fr) minmax(220px, 1fr);
+  padding: 10px;
+  border-radius: 12px;
+  background: #f6eddb;
+  line-height: 1.35;
+}
+
+.qa-assertion-row.failed {
+  background: #ffe1d7;
+  color: #7b2814;
+}
+
+.qa-assertion-row.passed {
+  background: #e8f1df;
+  color: #26372d;
+}
+
+.qa-assertion-state,
+.qa-assertion-name {
+  font-weight: 800;
+}
+
+.qa-assertion-detail {
+  overflow-wrap: anywhere;
+}
+
+.qa-details {
+  border-radius: 12px;
+  background: #f9f2e4;
+  color: #435044;
+}
+
+.qa-details summary {
+  cursor: pointer;
+  padding: 10px 12px;
+  font-weight: 800;
+}
+
+.qa-details ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0 14px 12px 30px;
+  line-height: 1.45;
+}
+
 .qa-list,
 .qa-ordered {
   display: grid;
@@ -640,6 +880,10 @@ select {
 
   .qa-grid,
   .qa-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .qa-assertion-row {
     grid-template-columns: 1fr;
   }
 }

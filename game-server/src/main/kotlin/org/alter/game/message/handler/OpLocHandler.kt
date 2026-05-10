@@ -7,6 +7,7 @@ import org.alter.game.model.EntityType
 import org.alter.game.model.Tile
 import org.alter.game.model.attr.INTERACTING_OBJ_ATTR
 import org.alter.game.model.attr.INTERACTING_OPT_ATTR
+import org.alter.game.model.attr.INTERACTING_SRC_TILE_ATTR
 import org.alter.game.model.entity.Client
 import org.alter.game.model.entity.GameObject
 import org.alter.game.model.entity.Player
@@ -63,6 +64,7 @@ class OpLocHandler : MessageHandler<OpLoc> {
         }
 
         client.attr[INTERACTING_OPT_ATTR] = message.op
+        client.attr[INTERACTING_SRC_TILE_ATTR] = client.tile
         client.attr[INTERACTING_OBJ_ATTR] = WeakReference(obj)
         client.executePlugin(ObjectPathAction.objectInteractPlugin)
     }

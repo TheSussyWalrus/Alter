@@ -79,7 +79,7 @@ class WoodcuttingPlugin(
                     val reward = world.roll(entry.outputs)
                     player.addXp(Skills.WOODCUTTING, entry.experience)
                     player.addOrDrop(reward.item, reward.amount, "Some logs fall to the floor.")
-                    player.message("You get some ${reward.item.replace('_', ' ')}.")
+                    player.message("You get some ${reward.item.displayItemName()}.")
                     if (world.randomDouble() <= entry.depletionChance) {
                         world.replaceWithRespawn(liveObj, entry.depletedObjectId, entry.respawnTicks)
                         break
@@ -107,4 +107,6 @@ class WoodcuttingPlugin(
             "iron_axe" -> Animation.WOODCUTTING_IRON_AXE
             else -> Animation.WOODCUTTING_BRONZE_AXE
         }
+
+    private fun String.displayItemName(): String = substringAfter("item.").replace('_', ' ')
 }

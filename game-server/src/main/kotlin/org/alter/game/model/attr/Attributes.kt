@@ -1,5 +1,6 @@
 package org.alter.game.model.attr
 
+import org.alter.game.model.Tile
 import org.alter.game.model.container.ItemTransaction
 import org.alter.game.model.entity.*
 import org.alter.game.model.item.Item
@@ -140,6 +141,11 @@ val COMMAND_ARGS_ATTR = AttributeKey<Array<String>>()
  * For example: object action one will set this attribute to [1].
  */
 val INTERACTING_OPT_ATTR = AttributeKey<Int>()
+
+/**
+ * The tile the pawn was standing on when the current object interaction was clicked.
+ */
+val INTERACTING_SRC_TILE_ATTR = AttributeKey<Tile>()
 
 /**
  * The slot that was last selected on any entity message.

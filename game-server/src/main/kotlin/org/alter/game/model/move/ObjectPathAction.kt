@@ -68,7 +68,14 @@ object ObjectPathAction {
         val lineOfSightRange = player.world.plugins.getObjInteractionDistance(obj.id)
 
         walk(player, obj, lineOfSightRange) {
-            if (!player.world.plugins.executeItemOnObject(player, obj.getTransform(player), item.id)) {
+            val transformedObj = obj.getTransform(player)
+            val handled =
+                player.world.plugins.executeItemOnObject(player, transformedObj, item.id) ||
+                    (
+                        transformedObj != obj.id &&
+                            player.world.plugins.executeItemOnObject(player, obj.id, item.id)
+                    )
+            if (!handled) {
                 player.writeMessage(Entity.NOTHING_INTERESTING_HAPPENS)
                 if (player.world.devContext.debugObjects) {
                     player.writeMessage(
@@ -87,7 +94,14 @@ object ObjectPathAction {
         val lineOfSightRange = player.world.plugins.getObjInteractionDistance(obj.id)
 
         walk(player, obj, lineOfSightRange) {
-            if (!player.world.plugins.executeObject(player, obj.getTransform(player), opt!!)) {
+            val transformedObj = obj.getTransform(player)
+            val handled =
+                player.world.plugins.executeObject(player, transformedObj, opt!!) ||
+                    (
+                        transformedObj != obj.id &&
+                            player.world.plugins.executeObject(player, obj.id, opt)
+                    )
+            if (!handled) {
                 player.writeMessage(Entity.NOTHING_INTERESTING_HAPPENS)
                 if (player.world.devContext.debugObjects) {
                     player.writeMessage(
