@@ -52,6 +52,58 @@
     "tags": []
   },
   {
+    "key": "hero_3295_2540_3090_0",
+    "npcId": 3295,
+    "name": "Hero",
+    "x": 2540,
+    "z": 3090,
+    "height": 0,
+    "walkRadius": 0,
+    "facing": "SOUTH",
+    "active": true,
+    "enabled": true,
+    "tags": []
+  },
+  {
+    "key": "hero_3295_2540_3094_0",
+    "npcId": 3295,
+    "name": "Hero",
+    "x": 2540,
+    "z": 3094,
+    "height": 0,
+    "walkRadius": 0,
+    "facing": "SOUTH",
+    "active": true,
+    "enabled": true,
+    "tags": []
+  },
+  {
+    "key": "hero_3295_2543_3090_0",
+    "npcId": 3295,
+    "name": "Hero",
+    "x": 2543,
+    "z": 3090,
+    "height": 0,
+    "walkRadius": 0,
+    "facing": "SOUTH",
+    "active": true,
+    "enabled": true,
+    "tags": []
+  },
+  {
+    "key": "hero_3295_2543_3094_0",
+    "npcId": 3295,
+    "name": "Hero",
+    "x": 2543,
+    "z": 3094,
+    "height": 0,
+    "walkRadius": 0,
+    "facing": "SOUTH",
+    "active": true,
+    "enabled": true,
+    "tags": []
+  },
+  {
     "key": "master_farmer_5730_2599_3104_0",
     "npcId": 5730,
     "name": "Master Farmer",
