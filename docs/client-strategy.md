@@ -24,11 +24,11 @@ http://127.0.0.1:4567/world-editor/client-manifest
 
 The manifest is backed by `data/cfg/client/client_manifest.json` and enriched at runtime with the active game name, revision, home tile, cache build id, and RSA modulus.
 
-Use `tools/client/validate-client-manifest.ps1` to verify the endpoint while the server is running, and `tools/client/bootstrap-alter-client.ps1` to create the initial `alter-client` repository from a RuneLite base.
+Use `tools/client/validate-client-manifest.ps1` to verify the endpoint while the server is running, and `tools/client/bootstrap-alter-client.ps1` to create or populate the initial `Dodian-Client` repository from a RuneLite base.
 
 ## Desktop Client MVP
 
-Create a separate `alter-client` repository from a revision-compatible RuneLite/client base pinned to Alter revision `228`.
+Create a separate `Dodian-Client` repository from a revision-compatible RuneLite/client base pinned to Alter revision `228`.
 
 The MVP client should:
 

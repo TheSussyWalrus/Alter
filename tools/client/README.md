@@ -1,6 +1,6 @@
-# Alter Client Bootstrap Tools
+# Dodian Client Bootstrap Tools
 
-These scripts prepare the next repository: an official desktop client that consumes Alter's runtime manifest and connects without RSProx.
+These scripts prepare `E:\GitHub\Dodian-Client`: an official desktop client that consumes Alter's runtime manifest and connects without RSProx.
 
 ## Validate The Server Manifest
 
@@ -17,10 +17,10 @@ The script checks the local `client_manifest.json` endpoint for revision, login/
 From the Alter repository root:
 
 ```powershell
-.\tools\client\bootstrap-alter-client.ps1 -TargetDir ..\alter-client
+.\tools\client\bootstrap-alter-client.ps1 -TargetDir ..\Dodian-Client
 ```
 
-The script clones a RuneLite base into `..\alter-client` if it does not exist, fetches the local Alter manifest when the server is running, and writes `ALTER_CLIENT_BOOTSTRAP.md` into the client repo with the first patch checklist.
+The script clones a RuneLite base into `..\Dodian-Client` if it does not exist. If `..\Dodian-Client` already exists as an empty Git repository, it fetches the RuneLite base into that repo while preserving existing remotes. It also fetches the local Alter manifest when the server is running and writes `ALTER_CLIENT_BOOTSTRAP.md` into the client repo with the first patch checklist.
 
 ## Next Implementation Step
 
