@@ -1,8 +1,8 @@
 # Alter Player and Developer Guide
 
-Regenerated from the current source snapshot on May 9, 2026.
+Regenerated from the current source snapshot on May 10, 2026.
 
-This guide has two goals:
+This guide has two jobs:
 
 - player view: what you can actually do in game right now
 - developer view: what is implemented, what is still a shell, and where the code still differs from Old School RuneScape
@@ -21,9 +21,9 @@ You can currently:
 - move, click-to-walk, click the minimap, and interact with NPCs, objects, ground items, and other players
 - fight with melee, ranged, and magic
 - use prayers, quick prayers, and prayer unlock scrolls
-- bank, trade, use shops, and browse most of the familiar gameframe
+- bank, trade, use shops, and browse a large slice of the familiar gameframe
 - train a meaningful set of classic skills
-- use a small set of player commands and a larger set of admin or developer tools
+- use a small set of player commands
 
 ### Getting Started
 
@@ -46,7 +46,6 @@ You can currently:
 - Run energy works and can be toggled from the minimap orb or the settings tab.
 - Run energy recovery is affected by your Agility level, even though Agility itself does not have a live training loop yet.
 - The world map opens and tracks your current tile.
-- Fullscreen minimap mode is currently disabled in the world map flow.
 
 ### Combat
 
@@ -180,7 +179,7 @@ Two skill areas have package scaffolding but no live player loop:
 - agility
 - farming
 
-I did not find live runecrafting, construction, or hunter gameplay loops in this snapshot, even though some UI pieces can still suggest broader coverage.
+I did not find live runecrafting, construction, or hunter gameplay loops in this snapshot, even though some UI pieces and command aliases can still suggest broader coverage.
 
 ### Items And Special Mechanics
 
@@ -190,7 +189,6 @@ I did not find live runecrafting, construction, or hunter gameplay loops in this
 - Ring of wealth teleports are implemented.
 - Dwarven rock cake behaves like the OSRS item and damages you when eaten or guzzled.
 - The looting bag interface exists, but actual bag storage is disabled.
-- Saved looting bag contents can still be checked, banked, and deposited if they already exist in a save.
 - Amulet of Glory teleports are not live.
 - The Ancient Wyvern Shield plugin is empty.
 - Elemental and mind shields only play equip animation and graphic hooks.
@@ -249,7 +247,7 @@ Player-facing shortcuts currently wired:
 
 - `::home` teleports you to the configured home tile
 - `::thieving` teleports you to the thieving test area
-- `::yell <message>` broadcasts a server-wide message
+- `::yell <message>` broadcasts a server-wide message with rank formatting
 - `::empty` clears your inventory
 
 ## Developer Guide
@@ -292,7 +290,6 @@ These are the clearest gaps found in the current snapshot:
 - Elemental and mind shields only play VFX hooks.
 - Agility and farming have package scaffolding but no live player loop.
 - I did not find a live runecrafting skill loop at all.
-- World map fullscreen minimap mode is disabled in the world map flow.
 - Character summary quest and diary counters are hardcoded placeholders rather than real progression counts.
 - Some interface tabs exist without complete backend behavior.
 - Some bank tab menu actions are still unimplemented.
@@ -345,6 +342,7 @@ Still divergent from OSRS:
 - The dragon pickaxe special attack is registered in `game-plugins/src/main/kotlin/org/alter/plugins/content/items/DragonPickaxePlugin.kt`.
 - The main combat special-attacks registry lives in `game-plugins/src/main/kotlin/org/alter/plugins/content/combat/specialattack/SpecialAttacks.kt`.
 - Prayer drain, quick prayers, and unlock checks live in `game-plugins/src/main/kotlin/org/alter/plugins/content/mechanics/prayer/Prayers.kt` and `game-plugins/src/main/kotlin/org/alter/plugins/content/mechanics/prayer/PrayersPlugin.kt`.
+- Run energy drain and regeneration live in `game-plugins/src/main/kotlin/org/alter/plugins/content/mechanics/run/RunEnergy.kt`.
 - Teleport tabs and teleport spell metadata are in `game-plugins/src/main/kotlin/org/alter/plugins/content/items/consumables/teletabs/TeleportTabPlugin.kt` and `game-plugins/src/main/kotlin/org/alter/plugins/content/magic/teleports/TeleportSpell.kt`.
 - Private messages are still incomplete in `game-server/src/main/kotlin/org/alter/game/model/social/Social.kt` and `game-server/src/main/kotlin/org/alter/game/message/handler/MessagePrivateSenderHandler.kt`.
 - Clan chat is explicitly unhandled in `game-server/src/main/kotlin/org/alter/game/message/handler/ClanJoinChatLeaveHandler.kt`.

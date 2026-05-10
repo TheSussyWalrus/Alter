@@ -52,6 +52,19 @@
     "tags": []
   },
   {
+    "key": "master_farmer_5730_2599_3104_0",
+    "npcId": 5730,
+    "name": "Master Farmer",
+    "x": 2599,
+    "z": 3104,
+    "height": 0,
+    "walkRadius": 0,
+    "facing": "SOUTH",
+    "active": false,
+    "enabled": true,
+    "tags": []
+  },
+  {
     "key": "shop_keeper_2813_2596_3105_0",
     "npcId": 2813,
     "name": "Shop keeper",
