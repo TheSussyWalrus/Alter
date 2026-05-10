@@ -198,5 +198,155 @@
         }
       ]
     }
+  },
+  {
+    "id": 5420,
+    "name": "Watchman",
+    "tags": [],
+    "combat": {
+      "stats": {
+        "attack": 30,
+        "strength": 20,
+        "defence": 20,
+        "ranged": 0,
+        "magic": 0,
+        "hitpoints": 28
+      },
+      "bonuses": {
+        "attackStab": 0,
+        "attackSlash": 0,
+        "attackCrush": 0,
+        "attackMagic": 0,
+        "attackRanged": 0,
+        "defenceStab": 0,
+        "defenceSlash": 0,
+        "defenceCrush": 0,
+        "defenceMagic": 0,
+        "defenceRanged": 0,
+        "meleeStrength": 0,
+        "rangedStrength": 0,
+        "magicDamage": 0
+      },
+      "animations": {
+        "attack": 422,
+        "block": 424,
+        "death": 836
+      },
+      "sounds": {},
+      "attackSpeed": 4,
+      "respawnDelay": 25,
+      "slayerReq": 1,
+      "slayerXp": 0.0,
+      "poisonChance": 0.0,
+      "venomChance": 0.0,
+      "immunePoison": false,
+      "immuneVenom": false,
+      "immuneCannons": false,
+      "immuneThralls": false
+    },
+    "aggression": {
+      "aggressive": false,
+      "radius": 0,
+      "searchDelay": 5,
+      "alwaysAggressive": false,
+      "retaliates": true
+    },
+    "followRange": 5,
+    "drops": {
+      "always": [
+        {
+          "itemId": 526,
+          "name": "Bones",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "noted": false
+        },
+        {
+          "itemId": 995,
+          "name": "Coins",
+          "minAmount": 1,
+          "maxAmount": 250,
+          "noted": false
+        }
+      ],
+      "main": [
+        {
+          "itemId": 1071,
+          "name": "Mithril platelegs",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        },
+        {
+          "itemId": 1121,
+          "name": "Mithril platebody",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        },
+        {
+          "itemId": 1159,
+          "name": "Mithril full helm",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        },
+        {
+          "itemId": 1197,
+          "name": "Mithril kiteshield",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        },
+        {
+          "itemId": 1315,
+          "name": "Mithril 2h sword",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 1,
+          "noted": false
+        },
+        {
+          "itemId": 1329,
+          "name": "Mithril scimitar",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        },
+        {
+          "itemId": 1331,
+          "name": "Adamant scimitar",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 1,
+          "noted": false
+        },
+        {
+          "itemId": 4127,
+          "name": "Mithril boots",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        }
+      ],
+      "mainEmptySlots": 20,
+      "preroll": [],
+      "tertiary": [
+        {
+          "itemId": 1731,
+          "name": "Amulet of power",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "denominator": 128,
+          "noted": false
+        }
+      ]
+    }
   }
 ]

@@ -28,6 +28,16 @@
         "terrainPadding": 0
       },
       {
+        "seedTile": { "x": 2576, "z": 3104, "height": 0 },
+        "objectNamePrefixes": [],
+        "objectIds": [8173],
+        "searchRadius": 8,
+        "startSearchRadius": 8,
+        "diagonalConnections": true,
+        "fillBoundingBox": true,
+        "terrainPadding": 0
+      },
+      {
         "seedTile": { "x": 2591, "z": 3103, "height": 0 },
         "objectNamePrefixes": [],
         "objectIds": [83, 4735, 4736, 8151, 8132, 8133, 8134, 8135, 8136, 8137, 8138, 18818, 18819, 18820, 18845, 18846, 18850, 7517, 7518, 7519],
