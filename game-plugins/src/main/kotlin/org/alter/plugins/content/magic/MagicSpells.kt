@@ -53,6 +53,8 @@ object MagicSpells {
 
     fun getMetadata(spellId: Int): SpellMetadata? = metadata[spellId]
 
+    fun getSpells(): List<SpellMetadata> = metadata.values.toList()
+
     fun getCombatSpells(): Map<Int, SpellMetadata> = metadata.filter { it.value.spellType == COMBAT_SPELL_TYPE }
 
     fun canCast(

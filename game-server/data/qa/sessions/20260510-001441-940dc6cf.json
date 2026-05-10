@@ -1,0 +1,877 @@
+{
+  "id": "20260510-001441-940dc6cf",
+  "scenarioId": "skills-basic",
+  "scenarioName": "Basic Skills QA",
+  "seed": 9001,
+  "requestedBy": "rest-api",
+  "startedAt": "2026-05-10T00:14:41.810724500Z",
+  "finishedAt": "2026-05-10T00:16:56.815265500Z",
+  "status": "failed",
+  "botName": "QA_Skills",
+  "botTile": {
+    "x": 2606,
+    "z": 3093,
+    "height": 0,
+    "regionId": 10288
+  },
+  "steps": [
+    {
+      "id": "woodcutting",
+      "skill": "woodcutting",
+      "category": "gathering",
+      "type": "resource-probe",
+      "startedAtCycle": 206,
+      "finishedAtCycle": 242,
+      "status": "passed",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "Found object 1278 for 'nearest_tree' at 2621,3102."
+      ],
+      "assertions": [
+        {
+          "name": "object-plugin:1278:1",
+          "passed": true,
+          "expected": "handled",
+          "actual": "true"
+        },
+        {
+          "name": "xp:woodcutting",
+          "passed": true,
+          "expected": ">= 25.0",
+          "actual": "25.0"
+        },
+        {
+          "name": "inventory:item.logs:min",
+          "passed": true,
+          "expected": ">= 1",
+          "actual": "1"
+        },
+        {
+          "name": "messages:any",
+          "passed": true,
+          "expected": "one of configured messages",
+          "actual": "Welcome to Alter.\nYou get some logs."
+        }
+      ],
+      "messages": [
+        "Welcome to Alter.",
+        "You get some logs."
+      ]
+    },
+    {
+      "id": "mining",
+      "skill": "mining",
+      "category": "gathering",
+      "type": "resource-probe",
+      "startedAtCycle": 242,
+      "finishedAtCycle": 245,
+      "status": "passed",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "Found object 11161 for 'nearest_copper_or_tin_rock' at 2630,3137."
+      ],
+      "assertions": [
+        {
+          "name": "object-plugin:11161:1",
+          "passed": true,
+          "expected": "handled",
+          "actual": "true"
+        },
+        {
+          "name": "xp:mining",
+          "passed": true,
+          "expected": ">= 17.5",
+          "actual": "17.5"
+        },
+        {
+          "name": "inventory:any",
+          "passed": true,
+          "expected": "one matching delta",
+          "actual": "inventory:item.copper_ore:min=1, inventory:item.tin_ore:min=0"
+        },
+        {
+          "name": "messages:any",
+          "passed": false,
+          "expected": "one of configured messages",
+          "actual": "You manage to mine some copper ore."
+        }
+      ],
+      "messages": [
+        "You manage to mine some copper ore."
+      ]
+    },
+    {
+      "id": "fishing",
+      "skill": "fishing",
+      "category": "gathering",
+      "type": "npc-resource-probe",
+      "startedAtCycle": 245,
+      "finishedAtCycle": 345,
+      "status": "failed",
+      "failureClass": "interaction_failed",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "No object ids resolved for target 'nearest_net_fishing_spot'.",
+        "No target NPC found within 256 tiles.",
+        "No supported action shape found for step 'fishing'."
+      ],
+      "assertions": [
+        {
+          "name": "xp:fishing",
+          "passed": false,
+          "expected": ">= 10.0",
+          "actual": "0.0"
+        },
+        {
+          "name": "inventory:any",
+          "passed": false,
+          "expected": "one matching delta",
+          "actual": "inventory:item.raw_shrimps:min=0, inventory:item.raw_anchovies:min=0"
+        },
+        {
+          "name": "messages:any",
+          "passed": false,
+          "expected": "one of configured messages",
+          "actual": "You manage to mine some copper ore.\nYou manage to mine some copper ore.\nYou manage to mine some copper ore.\nYou get some logs."
+        }
+      ],
+      "messages": [
+        "You manage to mine some copper ore.",
+        "You manage to mine some copper ore.",
+        "You manage to mine some copper ore.",
+        "You get some logs."
+      ]
+    },
+    {
+      "id": "firemaking",
+      "skill": "firemaking",
+      "category": "production",
+      "type": "inventory-action-probe",
+      "startedAtCycle": 345,
+      "finishedAtCycle": 347,
+      "status": "passed",
+      "observations": [
+        "Moved QA bot to 2606,3093,0."
+      ],
+      "assertions": [
+        {
+          "name": "item-on-item:590:1511",
+          "passed": true,
+          "expected": "handled",
+          "actual": "true"
+        },
+        {
+          "name": "xp:firemaking",
+          "passed": true,
+          "expected": ">= 40.0",
+          "actual": "40.0"
+        },
+        {
+          "name": "inventory:item.logs:max",
+          "passed": true,
+          "expected": "<= -1",
+          "actual": "-1"
+        }
+      ],
+      "messages": [
+        "You light the logs."
+      ]
+    },
+    {
+      "id": "cooking",
+      "skill": "cooking",
+      "category": "production",
+      "type": "object-action-probe",
+      "startedAtCycle": 347,
+      "finishedAtCycle": 349,
+      "status": "passed",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "Found object 26185 for 'nearest_range_or_fire' at 2606,3093."
+      ],
+      "assertions": [
+        {
+          "name": "item-on-object:317:26185",
+          "passed": true,
+          "expected": "handled",
+          "actual": "true"
+        },
+        {
+          "name": "xp:cooking",
+          "passed": true,
+          "expected": ">= 0.0",
+          "actual": "30.0"
+        },
+        {
+          "name": "inventory:any",
+          "passed": true,
+          "expected": "one matching delta",
+          "actual": "inventory:item.shrimps:min=1, inventory:item.burnt_shrimp:min=0"
+        },
+        {
+          "name": "messages:any",
+          "passed": false,
+          "expected": "one of configured messages",
+          "actual": "You successfully cook the item.shrimps."
+        }
+      ],
+      "messages": [
+        "You successfully cook the item.shrimps."
+      ]
+    },
+    {
+      "id": "smithing",
+      "skill": "smithing",
+      "category": "production",
+      "type": "object-action-probe",
+      "startedAtCycle": 349,
+      "finishedAtCycle": 419,
+      "status": "failed",
+      "failureClass": "interaction_failed",
+      "observations": [
+        "Moved QA bot to 3109,3499,0.",
+        "No target object found for 'nearest_furnace' within 32 tiles."
+      ],
+      "assertions": [
+        {
+          "name": "xp:smithing",
+          "passed": false,
+          "expected": ">= 6.2",
+          "actual": "0.0"
+        },
+        {
+          "name": "inventory:item.bronze_bar:min",
+          "passed": false,
+          "expected": ">= 1",
+          "actual": "0"
+        },
+        {
+          "name": "messages:any",
+          "passed": false,
+          "expected": "one of configured messages",
+          "actual": ""
+        }
+      ],
+      "messages": []
+    },
+    {
+      "id": "crafting",
+      "skill": "crafting",
+      "category": "production",
+      "type": "inventory-action-probe",
+      "startedAtCycle": 419,
+      "finishedAtCycle": 422,
+      "status": "passed",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "Selected recipe item.leather_gloves from skill menu."
+      ],
+      "assertions": [
+        {
+          "name": "item-on-item:1733:1741",
+          "passed": true,
+          "expected": "handled",
+          "actual": "true"
+        },
+        {
+          "name": "xp:crafting",
+          "passed": true,
+          "expected": ">= 13.8",
+          "actual": "13.8"
+        },
+        {
+          "name": "inventory:item.leather_gloves:min",
+          "passed": true,
+          "expected": ">= 1",
+          "actual": "1"
+        },
+        {
+          "name": "messages:any",
+          "passed": true,
+          "expected": "one of configured messages",
+          "actual": "You make a pair of leather gloves."
+        }
+      ],
+      "messages": [
+        "You make a pair of leather gloves."
+      ]
+    },
+    {
+      "id": "fletching",
+      "skill": "fletching",
+      "category": "production",
+      "type": "inventory-action-probe",
+      "startedAtCycle": 422,
+      "finishedAtCycle": 425,
+      "status": "passed",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "Selected recipe item.arrow_shaft from skill menu."
+      ],
+      "assertions": [
+        {
+          "name": "item-on-item:946:1511",
+          "passed": true,
+          "expected": "handled",
+          "actual": "true"
+        },
+        {
+          "name": "xp:fletching",
+          "passed": true,
+          "expected": ">= 5.0",
+          "actual": "5.0"
+        },
+        {
+          "name": "inventory:item.arrow_shaft:min",
+          "passed": true,
+          "expected": ">= 15",
+          "actual": "15"
+        },
+        {
+          "name": "messages:any",
+          "passed": true,
+          "expected": "one of configured messages",
+          "actual": "You fletch some arrow shafts."
+        }
+      ],
+      "messages": [
+        "You fletch some arrow shafts."
+      ]
+    },
+    {
+      "id": "herblore",
+      "skill": "herblore",
+      "category": "production",
+      "type": "inventory-action-probe",
+      "startedAtCycle": 425,
+      "finishedAtCycle": 426,
+      "status": "passed",
+      "observations": [
+        "Moved QA bot to 2606,3093,0."
+      ],
+      "assertions": [
+        {
+          "name": "item-plugin:199:1",
+          "passed": true,
+          "expected": "handled",
+          "actual": "true"
+        },
+        {
+          "name": "xp:herblore",
+          "passed": true,
+          "expected": ">= 2.5",
+          "actual": "2.5"
+        },
+        {
+          "name": "inventory:item.guam_leaf:min",
+          "passed": true,
+          "expected": ">= 1",
+          "actual": "1"
+        },
+        {
+          "name": "messages:any",
+          "passed": true,
+          "expected": "one of configured messages",
+          "actual": "You clean the guam leaf."
+        }
+      ],
+      "messages": [
+        "You clean the guam leaf."
+      ]
+    },
+    {
+      "id": "slayer-check",
+      "skill": "slayer",
+      "category": "service",
+      "type": "config-availability-probe",
+      "startedAtCycle": 426,
+      "finishedAtCycle": 427,
+      "status": "passed",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "Config availability probe executed."
+      ],
+      "assertions": [
+        {
+          "name": "config:data/cfg/slayer/slayer_masters.json",
+          "passed": true,
+          "expected": "exists",
+          "actual": "true"
+        },
+        {
+          "name": "config:data/cfg/slayer/slayer_tasks.json",
+          "passed": true,
+          "expected": "exists",
+          "actual": "true"
+        },
+        {
+          "name": "slayer-command",
+          "passed": true,
+          "expected": "handled",
+          "actual": "true"
+        },
+        {
+          "name": "config-loaded",
+          "passed": true,
+          "expected": "true",
+          "actual": "true"
+        }
+      ],
+      "messages": [
+        "New Slayer assignment from Turael: zombies (14 remaining)."
+      ]
+    },
+    {
+      "id": "agility-check",
+      "skill": "agility",
+      "category": "movement",
+      "type": "config-availability-probe",
+      "startedAtCycle": 427,
+      "finishedAtCycle": 428,
+      "status": "passed",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "Config availability probe executed."
+      ],
+      "assertions": [
+        {
+          "name": "config:data/cfg/agility/courses.json",
+          "passed": true,
+          "expected": "exists",
+          "actual": "true"
+        },
+        {
+          "name": "config-loaded",
+          "passed": true,
+          "expected": "true",
+          "actual": "true"
+        }
+      ],
+      "messages": []
+    },
+    {
+      "id": "farming-check",
+      "skill": "farming",
+      "category": "service",
+      "type": "config-availability-probe",
+      "startedAtCycle": 428,
+      "finishedAtCycle": 429,
+      "status": "passed",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "Config availability probe executed."
+      ],
+      "assertions": [
+        {
+          "name": "config:data/cfg/farming/farming_patches.json",
+          "passed": true,
+          "expected": "exists",
+          "actual": "true"
+        },
+        {
+          "name": "config:data/cfg/farming/farming_state.json",
+          "passed": true,
+          "expected": "exists",
+          "actual": "true"
+        },
+        {
+          "name": "config-loaded",
+          "passed": true,
+          "expected": "true",
+          "actual": "true"
+        }
+      ],
+      "messages": []
+    },
+    {
+      "id": "runecrafting-missing",
+      "skill": "runecrafting",
+      "category": "negative",
+      "type": "missing-content-probe",
+      "startedAtCycle": 429,
+      "finishedAtCycle": 430,
+      "status": "passed",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "Marked missing-content probe; no interaction executed."
+      ],
+      "assertions": [
+        {
+          "name": "missing-content-expected",
+          "passed": true,
+          "expected": "missing",
+          "actual": "true"
+        }
+      ],
+      "messages": []
+    },
+    {
+      "id": "world-sanity",
+      "skill": "none",
+      "category": "world",
+      "type": "world-sanity-probe",
+      "startedAtCycle": 430,
+      "finishedAtCycle": 431,
+      "status": "passed",
+      "observations": [
+        "Moved QA bot to 2606,3093,0.",
+        "World sanity probe executed."
+      ],
+      "assertions": [
+        {
+          "name": "world-has-players",
+          "passed": true,
+          "expected": "true",
+          "actual": "2"
+        },
+        {
+          "name": "world-has-npcs",
+          "passed": true,
+          "expected": "true",
+          "actual": "120"
+        },
+        {
+          "name": "anchor:Shop keeper",
+          "passed": true,
+          "expected": "found",
+          "actual": "true"
+        },
+        {
+          "name": "anchor:Giant rat",
+          "passed": true,
+          "expected": "found",
+          "actual": "true"
+        },
+        {
+          "name": "world-available",
+          "passed": true,
+          "expected": "true",
+          "actual": "true"
+        }
+      ],
+      "messages": []
+    }
+  ],
+  "observations": [
+    "Started scenario 'skills-basic' with 14 step(s).",
+    "woodcutting: Moved QA bot to 2606,3093,0.",
+    "woodcutting: Found object 1278 for 'nearest_tree' at 2621,3102.",
+    "mining: Moved QA bot to 2606,3093,0.",
+    "mining: Found object 11161 for 'nearest_copper_or_tin_rock' at 2630,3137.",
+    "fishing: Moved QA bot to 2606,3093,0.",
+    "fishing: No object ids resolved for target 'nearest_net_fishing_spot'.",
+    "fishing: No target NPC found within 256 tiles.",
+    "fishing: No supported action shape found for step 'fishing'.",
+    "firemaking: Moved QA bot to 2606,3093,0.",
+    "cooking: Moved QA bot to 2606,3093,0.",
+    "cooking: Found object 26185 for 'nearest_range_or_fire' at 2606,3093.",
+    "smithing: Moved QA bot to 3109,3499,0.",
+    "smithing: No target object found for 'nearest_furnace' within 32 tiles.",
+    "crafting: Moved QA bot to 2606,3093,0.",
+    "crafting: Selected recipe item.leather_gloves from skill menu.",
+    "fletching: Moved QA bot to 2606,3093,0.",
+    "fletching: Selected recipe item.arrow_shaft from skill menu.",
+    "herblore: Moved QA bot to 2606,3093,0.",
+    "slayer-check: Moved QA bot to 2606,3093,0.",
+    "slayer-check: Config availability probe executed.",
+    "agility-check: Moved QA bot to 2606,3093,0.",
+    "agility-check: Config availability probe executed.",
+    "farming-check: Moved QA bot to 2606,3093,0.",
+    "farming-check: Config availability probe executed.",
+    "runecrafting-missing: Moved QA bot to 2606,3093,0.",
+    "runecrafting-missing: Marked missing-content probe; no interaction executed.",
+    "world-sanity: Moved QA bot to 2606,3093,0.",
+    "world-sanity: World sanity probe executed."
+  ],
+  "warnings": [],
+  "assertions": [
+    {
+      "name": "object-plugin:1278:1",
+      "passed": true,
+      "expected": "handled",
+      "actual": "true"
+    },
+    {
+      "name": "xp:woodcutting",
+      "passed": true,
+      "expected": ">= 25.0",
+      "actual": "25.0"
+    },
+    {
+      "name": "inventory:item.logs:min",
+      "passed": true,
+      "expected": ">= 1",
+      "actual": "1"
+    },
+    {
+      "name": "messages:any",
+      "passed": true,
+      "expected": "one of configured messages",
+      "actual": "Welcome to Alter.\nYou get some logs."
+    },
+    {
+      "name": "object-plugin:11161:1",
+      "passed": true,
+      "expected": "handled",
+      "actual": "true"
+    },
+    {
+      "name": "xp:mining",
+      "passed": true,
+      "expected": ">= 17.5",
+      "actual": "17.5"
+    },
+    {
+      "name": "inventory:any",
+      "passed": true,
+      "expected": "one matching delta",
+      "actual": "inventory:item.copper_ore:min=1, inventory:item.tin_ore:min=0"
+    },
+    {
+      "name": "messages:any",
+      "passed": false,
+      "expected": "one of configured messages",
+      "actual": "You manage to mine some copper ore."
+    },
+    {
+      "name": "xp:fishing",
+      "passed": false,
+      "expected": ">= 10.0",
+      "actual": "0.0"
+    },
+    {
+      "name": "inventory:any",
+      "passed": false,
+      "expected": "one matching delta",
+      "actual": "inventory:item.raw_shrimps:min=0, inventory:item.raw_anchovies:min=0"
+    },
+    {
+      "name": "messages:any",
+      "passed": false,
+      "expected": "one of configured messages",
+      "actual": "You manage to mine some copper ore.\nYou manage to mine some copper ore.\nYou manage to mine some copper ore.\nYou get some logs."
+    },
+    {
+      "name": "item-on-item:590:1511",
+      "passed": true,
+      "expected": "handled",
+      "actual": "true"
+    },
+    {
+      "name": "xp:firemaking",
+      "passed": true,
+      "expected": ">= 40.0",
+      "actual": "40.0"
+    },
+    {
+      "name": "inventory:item.logs:max",
+      "passed": true,
+      "expected": "<= -1",
+      "actual": "-1"
+    },
+    {
+      "name": "item-on-object:317:26185",
+      "passed": true,
+      "expected": "handled",
+      "actual": "true"
+    },
+    {
+      "name": "xp:cooking",
+      "passed": true,
+      "expected": ">= 0.0",
+      "actual": "30.0"
+    },
+    {
+      "name": "inventory:any",
+      "passed": true,
+      "expected": "one matching delta",
+      "actual": "inventory:item.shrimps:min=1, inventory:item.burnt_shrimp:min=0"
+    },
+    {
+      "name": "messages:any",
+      "passed": false,
+      "expected": "one of configured messages",
+      "actual": "You successfully cook the item.shrimps."
+    },
+    {
+      "name": "xp:smithing",
+      "passed": false,
+      "expected": ">= 6.2",
+      "actual": "0.0"
+    },
+    {
+      "name": "inventory:item.bronze_bar:min",
+      "passed": false,
+      "expected": ">= 1",
+      "actual": "0"
+    },
+    {
+      "name": "messages:any",
+      "passed": false,
+      "expected": "one of configured messages",
+      "actual": ""
+    },
+    {
+      "name": "item-on-item:1733:1741",
+      "passed": true,
+      "expected": "handled",
+      "actual": "true"
+    },
+    {
+      "name": "xp:crafting",
+      "passed": true,
+      "expected": ">= 13.8",
+      "actual": "13.8"
+    },
+    {
+      "name": "inventory:item.leather_gloves:min",
+      "passed": true,
+      "expected": ">= 1",
+      "actual": "1"
+    },
+    {
+      "name": "messages:any",
+      "passed": true,
+      "expected": "one of configured messages",
+      "actual": "You make a pair of leather gloves."
+    },
+    {
+      "name": "item-on-item:946:1511",
+      "passed": true,
+      "expected": "handled",
+      "actual": "true"
+    },
+    {
+      "name": "xp:fletching",
+      "passed": true,
+      "expected": ">= 5.0",
+      "actual": "5.0"
+    },
+    {
+      "name": "inventory:item.arrow_shaft:min",
+      "passed": true,
+      "expected": ">= 15",
+      "actual": "15"
+    },
+    {
+      "name": "messages:any",
+      "passed": true,
+      "expected": "one of configured messages",
+      "actual": "You fletch some arrow shafts."
+    },
+    {
+      "name": "item-plugin:199:1",
+      "passed": true,
+      "expected": "handled",
+      "actual": "true"
+    },
+    {
+      "name": "xp:herblore",
+      "passed": true,
+      "expected": ">= 2.5",
+      "actual": "2.5"
+    },
+    {
+      "name": "inventory:item.guam_leaf:min",
+      "passed": true,
+      "expected": ">= 1",
+      "actual": "1"
+    },
+    {
+      "name": "messages:any",
+      "passed": true,
+      "expected": "one of configured messages",
+      "actual": "You clean the guam leaf."
+    },
+    {
+      "name": "config:data/cfg/slayer/slayer_masters.json",
+      "passed": true,
+      "expected": "exists",
+      "actual": "true"
+    },
+    {
+      "name": "config:data/cfg/slayer/slayer_tasks.json",
+      "passed": true,
+      "expected": "exists",
+      "actual": "true"
+    },
+    {
+      "name": "slayer-command",
+      "passed": true,
+      "expected": "handled",
+      "actual": "true"
+    },
+    {
+      "name": "config-loaded",
+      "passed": true,
+      "expected": "true",
+      "actual": "true"
+    },
+    {
+      "name": "config:data/cfg/agility/courses.json",
+      "passed": true,
+      "expected": "exists",
+      "actual": "true"
+    },
+    {
+      "name": "config-loaded",
+      "passed": true,
+      "expected": "true",
+      "actual": "true"
+    },
+    {
+      "name": "config:data/cfg/farming/farming_patches.json",
+      "passed": true,
+      "expected": "exists",
+      "actual": "true"
+    },
+    {
+      "name": "config:data/cfg/farming/farming_state.json",
+      "passed": true,
+      "expected": "exists",
+      "actual": "true"
+    },
+    {
+      "name": "config-loaded",
+      "passed": true,
+      "expected": "true",
+      "actual": "true"
+    },
+    {
+      "name": "missing-content-expected",
+      "passed": true,
+      "expected": "missing",
+      "actual": "true"
+    },
+    {
+      "name": "world-has-players",
+      "passed": true,
+      "expected": "true",
+      "actual": "2"
+    },
+    {
+      "name": "world-has-npcs",
+      "passed": true,
+      "expected": "true",
+      "actual": "120"
+    },
+    {
+      "name": "anchor:Shop keeper",
+      "passed": true,
+      "expected": "found",
+      "actual": "true"
+    },
+    {
+      "name": "anchor:Giant rat",
+      "passed": true,
+      "expected": "found",
+      "actual": "true"
+    },
+    {
+      "name": "world-available",
+      "passed": true,
+      "expected": "true",
+      "actual": "true"
+    }
+  ]
+}
