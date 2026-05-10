@@ -41,6 +41,21 @@ class WorldEditorController(private val world: World) {
         return ok(res, service.schema())
     }
 
+    fun javConfig(res: Response): String {
+        val service = clientManifestService(res) ?: return currentResponse(res)
+        res.type("text/plain")
+        return service.javConfig(world)
+    }
+
+    fun worldList(res: Response): Any? {
+        val service = clientManifestService(res) ?: return currentResponse(res)
+        val bytes = service.worldList()
+        res.type("application/octet-stream")
+        res.raw().outputStream.write(bytes)
+        res.raw().outputStream.flush()
+        return null
+    }
+
     fun listNpcSpawns(res: Response): String {
         val service = npcSpawnService(res) ?: return currentResponse(res)
         return ok(res, spawnState(service))

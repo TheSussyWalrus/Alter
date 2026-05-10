@@ -1,15 +1,20 @@
 package org.alter.plugins.content.tools.client
 
+import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.google.gson.JsonNull
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import com.google.gson.reflect.TypeToken
 import dev.openrune.cache.CacheManager
 import gg.rsmod.util.ServerProperties
 import org.alter.game.Server
 import org.alter.game.model.World
 import org.alter.game.service.Service
 import org.alter.game.service.rsa.RsaService
+import org.alter.plugins.service.worldlist.model.WorldEntry
+import java.io.ByteArrayOutputStream
+import java.io.DataOutputStream
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -62,6 +67,103 @@ class ClientManifestService : Service {
 
     fun schema(): JsonObject =
         JsonParser.parseString(CLIENT_MANIFEST_SCHEMA).asJsonObject
+
+    fun javConfig(world: World): String {
+        val context = world.gameContext
+        val endpointConfig = endpoints(context)
+        val js5Host = endpointConfig.get("js5Host").asString
+        val worldListUrl = endpointConfig.get("worldListUrl").asString
+        val codebase = config.string("javConfigCodebase", "http://$js5Host/")!!
+        val initialJar = config.string("initialJar", "gamepack_${context.revision}.jar")
+        val initialClass = config.string("initialClass", "client.class")
+        val worldId = config.int("worldId", 1)
+
+        return buildString {
+            appendLine("title=${config.string("title", context.name)}")
+            appendLine("adverturl=http://$js5Host/")
+            appendLine("codebase=$codebase")
+            appendLine("cachedir=${config.string("cacheDir", "dodian")}")
+            appendLine("storebase=0")
+            appendLine("initial_jar=$initialJar")
+            appendLine("initial_class=$initialClass")
+            appendLine("termsurl=http://$js5Host/terms")
+            appendLine("privacyurl=http://$js5Host/privacy")
+            appendLine("viewerversion=${config.int("viewerVersion", context.revision)}")
+            appendLine("win_sub_version=1")
+            appendLine("mac_sub_version=2")
+            appendLine("other_sub_version=2")
+            appendLine("download=0")
+            appendLine("window_preferredwidth=800")
+            appendLine("window_preferredheight=600")
+            appendLine("advert_height=0")
+            appendLine("applet_minwidth=765")
+            appendLine("applet_minheight=503")
+            appendLine("applet_maxwidth=5760")
+            appendLine("applet_maxheight=2160")
+            appendLine("runelite.worldparam=1")
+            appendLine("msg=lang0=English")
+            appendLine("msg=loading_app=Loading Dodian")
+            appendLine("msg=err_get_file=Error getting file")
+            appendLine("msg=err_downloading=Error downloading")
+            appendLine("msg=ok=OK")
+            appendLine("msg=cancel=Cancel")
+            appendLine("msg=message=Message")
+            appendLine("msg=information=Information")
+            appendLine("param=14=0")
+            appendLine("param=12=$worldId")
+            appendLine("param=11=http://$js5Host/")
+            appendLine("param=13=.dodian.local")
+            appendLine("param=3=false")
+            appendLine("param=6=0")
+            appendLine("param=7=0")
+            appendLine("param=9=${config.string("jagexToken", "")}")
+            appendLine("param=15=0")
+            appendLine("param=10=5")
+            appendLine("param=8=true")
+            appendLine("param=17=$worldListUrl")
+            appendLine("param=2=http://$js5Host/")
+            appendLine("param=18=")
+            appendLine("param=4=0")
+            appendLine("param=1=$worldId")
+            appendLine("param=19=")
+            appendLine("param=16=false")
+            appendLine("param=5=0")
+        }
+    }
+
+    fun worldList(): ByteArray {
+        val path = resolveConfigPath(config.string("worldListConfig", "../data/cfg/world.json")!!)
+        val entries =
+            if (Files.exists(path)) {
+                Files.newBufferedReader(path).use { reader ->
+                    Gson().fromJson<List<WorldEntry>>(reader, object : TypeToken<List<WorldEntry>>() {}.type)
+                }
+            } else {
+                emptyList()
+            }
+
+        val worldList = ByteArrayOutputStream()
+        DataOutputStream(worldList).use { out ->
+            out.writeShort(entries.size)
+            entries.forEach { entry ->
+                val mask = entry.types.fold(0) { acc, type -> acc or type.mask }
+                out.writeShort(entry.id)
+                out.writeInt(mask)
+                out.writeCString(entry.address)
+                out.writeCString(entry.activity)
+                out.writeByte(entry.location.id)
+                out.writeShort(entry.players)
+            }
+        }
+
+        val framed = ByteArrayOutputStream()
+        DataOutputStream(framed).use { out ->
+            val bytes = worldList.toByteArray()
+            out.writeInt(bytes.size)
+            out.write(bytes)
+        }
+        return framed.toByteArray()
+    }
 
     private fun endpoints(context: org.alter.game.GameContext): JsonObject =
         JsonObject().apply {
@@ -185,6 +287,11 @@ class ClientManifestService : Service {
                 Paths.get("..").resolve(direct),
             )
         return candidates.firstOrNull { Files.exists(it) }?.normalize() ?: direct
+    }
+
+    private fun DataOutputStream.writeCString(value: String) {
+        write(value.toByteArray(Charsets.UTF_8))
+        writeByte(0)
     }
 
     companion object {
