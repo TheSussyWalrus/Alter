@@ -66,7 +66,8 @@ class CombatPlugin(
         if (pawn.entityType.isNpc) {
             routeLogic = (pawn as Npc).routeLogic
         }
-        var reached = world.reachStrategy.reached(
+        val overlapping = Combat.areOverlapping(pawn, target)
+        var reached = !overlapping && world.reachStrategy.reached(
             flags = world.collision,
             level = pawn.tile.height,
             srcX = pawn.tile.x ,
@@ -92,6 +93,11 @@ class CombatPlugin(
                         destLength = target.getSize()
                     )
                     pawn.walkRoute(route, StepType.NORMAL)
+                    if (overlapping && !pawn.hasMoveDestination()) {
+                        Combat.reset(pawn)
+                        pawn.resetFacePawn()
+                        return false
+                    }
                 }
                 0 -> {
                     val route = LinkedList<Tile>()
@@ -125,6 +131,11 @@ class CombatPlugin(
                         route.add(diagonalMove)
                     }
                     if (route.isEmpty()) {
+                        if (overlapping) {
+                            Combat.reset(pawn)
+                            pawn.resetFacePawn()
+                            return false
+                        }
                         pawn.forceChat("Broke")
                         return true
                     }
@@ -132,7 +143,7 @@ class CombatPlugin(
                 }
             }
         }
-        if (pawn.tile.getDistance(target.tile) <= attackRange + target.getSize()) {
+        if (!overlapping && pawn.tile.getDistance(target.tile) <= attackRange + target.getSize()) {
             reached = true
             pawn.stopMovement()
         }

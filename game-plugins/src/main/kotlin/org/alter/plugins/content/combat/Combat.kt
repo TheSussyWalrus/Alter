@@ -43,13 +43,13 @@ object Combat {
         pawn: Pawn,
         target: Pawn,
         combatClass: CombatClass,
-    ): Boolean = canEngage(pawn, target) && getStrategy(combatClass).canAttack(pawn, target)
+    ): Boolean = canEngage(pawn, target) && !areOverlapping(pawn, target) && getStrategy(combatClass).canAttack(pawn, target)
 
     fun canAttack(
         pawn: Pawn,
         target: Pawn,
         strategy: CombatStrategy,
-    ): Boolean = canEngage(pawn, target) && strategy.canAttack(pawn, target)
+    ): Boolean = canEngage(pawn, target) && !areOverlapping(pawn, target) && strategy.canAttack(pawn, target)
 
     fun isAttackDelayReady(pawn: Pawn): Boolean = !pawn.timers.has(ATTACK_DELAY)
 
@@ -110,7 +110,7 @@ object Combat {
             } else if (target is Player) {
                 val strategy = CombatConfigs.getCombatStrategy(target)
                 val attackRange = strategy.getAttackRange(target)
-                if (/** target.getVarp(AttackTab.DISABLE_AUTO_RETALIATE_VARP) == 0 && */ target.getCombatTarget() != pawn && target.tile.isWithinRadius(pawn.tile, attackRange)) {
+                if (/** target.getVarp(AttackTab.DISABLE_AUTO_RETALIATE_VARP) == 0 && */ target.getCombatTarget() != pawn && !areOverlapping(target, pawn) && target.tile.isWithinRadius(pawn.tile, attackRange)) {
                     target.attack(pawn)
                 } /**
                     * @TODO Auto Retaliate
@@ -167,6 +167,10 @@ object Combat {
         val world = pawn.world
         val start = pawn.tile
         val end = target.tile
+
+        if (areOverlapping(pawn, target)) {
+            return false
+        }
 
         val srcSize = pawn.getSize()
         val dstSize = Math.max(distance, target.getSize())
@@ -296,7 +300,23 @@ object Combat {
             CombatClass.MAGIC -> MagicCombatStrategy
         }
 
-    private fun areOverlapping(
+    fun areOverlapping(
+        pawn: Pawn,
+        target: Pawn,
+    ): Boolean =
+        pawn.tile.height == target.tile.height &&
+            areOverlapping(
+                pawn.tile.x,
+                pawn.tile.z,
+                pawn.getSize(),
+                pawn.getSize(),
+                target.tile.x,
+                target.tile.z,
+                target.getSize(),
+                target.getSize(),
+            )
+
+    fun areOverlapping(
         x1: Int,
         z1: Int,
         width1: Int,
