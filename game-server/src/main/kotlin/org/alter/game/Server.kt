@@ -190,6 +190,18 @@ class Server {
         logger.info {
             "Loaded ${DecimalFormat().format(world.plugins.getPluginCount())} plugins in ${individualStopwatch.elapsed(TimeUnit.MILLISECONDS)}ms."
         }
+        if (world.plugins.getPluginCount() == 0) {
+            throw IllegalStateException(
+                "No game content plugins were loaded. Check that game-plugins is on the runtime classpath; " +
+                    "prefer the Gradle game-server:run configuration from the Alter project.",
+            )
+        }
+        if (world.npcs.count() == 0) {
+            logger.error {
+                "No NPCs spawned after plugin loading. If this world should have Dodian content, " +
+                    "check the game-plugins runtime classpath and plugin scanner output."
+            }
+        }
 
         /*
          * Post load world.

@@ -2,6 +2,7 @@ package org.alter.plugins.service.restapi.routes
 
 import com.google.gson.Gson
 import org.alter.game.model.World
+import org.alter.game.service.rsa.RsaService
 import org.alter.plugins.service.restapi.controllers.OnlinePlayersController
 import org.alter.plugins.service.restapi.controllers.PlayerController
 import spark.Spark.*
@@ -9,7 +10,11 @@ import spark.Spark.*
 /**
  * @TODO Http-api
  */
-class RestApiRoutes {
+class RestApiRoutes(
+    private val host: String,
+    private val httpPort: Int,
+    private val gamePort: Int,
+) {
     fun init(
         world: World,
         auth: Boolean,
@@ -23,43 +28,166 @@ class RestApiRoutes {
                 req, res ->
             Gson().toJson(PlayerController(req, res, false).init(world))
         }
-        get("/jav_config.ws") { req, res ->
-            val filePath = "../jav_config.ws"
-            res.type("application/octet-stream")
-            res.header("Content-Disposition", "attachment; filename=jav_config.ws")
-            try {
-                val file = java.nio.file.Paths.get(filePath)
-                val fileContent = java.nio.file.Files.readAllBytes(file)
-                res.raw().outputStream.write(fileContent)
-                res.raw().outputStream.flush()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            null
+
+        get("/client_manifest.json") { _, res ->
+            res.type("application/json")
+            Gson().toJson(buildClientManifest(world))
         }
 
+        get("/jav_config.ws") { _, res ->
+            res.type("text/plain")
+            res.header("Content-Disposition", "inline; filename=jav_config.ws")
+            buildJavConfig()
+        }
 
+        get("/world_list.ws") { _, res ->
+            res.type("application/json")
+            Gson().toJson(buildWorlds())
+        }
 
+        get("/worlds.js") { _, res ->
+            res.type("application/json")
+            Gson().toJson(buildWorlds())
+        }
 
-
-
-        get("/world_list.ws") { req, res ->
-            val filePath = "../world_list.ws"  // Replace with the actual path to your file
-            // Set response headers to indicate a file download
-            res.type("application/octet-stream")  // You can change this to the correct MIME type if known
-            res.header("Content-Disposition", "attachment; filename=world_list.ws")
-            // Read the file and return its contents as the response
-            try {
-                val file = java.nio.file.Paths.get(filePath)
-                println(file.toAbsolutePath().toString())
-                val fileContent = java.nio.file.Files.readAllBytes(file)
-                res.raw().outputStream.write(fileContent)
-                res.raw().outputStream.flush()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            // Return null as the response is handled directly by writing to the output stream
-            null
+        get("/debug/world") { _, res ->
+            res.type("application/json")
+            Gson().toJson(buildDebugWorld(world))
         }
     }
+
+    private fun buildDebugWorld(world: World): Map<String, Any?> =
+        linkedMapOf(
+            "game" to world.gameContext.name,
+            "revision" to world.gameContext.revision,
+            "plugins" to world.plugins.getPluginCount(),
+            "players" to world.players.count(),
+            "npcs" to world.npcs.count(),
+            "home" to linkedMapOf(
+                "x" to world.gameContext.home.x,
+                "z" to world.gameContext.home.z,
+                "height" to world.gameContext.home.height,
+            ),
+        )
+
+    private fun buildClientManifest(world: World): Map<String, Any?> {
+        val rsaService = world.getService(RsaService::class.java)
+        val restBaseUrl = "http://$host:$httpPort"
+
+        return linkedMapOf(
+            "game" to world.gameContext.name,
+            "revision" to world.gameContext.revision,
+            "environment" to "local",
+            "endpoints" to linkedMapOf(
+                "loginHost" to host,
+                "loginPort" to gamePort,
+                "js5Host" to host,
+                "js5Ports" to listOf(gamePort),
+                "worldListUrl" to "$restBaseUrl/world_list.ws",
+                "restApiBaseUrl" to restBaseUrl,
+                "home" to linkedMapOf(
+                    "x" to world.gameContext.home.x,
+                    "z" to world.gameContext.home.z,
+                    "height" to world.gameContext.home.height,
+                ),
+            ),
+            "cache" to linkedMapOf(
+                "revision" to world.gameContext.revision,
+                "buildId" to "local-${world.gameContext.revision}",
+                "updateMode" to "js5",
+                "cacheNativeBossAssets" to true,
+            ),
+            "rsa" to linkedMapOf(
+                "publicExponent" to "10001",
+                "modulus" to rsaService?.getModulus()?.toString(16),
+            ),
+            "client" to linkedMapOf(
+                "minimumVersion" to "0.1.0",
+                "bootstrapVersion" to "local",
+                "downloadUrl" to null,
+            ),
+            "plugins" to linkedMapOf(
+                "pluginHubEnabled" to true,
+                "allowlistVersion" to "local",
+                "allowlist" to listOf("*"),
+                "externalAllowlist" to listOf("117hd"),
+            ),
+            "webClient" to linkedMapOf(
+                "enabled" to false,
+                "webSocketGatewayUrl" to null,
+            ),
+            "features" to linkedMapOf(
+                "desktopFirst" to true,
+                "curatedPlugins" to true,
+                "pluginHubLocked" to false,
+                "cacheNativeVisuals" to true,
+                "webClientDeferred" to true,
+            ),
+            "notes" to "Local Alter bootstrap generated by RestApiService.",
+        )
+    }
+
+    private fun buildJavConfig(): String {
+        val restBaseUrl = "http://$host:$httpPort"
+        return """
+            title=Dodian
+            adverturl=$restBaseUrl/
+            codebase=http://$host:$gamePort/
+            cachedir=dodian
+            storebase=0
+            initial_jar=gamepack.jar
+            initial_class=client.class
+            termsurl=$restBaseUrl/
+            privacyurl=$restBaseUrl/
+            viewerversion=124
+            win_sub_version=1
+            mac_sub_version=2
+            other_sub_version=2
+            download=0
+            window_preferredwidth=800
+            window_preferredheight=600
+            advert_height=0
+            applet_minwidth=765
+            applet_minheight=503
+            applet_maxwidth=5760
+            applet_maxheight=2160
+            runelite.worldparam=12
+            msg=lang0=English
+            msg=loading_app=Loading Dodian
+            msg=err_get_file=Error getting file
+            param=14=0
+            param=12=1
+            param=11=https://auth.jagex.com/
+            param=13=.runescape.com
+            param=3=false
+            param=6=0
+            param=7=0
+            param=9=ElZAIrq5NpKN6D3mDdihco3oPeYN2KFy2DCquj7JMmECPmLrDP3Bnw
+            param=15=0
+            param=10=5
+            param=8=true
+            param=17=$restBaseUrl/
+            param=2=https://payments.jagex.com/operator/v1/
+            param=18=$restBaseUrl/world_list.ws
+            param=4=1
+            param=1=1
+            param=19=
+            param=16=false
+            param=5=0
+        """.trimIndent() + "\n"
+    }
+
+    private fun buildWorlds(): Map<String, Any> =
+        linkedMapOf(
+            "worlds" to listOf(
+                linkedMapOf(
+                    "id" to 1,
+                    "types" to listOf("FREE"),
+                    "address" to host,
+                    "activity" to "Dodian",
+                    "location" to "UNITED_STATES_OF_AMERICA",
+                    "players" to 0,
+                ),
+            ),
+        )
 }
