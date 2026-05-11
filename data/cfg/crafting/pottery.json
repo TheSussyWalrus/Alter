@@ -1,0 +1,12 @@
+[
+  {
+    "objectNames": ["object.potters_wheel", "object.potters_wheel_14887", "object.potters_wheel_20375", "object.potters_wheel_39395", "object.potters_wheel_40733", "object.potters_wheel_50732"],
+    "input": "item.soft_clay",
+    "products": [
+      { "item": "item.unfired_pot", "level": 1, "experience": 6.3, "message": "You shape the clay into an unfired pot." },
+      { "item": "item.unfired_pie_dish", "level": 7, "experience": 10.0, "message": "You shape the clay into an unfired pie dish." },
+      { "item": "item.unfired_bowl", "level": 8, "experience": 15.0, "message": "You shape the clay into an unfired bowl." },
+      { "item": "item.unfired_plant_pot", "level": 19, "experience": 17.5, "message": "You shape the clay into an unfired plant pot." }
+    ]
+  }
+]

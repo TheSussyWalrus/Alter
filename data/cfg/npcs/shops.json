@@ -1,0 +1,84 @@
+[
+  {
+    "id": "yanille_general",
+    "name": "Shop Keeper 1",
+    "npcIds": [
+      2813
+    ],
+    "currencyItemId": 995,
+    "buysItems": true,
+    "sellsItems": true,
+    "restockTicks": 100,
+    "tags": [],
+    "items": [
+      {
+        "itemId": 303,
+        "name": "Small fishing net",
+        "amount": 1000,
+        "price": 0,
+        "restockTicks": 1
+      },
+      {
+        "itemId": 590,
+        "name": "Tinderbox",
+        "amount": 1000,
+        "price": 0,
+        "restockTicks": 1
+      },
+      {
+        "itemId": 946,
+        "name": "Knife",
+        "amount": 1000,
+        "price": 0
+      },
+      {
+        "itemId": 952,
+        "name": "Spade",
+        "amount": 1000,
+        "price": 0
+      },
+      {
+        "itemId": 1265,
+        "name": "Bronze pickaxe",
+        "amount": 1000,
+        "price": 0
+      },
+      {
+        "itemId": 1351,
+        "name": "Bronze axe",
+        "amount": 1000,
+        "price": 0
+      },
+      {
+        "itemId": 1755,
+        "name": "Chisel",
+        "amount": 1000,
+        "price": 0
+      },
+      {
+        "itemId": 2347,
+        "name": "Hammer",
+        "amount": 1000,
+        "price": 0
+      },
+      {
+        "itemId": 4155,
+        "name": "Enchanted gem",
+        "amount": 1000,
+        "price": 0
+      },
+      {
+        "itemId": 5341,
+        "name": "Rake",
+        "amount": 1000,
+        "price": 0
+      },
+      {
+        "itemId": 5343,
+        "name": "Seed dibber",
+        "amount": 1000,
+        "price": 0
+      }
+    ]
+  }
+]

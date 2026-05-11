@@ -563,6 +563,28 @@ class PluginRepository(
      */
     fun getPluginCount(): Int = pluginCount
 
+    fun getDebugCounts(): Map<String, Int> =
+        linkedMapOf(
+            "worldInit" to worldInitPlugins.size,
+            "login" to loginPlugins.size,
+            "logout" to logoutPlugins.size,
+            "buttons" to buttonPlugins.size,
+            "items" to itemPlugins.values.sumOf { it.size },
+            "groundItems" to groundItemPlugins.values.sumOf { it.size },
+            "objects" to objectPlugins.values.sumOf { it.size },
+            "itemOnObjects" to itemOnObjectPlugins.values.sumOf { it.size },
+            "itemOnItems" to itemOnItemPlugins.size,
+            "itemOnGroundItems" to itemOnGroundItemPlugins.size,
+            "npcs" to npcPlugins.values.sumOf { it.size },
+            "itemOnNpcs" to itemOnNpcPlugins.size,
+            "commands" to commandPlugins.size,
+            "events" to eventPlugins.values.sumOf { it.size },
+            "npcSpawns" to npcSpawns.size,
+            "objectSpawns" to objSpawns.size,
+            "itemSpawns" to itemSpawns.size,
+            "services" to services.size,
+        )
+
     fun getNpcInteractionDistance(npc: Int): Int? = npcInteractionDistancePlugins.getOrDefault(npc, null)
 
     fun getObjInteractionDistance(obj: Int): Int? = objInteractionDistancePlugins.getOrDefault(obj, null)

@@ -27,6 +27,12 @@ class TeleportTabPlugin(
     server: Server
 ) : KotlinPlugin(r, world, server) {
 
+    private val OPTIONS =
+        mapOf(
+            "item.kharyrll_teleport" to "break",
+            "item.lumberyard_teleport" to "teleport",
+        )
+
     private val LOCATIONS =
         mapOf(
             "item.varrock_teleport" to Area(3210, 3423, 3216, 3425),
@@ -45,6 +51,8 @@ class TeleportTabPlugin(
             "item.trollheim_teleport" to Area(2888, 3678, 2893, 3681),
             "item.catherby_teleport" to Area(2800, 3449, 2801, 3450),
             "item.barbarian_teleport" to Area(2543, 3570, 2544, 3571),
+            "item.kharyrll_teleport" to Area(3494, 3470, 3498, 3474),
+            "item.lumberyard_teleport" to Area(3301, 3487, 3304, 3490),
             // Items.LUMBRIDGE_GRAVEYARD_TELEPORT to Area(1632, 3839, 1633, 3840),
             "item.draynor_manor_teleport" to Area(3108, 3352, 3108, 3352),
             // Items.FELDIP_HILLS_TELEPORT to Area(2542, 2925, 2542, 2925), -> Teleport
@@ -57,7 +65,7 @@ class TeleportTabPlugin(
 
     init {
         LOCATIONS.forEach { item, endTile ->
-            onItemOption(item = item, option = "break") {
+            onItemOption(item = item, option = OPTIONS[item] ?: "break") {
                 player.queue(TaskPriority.STRONG) {
                     player.teleport(this, endTile, getRSCM(item))
                 }

@@ -1,0 +1,51 @@
+[
+  {
+    "raw": "raw_shrimps",
+    "cooked": "shrimps",
+    "burnt": "burnt_shrimp",
+    "level": 1,
+    "experience": 30.0
+  },
+  {
+    "raw": "raw_anchovies",
+    "cooked": "anchovies",
+    "burnt": "burnt_fish",
+    "level": 1,
+    "experience": 30.0
+  },
+  {
+    "raw": "raw_trout",
+    "cooked": "trout",
+    "burnt": "burnt_fish",
+    "level": 15,
+    "experience": 70.0
+  },
+  {
+    "raw": "raw_salmon",
+    "cooked": "salmon",
+    "burnt": "burnt_fish",
+    "level": 25,
+    "experience": 90.0
+  },
+  {
+    "raw": "raw_tuna",
+    "cooked": "tuna",
+    "burnt": "burnt_fish",
+    "level": 30,
+    "experience": 100.0
+  },
+  {
+    "raw": "raw_lobster",
+    "cooked": "lobster",
+    "burnt": "burnt_lobster",
+    "level": 40,
+    "experience": 120.0
+  },
+  {
+    "raw": "raw_swordfish",
+    "cooked": "swordfish",
+    "burnt": "burnt_swordfish",
+    "level": 45,
+    "experience": 140.0
+  }
+]

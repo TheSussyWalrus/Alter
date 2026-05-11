@@ -1,0 +1,20 @@
+[
+  {
+    "objectNames": ["object.spinning_wheel", "object.spinning_wheel_8748", "object.spinning_wheel_14889", "object.spinning_wheel_20365", "object.spinning_wheel_21304", "object.spinning_wheel_25824", "object.spinning_wheel_26143", "object.spinning_wheel_30934", "object.spinning_wheel_40735", "object.spinning_wheel_55330"],
+    "input": "item.wool",
+    "output": "item.ball_of_wool",
+    "level": 1,
+    "experience": 2.5,
+    "ticks": 2,
+    "message": "You spin the wool into a ball."
+  },
+  {
+    "objectNames": ["object.spinning_wheel", "object.spinning_wheel_8748", "object.spinning_wheel_14889", "object.spinning_wheel_20365", "object.spinning_wheel_21304", "object.spinning_wheel_25824", "object.spinning_wheel_26143", "object.spinning_wheel_30934", "object.spinning_wheel_40735", "object.spinning_wheel_55330"],
+    "input": "item.flax",
+    "output": "item.bow_string",
+    "level": 10,
+    "experience": 15.0,
+    "ticks": 2,
+    "message": "You spin the flax into a bow string."
+  }
+]

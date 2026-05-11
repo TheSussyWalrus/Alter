@@ -1,0 +1,637 @@
+[
+  {
+    "id": 2090,
+    "name": "Moss giant",
+    "tags": [],
+    "combat": {
+      "stats": {
+        "attack": 50,
+        "strength": 40,
+        "defence": 40,
+        "ranged": 0,
+        "magic": 0,
+        "hitpoints": 50
+      },
+      "bonuses": {
+        "attackStab": 0,
+        "attackSlash": 0,
+        "attackCrush": 0,
+        "attackMagic": 0,
+        "attackRanged": 0,
+        "defenceStab": 0,
+        "defenceSlash": 0,
+        "defenceCrush": 0,
+        "defenceMagic": 0,
+        "defenceRanged": 0,
+        "meleeStrength": 0,
+        "rangedStrength": 0,
+        "magicDamage": 0
+      },
+      "animations": {
+        "attack": 4658,
+        "block": 4657,
+        "death": 4659
+      },
+      "sounds": {},
+      "attackSpeed": 5,
+      "respawnDelay": 25,
+      "slayerReq": 1,
+      "slayerXp": 0.0,
+      "poisonChance": 0.0,
+      "venomChance": 0.0,
+      "immunePoison": false,
+      "immuneVenom": false,
+      "immuneCannons": false,
+      "immuneThralls": false
+    },
+    "aggression": {
+      "aggressive": false,
+      "radius": 0,
+      "searchDelay": 5,
+      "alwaysAggressive": false,
+      "retaliates": true
+    },
+    "followRange": 5,
+    "drops": {
+      "always": [
+        {
+          "itemId": 532,
+          "name": "Big bones",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "noted": false
+        },
+        {
+          "itemId": 995,
+          "name": "Coins",
+          "minAmount": 1,
+          "maxAmount": 420,
+          "noted": false
+        }
+      ],
+      "main": [
+        {
+          "itemId": 1073,
+          "name": "Adamant platelegs",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        },
+        {
+          "itemId": 1123,
+          "name": "Adamant platebody",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        },
+        {
+          "itemId": 1161,
+          "name": "Adamant full helm",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        },
+        {
+          "itemId": 1199,
+          "name": "Adamant kiteshield",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        },
+        {
+          "itemId": 1317,
+          "name": "Adamant 2h sword",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        },
+        {
+          "itemId": 1331,
+          "name": "Adamant scimitar",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        },
+        {
+          "itemId": 4129,
+          "name": "Adamant boots",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 1,
+          "noted": false
+        }
+      ],
+      "mainEmptySlots": 25,
+      "preroll": [],
+      "tertiary": [
+        {
+          "itemId": 1333,
+          "name": "Rune scimitar",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "denominator": 128,
+          "noted": false
+        },
+        {
+          "itemId": 4131,
+          "name": "Rune boots",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "denominator": 256,
+          "noted": false
+        }
+      ]
+    }
+  },
+  {
+    "id": 2813,
+    "name": "Shop keeper",
+    "shopKey": "yanille_general",
+    "tags": [],
+    "combat": {
+      "stats": {
+        "attack": 0,
+        "strength": 0,
+        "defence": 0,
+        "ranged": 0,
+        "magic": 0,
+        "hitpoints": 10
+      },
+      "bonuses": {
+        "attackStab": 0,
+        "attackSlash": 0,
+        "attackCrush": 0,
+        "attackMagic": 0,
+        "attackRanged": 0,
+        "defenceStab": 0,
+        "defenceSlash": 0,
+        "defenceCrush": 0,
+        "defenceMagic": 0,
+        "defenceRanged": 0,
+        "meleeStrength": 0,
+        "rangedStrength": 0,
+        "magicDamage": 0
+      },
+      "animations": {
+        "attack": 422,
+        "block": 424,
+        "death": 836
+      },
+      "sounds": {},
+      "attackSpeed": 4,
+      "respawnDelay": 25,
+      "slayerReq": 1,
+      "slayerXp": 0.0,
+      "poisonChance": 0.0,
+      "venomChance": 0.0,
+      "immunePoison": false,
+      "immuneVenom": false,
+      "immuneCannons": false,
+      "immuneThralls": false
+    },
+    "aggression": {
+      "aggressive": false,
+      "radius": 0,
+      "searchDelay": 5,
+      "alwaysAggressive": false,
+      "retaliates": true
+    },
+    "followRange": 0,
+    "drops": {
+      "always": [],
+      "main": [],
+      "mainEmptySlots": 0,
+      "preroll": [],
+      "tertiary": []
+    }
+  },
+  {
+    "id": 3295,
+    "name": "Hero",
+    "tags": [],
+    "combat": {
+      "stats": {
+        "attack": 60,
+        "strength": 65,
+        "defence": 65,
+        "ranged": 0,
+        "magic": 0,
+        "hitpoints": 80
+      },
+      "bonuses": {
+        "attackStab": 0,
+        "attackSlash": 0,
+        "attackCrush": 0,
+        "attackMagic": 0,
+        "attackRanged": 0,
+        "defenceStab": 0,
+        "defenceSlash": 0,
+        "defenceCrush": 0,
+        "defenceMagic": 0,
+        "defenceRanged": 0,
+        "meleeStrength": 0,
+        "rangedStrength": 0,
+        "magicDamage": 0
+      },
+      "animations": {
+        "attack": 422,
+        "block": 424,
+        "death": 836
+      },
+      "sounds": {},
+      "attackSpeed": 4,
+      "respawnDelay": 25,
+      "slayerReq": 1,
+      "slayerXp": 0.0,
+      "poisonChance": 0.0,
+      "venomChance": 0.0,
+      "immunePoison": false,
+      "immuneVenom": false,
+      "immuneCannons": false,
+      "immuneThralls": false
+    },
+    "aggression": {
+      "aggressive": false,
+      "radius": 0,
+      "searchDelay": 5,
+      "alwaysAggressive": false,
+      "retaliates": true
+    },
+    "followRange": 7,
+    "drops": {
+      "always": [
+        {
+          "itemId": 526,
+          "name": "Bones",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "noted": false
+        }
+      ],
+      "main": [
+        {
+          "itemId": 1079,
+          "name": "Rune platelegs",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 1,
+          "noted": false
+        },
+        {
+          "itemId": 1127,
+          "name": "Rune platebody",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 1,
+          "noted": false
+        },
+        {
+          "itemId": 1319,
+          "name": "Rune 2h sword",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 1,
+          "noted": false
+        },
+        {
+          "itemId": 1333,
+          "name": "Rune scimitar",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 1,
+          "noted": false
+        },
+        {
+          "itemId": 1617,
+          "name": "Uncut diamond",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 1,
+          "noted": false
+        },
+        {
+          "itemId": 1631,
+          "name": "Uncut dragonstone",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 1,
+          "noted": false
+        },
+        {
+          "itemId": 4131,
+          "name": "Rune boots",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 1,
+          "noted": false
+        }
+      ],
+      "mainEmptySlots": 50,
+      "preroll": [],
+      "tertiary": [
+        {
+          "itemId": 1215,
+          "name": "Dragon dagger",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "denominator": 128,
+          "noted": false
+        }
+      ]
+    }
+  },
+  {
+    "id": 3313,
+    "name": "Giant rat",
+    "tags": [
+      "rat"
+    ],
+    "combat": {
+      "stats": {
+        "attack": 0,
+        "strength": 0,
+        "defence": 0,
+        "ranged": 0,
+        "magic": 0,
+        "hitpoints": 10
+      },
+      "bonuses": {
+        "attackStab": 0,
+        "attackSlash": 0,
+        "attackCrush": 0,
+        "attackMagic": 0,
+        "attackRanged": 0,
+        "defenceStab": 0,
+        "defenceSlash": 0,
+        "defenceCrush": 0,
+        "defenceMagic": 0,
+        "defenceRanged": 0,
+        "meleeStrength": 0,
+        "rangedStrength": 0,
+        "magicDamage": 0
+      },
+      "animations": {
+        "attack": 4933,
+        "block": 4934,
+        "death": 4935
+      },
+      "sounds": {},
+      "attackSpeed": 4,
+      "respawnDelay": 25,
+      "slayerReq": 1,
+      "slayerXp": 0.0,
+      "poisonChance": 0.0,
+      "venomChance": 0.0,
+      "immunePoison": false,
+      "immuneVenom": false,
+      "immuneCannons": false,
+      "immuneThralls": false
+    },
+    "aggression": {
+      "aggressive": false,
+      "radius": 5,
+      "searchDelay": 5,
+      "alwaysAggressive": false,
+      "retaliates": true
+    },
+    "followRange": 3,
+    "drops": {
+      "always": [
+        {
+          "itemId": 526,
+          "name": "Bones",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "noted": false
+        }
+      ],
+      "main": [
+        {
+          "itemId": 1067,
+          "name": "Iron platelegs",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        },
+        {
+          "itemId": 1115,
+          "name": "Iron platebody",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        },
+        {
+          "itemId": 1153,
+          "name": "Iron full helm",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        },
+        {
+          "itemId": 1191,
+          "name": "Iron kiteshield",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        },
+        {
+          "itemId": 1309,
+          "name": "Iron 2h sword",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 1,
+          "noted": false
+        },
+        {
+          "itemId": 1323,
+          "name": "Iron scimitar",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        }
+      ],
+      "mainEmptySlots": 10,
+      "preroll": [
+        {
+          "itemId": 25244,
+          "name": "Dark key",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "denominator": 1000,
+          "noted": false
+        }
+      ],
+      "tertiary": [
+        {
+          "itemId": 1325,
+          "name": "Steel scimitar",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "denominator": 128,
+          "noted": false
+        }
+      ]
+    }
+  },
+  {
+    "id": 5420,
+    "name": "Watchman",
+    "tags": [],
+    "combat": {
+      "stats": {
+        "attack": 30,
+        "strength": 20,
+        "defence": 20,
+        "ranged": 0,
+        "magic": 0,
+        "hitpoints": 28
+      },
+      "bonuses": {
+        "attackStab": 0,
+        "attackSlash": 0,
+        "attackCrush": 0,
+        "attackMagic": 0,
+        "attackRanged": 0,
+        "defenceStab": 0,
+        "defenceSlash": 0,
+        "defenceCrush": 0,
+        "defenceMagic": 0,
+        "defenceRanged": 0,
+        "meleeStrength": 0,
+        "rangedStrength": 0,
+        "magicDamage": 0
+      },
+      "animations": {
+        "attack": 422,
+        "block": 424,
+        "death": 836
+      },
+      "sounds": {},
+      "attackSpeed": 4,
+      "respawnDelay": 25,
+      "slayerReq": 1,
+      "slayerXp": 0.0,
+      "poisonChance": 0.0,
+      "venomChance": 0.0,
+      "immunePoison": false,
+      "immuneVenom": false,
+      "immuneCannons": false,
+      "immuneThralls": false
+    },
+    "aggression": {
+      "aggressive": false,
+      "radius": 0,
+      "searchDelay": 5,
+      "alwaysAggressive": false,
+      "retaliates": true
+    },
+    "followRange": 5,
+    "drops": {
+      "always": [
+        {
+          "itemId": 526,
+          "name": "Bones",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "noted": false
+        },
+        {
+          "itemId": 995,
+          "name": "Coins",
+          "minAmount": 1,
+          "maxAmount": 250,
+          "noted": false
+        }
+      ],
+      "main": [
+        {
+          "itemId": 1071,
+          "name": "Mithril platelegs",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        },
+        {
+          "itemId": 1121,
+          "name": "Mithril platebody",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        },
+        {
+          "itemId": 1159,
+          "name": "Mithril full helm",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        },
+        {
+          "itemId": 1197,
+          "name": "Mithril kiteshield",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        },
+        {
+          "itemId": 1315,
+          "name": "Mithril 2h sword",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 1,
+          "noted": false
+        },
+        {
+          "itemId": 1329,
+          "name": "Mithril scimitar",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        },
+        {
+          "itemId": 1331,
+          "name": "Adamant scimitar",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 1,
+          "noted": false
+        },
+        {
+          "itemId": 4127,
+          "name": "Mithril boots",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 2,
+          "noted": false
+        }
+      ],
+      "mainEmptySlots": 20,
+      "preroll": [],
+      "tertiary": [
+        {
+          "itemId": 1731,
+          "name": "Amulet of power",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "denominator": 128,
+          "noted": false
+        }
+      ]
+    }
+  }
+]

@@ -8150,6 +8150,7 @@ dead_herbs_8148:8148
 dead_herbs_8149:8149
 null_8150:8150
 null_8151:8151
+catherby_herb_patch:8151
 null_8152:8152
 null_8153:8153
 asgarnian_hops_8154:8154
@@ -8551,7 +8552,9 @@ dead_cabbages_8549:8549
 null_8550:8550
 null_8551:8551
 null_8552:8552
+catherby_allotment_south:8552
 null_8553:8553
+catherby_allotment_north:8553
 null_8554:8554
 null_8555:8555
 null_8556:8556

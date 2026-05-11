@@ -404,6 +404,9 @@ class World(val gameContext: GameContext, val devContext: DevContext) {
     }
 
     fun remove(npc: Npc) {
+        if (npc.index in 0 until npcs.capacity && npcs[npc.index] == npc && npc.hasAvatar()) {
+            network.npcAvatarFactory.release(npc.avatar)
+        }
         npcs.remove(npc)
         chunks.get(npc.tile)?.removeEntity(this, npc, npc.tile)
     }

@@ -1,0 +1,10 @@
+[
+  { "base": "item.gold_amulet_u", "string": "item.ball_of_wool", "output": "item.gold_amulet", "level": 8, "experience": 4.0, "message": "You put a string on the amulet." },
+  { "base": "item.sapphire_amulet_u", "string": "item.ball_of_wool", "output": "item.sapphire_amulet", "level": 24, "experience": 4.0, "message": "You put a string on the amulet." },
+  { "base": "item.emerald_amulet_u", "string": "item.ball_of_wool", "output": "item.emerald_amulet", "level": 31, "experience": 4.0, "message": "You put a string on the amulet." },
+  { "base": "item.ruby_amulet_u", "string": "item.ball_of_wool", "output": "item.ruby_amulet", "level": 50, "experience": 4.0, "message": "You put a string on the amulet." },
+  { "base": "item.diamond_amulet_u", "string": "item.ball_of_wool", "output": "item.diamond_amulet", "level": 70, "experience": 4.0, "message": "You put a string on the amulet." },
+  { "base": "item.dragonstone_amulet_u", "string": "item.ball_of_wool", "output": "item.dragonstone_amulet", "level": 80, "experience": 4.0, "message": "You put a string on the amulet." },
+  { "base": "item.onyx_amulet_u", "string": "item.ball_of_wool", "output": "item.onyx_amulet", "level": 90, "experience": 4.0, "message": "You put a string on the amulet." },
+  { "base": "item.unstrung_symbol", "string": "item.ball_of_wool", "output": "item.holy_symbol", "level": 16, "experience": 50.0, "message": "You put a string on the symbol." }
+]

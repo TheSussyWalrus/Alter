@@ -17,6 +17,16 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import('../views/PlayerView.vue')
+  },
+  {
+    path: '/npc-spawns',
+    name: 'npc-spawns',
+    component: () => import('../views/NpcSpawnsView.vue')
+  },
+  {
+    path: '/qa',
+    name: 'qa',
+    component: () => import('../views/QaView.vue')
   }
 ]
 

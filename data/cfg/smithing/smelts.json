@@ -1,0 +1,66 @@
+[
+  {
+    "objectNames": ["object.furnace"],
+    "inputs": ["item.copper_ore", "item.tin_ore"],
+    "output": "item.bronze_bar",
+    "outputAmount": 1,
+    "level": 1,
+    "experience": 6.2
+  },
+  {
+    "objectNames": ["object.furnace"],
+    "inputs": ["item.iron_ore"],
+    "output": "item.iron_bar",
+    "outputAmount": 1,
+    "level": 15,
+    "experience": 12.5
+  },
+  {
+    "objectNames": ["object.furnace"],
+    "inputs": ["item.iron_ore", "item.coal", "item.coal"],
+    "output": "item.steel_bar",
+    "outputAmount": 1,
+    "level": 30,
+    "experience": 17.5
+  },
+  {
+    "objectNames": ["object.furnace"],
+    "inputs": ["item.mithril_ore", "item.coal", "item.coal", "item.coal", "item.coal"],
+    "output": "item.mithril_bar",
+    "outputAmount": 1,
+    "level": 50,
+    "experience": 30.0
+  },
+  {
+    "objectNames": ["object.furnace"],
+    "inputs": ["item.adamantite_ore", "item.coal", "item.coal", "item.coal", "item.coal"],
+    "output": "item.adamantite_bar",
+    "outputAmount": 1,
+    "level": 70,
+    "experience": 37.5
+  },
+  {
+    "objectNames": ["object.furnace"],
+    "inputs": ["item.runite_ore", "item.coal", "item.coal", "item.coal", "item.coal", "item.coal", "item.coal", "item.coal", "item.coal"],
+    "output": "item.runite_bar",
+    "outputAmount": 1,
+    "level": 85,
+    "experience": 50.0
+  },
+  {
+    "objectNames": ["object.furnace"],
+    "inputs": ["item.silver_ore"],
+    "output": "item.silver_bar",
+    "outputAmount": 1,
+    "level": 20,
+    "experience": 13.7
+  },
+  {
+    "objectNames": ["object.furnace"],
+    "inputs": ["item.gold_ore"],
+    "output": "item.gold_bar",
+    "outputAmount": 1,
+    "level": 40,
+    "experience": 22.5
+  }
+]

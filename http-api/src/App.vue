@@ -20,7 +20,10 @@
                 <router-link to="">Player management</router-link>
               </li>
               <li>
-                <router-link to="">NPC management</router-link>
+                <router-link to="/npc-spawns">NPC spawn editor</router-link>
+              </li>
+              <li>
+                <router-link to="/qa">AI QA center</router-link>
               </li>
               <li>
                 <router-link to="">Event management</router-link>

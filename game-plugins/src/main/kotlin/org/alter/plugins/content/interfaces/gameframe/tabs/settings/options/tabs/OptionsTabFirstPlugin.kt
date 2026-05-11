@@ -20,6 +20,7 @@ import org.alter.game.model.shop.*
 import org.alter.game.model.timer.*
 import org.alter.game.plugin.*
 import org.alter.plugins.content.interfaces.options.OptionsTab
+import org.alter.plugins.content.interfaces.options.Settings
 
 class OptionsTabFirstPlugin(
     r: PluginRepository,
@@ -244,6 +245,10 @@ class OptionsTabFirstPlugin(
             player.setInterfaceEvents(interfaceId = 134, component = 19, range = 0..449, setting = InterfaceEvent.ClickOp1)
             player.setInterfaceEvents(interfaceId = 134, component = 28, range = 0..41, setting = InterfaceEvent.ClickOp1)
             player.setInterfaceEvents(interfaceId = 134, component = 21, range = 0..219, setting = InterfaceEvent.ClickOp1)
+        }
+
+        onButton(OptionsTab.ALL_SETTINGS_INTERFACE_ID, Settings.SETTINGS_CLOSE_BUTTON_ID) {
+            player.closeInterface(OptionsTab.ALL_SETTINGS_INTERFACE_ID)
         }
     }
 

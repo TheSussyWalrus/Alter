@@ -11,6 +11,7 @@ import org.alter.game.model.shop.ShopItem
 import org.alter.game.plugin.KotlinPlugin
 import org.alter.game.plugin.PluginRepository
 import org.alter.plugins.content.mechanics.shops.CoinCurrency
+import org.alter.plugins.content.tools.npcdefs.openNpcDefinedShopOrFallback
 import org.alter.rscm.RSCM.getRSCM
 
 
@@ -56,7 +57,7 @@ class BobPlugin(
         }
     }
 
-    fun Player.shop() = this.openShop("Bob's Brilliant Axes.")
+    fun Player.shop() = this.openNpcDefinedShopOrFallback("Bob's Brilliant Axes.")
 
     suspend fun QueueTask.dialog(player: Player) {
         when (options(player, *dialogOptions.toTypedArray())) {

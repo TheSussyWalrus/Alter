@@ -1,0 +1,42 @@
+[
+  {
+    "unfinished": "item.guam_potion_unf",
+    "secondary": "item.eye_of_newt",
+    "finished": "item.attack_potion3",
+    "level": 3,
+    "experience": 25.0,
+    "ticks": 2,
+    "animation": 363,
+    "message": "You mix the ingredients into an attack potion."
+  },
+  {
+    "unfinished": "item.tarromin_potion_unf",
+    "secondary": "item.limpwurt_root",
+    "finished": "item.strength_potion3",
+    "level": 12,
+    "experience": 50.0,
+    "ticks": 2,
+    "animation": 363,
+    "message": "You mix the ingredients into a strength potion."
+  },
+  {
+    "unfinished": "item.ranarr_potion_unf",
+    "secondary": "item.white_berries",
+    "finished": "item.defence_potion3",
+    "level": 30,
+    "experience": 37.5,
+    "ticks": 2,
+    "animation": 363,
+    "message": "You mix the ingredients into a defence potion."
+  },
+  {
+    "unfinished": "item.marrentill_potion_unf",
+    "secondary": "item.unicorn_horn_dust",
+    "finished": "item.antipoison3",
+    "level": 5,
+    "experience": 37.5,
+    "ticks": 2,
+    "animation": 363,
+    "message": "You mix the ingredients into an antipoison potion."
+  }
+]

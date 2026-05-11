@@ -13,8 +13,8 @@ class RestApiService : Service {
     private var host = "127.0.0.1"
     private var gamePort = 43594
     private var origin = "*"
-    private var methods = "GET, POST"
-    private var headers = "X-PINGOTHER, Content-Type"
+    private var methods = "GET, POST, PATCH, DELETE, OPTIONS"
+    private var headers = "X-PINGOTHER, Content-Type, X-AUTH"
     private var auth = false
     private var started = false
 
@@ -27,8 +27,8 @@ class RestApiService : Service {
         host = serviceProperties.getOrDefault("host", "127.0.0.1")
         gamePort = serviceProperties.getOrDefault("game-port", 43594)
         origin = serviceProperties.getOrDefault("origin", "*")
-        methods = serviceProperties.getOrDefault("methods", "GET, POST")
-        headers = serviceProperties.getOrDefault("headers", "X-PINGOTHER, Content-Type")
+        methods = serviceProperties.getOrDefault("methods", "GET, POST, PATCH, DELETE, OPTIONS")
+        headers = serviceProperties.getOrDefault("headers", "X-PINGOTHER, Content-Type, X-AUTH")
         auth = serviceProperties.getOrDefault("auth", false)
     }
 
@@ -40,6 +40,7 @@ class RestApiService : Service {
             return
         }
 
+        Spark.ipAddress(host)
         Spark.port(httpPort)
         CorsRoute(origin, methods, headers)
         RestApiRoutes(host, httpPort, gamePort).init(world, auth)
