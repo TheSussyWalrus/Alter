@@ -77,6 +77,7 @@ class ClientManifestService : Service {
         val initialJar = config.string("initialJar", "gamepack_${context.revision}.jar")
         val initialClass = config.string("initialClass", "client.class")
         val worldId = config.int("worldId", 1)
+        val worldTypeMask = config.int("worldTypeMask", 1)
 
         return buildString {
             appendLine("title=${config.string("title", context.name)}")
@@ -113,7 +114,7 @@ class ClientManifestService : Service {
             appendLine("param=12=$worldId")
             appendLine("param=11=http://$js5Host/")
             appendLine("param=13=.dodian.local")
-            appendLine("param=3=false")
+            appendLine("param=3=true")
             appendLine("param=6=0")
             appendLine("param=7=0")
             appendLine("param=9=${config.string("jagexToken", "")}")
@@ -127,7 +128,7 @@ class ClientManifestService : Service {
             appendLine("param=1=$worldId")
             appendLine("param=19=")
             appendLine("param=16=false")
-            appendLine("param=5=0")
+            appendLine("param=5=$worldTypeMask")
         }
     }
 

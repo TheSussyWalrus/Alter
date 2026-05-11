@@ -335,14 +335,14 @@
       },
       "action": {
         "validateWorld": {
-          "worldId": 1,
+          "worldId": 2,
           "activity": "Skilling",
           "spawnAnchorsRequired": ["yanille_shop_keeper", "yanille_giant_rat_line"]
         }
       },
       "expect": {
         "worldAvailable": true,
-        "worldTypesInclude": ["FREE"],
+        "worldTypesInclude": ["MEMBERS"],
         "spawnAnchorsFound": ["yanille_shop_keeper", "yanille_giant_rat_line"]
       },
       "timeoutTicks": 20,

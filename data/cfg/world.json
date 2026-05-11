@@ -1,14 +1,14 @@
 [
   {
-    "id": 1,
-    "types": ["FREE"],
+    "id": 2,
+    "types": ["MEMBERS"],
     "address": "127.0.0.1",
     "activity": "Skilling",
     "location": "UNITED_STATES",
     "players": 1000
   },
   {
-    "id": 2,
+    "id": 3,
     "types": ["PVP"],
     "address": "127.0.0.2",
     "activity": "Combat",

@@ -24,6 +24,8 @@ class RestApiRoutes(
     private val gamePort: Int,
 ) {
     private val gson = Gson()
+    private val defaultWorldId = 2
+    private val defaultWorldTypeMask = 1 // MEMBERS
 
     fun init(
         world: World,
@@ -407,10 +409,10 @@ class RestApiRoutes(
             msg=loading_app=Loading Dodian
             msg=err_get_file=Error getting file
             param=14=0
-            param=12=1
+            param=12=$defaultWorldId
             param=11=https://auth.jagex.com/
             param=13=.runescape.com
-            param=3=false
+            param=3=true
             param=6=0
             param=7=0
             param=9=ElZAIrq5NpKN6D3mDdihco3oPeYN2KFy2DCquj7JMmECPmLrDP3Bnw
@@ -421,10 +423,10 @@ class RestApiRoutes(
             param=2=https://payments.jagex.com/operator/v1/
             param=18=$restBaseUrl/world_list.ws
             param=4=1
-            param=1=1
+            param=1=$defaultWorldId
             param=19=
             param=16=false
-            param=5=0
+            param=5=$defaultWorldTypeMask
         """.trimIndent() + "\n"
     }
 
@@ -432,8 +434,8 @@ class RestApiRoutes(
         linkedMapOf(
             "worlds" to listOf(
                 linkedMapOf(
-                    "id" to 1,
-                    "types" to listOf("FREE"),
+                    "id" to defaultWorldId,
+                    "types" to listOf("MEMBERS"),
                     "address" to host,
                     "activity" to "Dodian",
                     "location" to "UNITED_STATES_OF_AMERICA",
