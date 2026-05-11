@@ -210,6 +210,7 @@ class ClientManifestService : Service {
             addProperty("pluginHubEnabled", config.boolean("pluginHubEnabled", false))
             addProperty("allowlistVersion", config.string("pluginAllowlistVersion", "local"))
             add("allowlist", config.stringArray("pluginAllowlist"))
+            add("externalAllowlist", config.stringArray("externalPluginAllowlist"))
         }
 
     private fun webClient(): JsonObject =
@@ -361,11 +362,12 @@ class ClientManifestService : Service {
                 },
                 "plugins": {
                   "type": "object",
-                  "required": ["pluginHubEnabled", "allowlistVersion", "allowlist"],
+                  "required": ["pluginHubEnabled", "allowlistVersion", "allowlist", "externalAllowlist"],
                   "properties": {
                     "pluginHubEnabled": { "type": "boolean" },
                     "allowlistVersion": { "type": "string" },
-                    "allowlist": { "type": "array", "items": { "type": "string" } }
+                    "allowlist": { "type": "array", "items": { "type": "string" } },
+                    "externalAllowlist": { "type": "array", "items": { "type": "string" } }
                   }
                 },
                 "webClient": {

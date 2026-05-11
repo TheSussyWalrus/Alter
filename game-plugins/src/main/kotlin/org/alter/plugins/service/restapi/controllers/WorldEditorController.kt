@@ -33,6 +33,7 @@ class WorldEditorController(private val world: World) {
 
     fun clientManifest(res: Response): String {
         val service = clientManifestService(res) ?: return currentResponse(res)
+        service.reload()
         return ok(res, service.manifest(world))
     }
 
@@ -43,12 +44,14 @@ class WorldEditorController(private val world: World) {
 
     fun javConfig(res: Response): String {
         val service = clientManifestService(res) ?: return currentResponse(res)
+        service.reload()
         res.type("text/plain")
         return service.javConfig(world)
     }
 
     fun worldList(res: Response): Any? {
         val service = clientManifestService(res) ?: return currentResponse(res)
+        service.reload()
         val bytes = service.worldList()
         res.type("application/octet-stream")
         res.raw().outputStream.write(bytes)
