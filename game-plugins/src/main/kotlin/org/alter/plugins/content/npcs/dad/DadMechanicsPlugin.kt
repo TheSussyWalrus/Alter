@@ -1,9 +1,11 @@
 package org.alter.plugins.content.npcs.dad
 
+import org.alter.api.PrayerIcon
 import org.alter.api.cfg.Animation
 import org.alter.api.cfg.Graphic
 import org.alter.api.cfg.Sound
 import org.alter.api.ext.createProjectile
+import org.alter.api.ext.hasPrayerIcon
 import org.alter.api.ext.hit
 import org.alter.api.ext.message
 import org.alter.api.ext.playSound
@@ -83,11 +85,18 @@ class DadMechanicsPlugin(
                 ),
             )
             player.hit(
-                damage = world.random(THROWER_DAMAGE),
+                damage = player.throwerDamage(),
                 delay = RangedCombatStrategy.getHitDelay(thrower.getFrontFacingTile(player), player.getCentreTile()),
             )
         }
     }
+
+    private fun Player.throwerDamage(): Int =
+        if (hasPrayerIcon(PrayerIcon.PROTECT_FROM_MISSILES)) {
+            0
+        } else {
+            world.random(THROWER_DAMAGE)
+        }
 
     private fun telegraphSwat(
         dad: Npc,

@@ -23,6 +23,13 @@ object CombatConfigs {
 
     private const val MIN_ATTACK_SPEED = 1
 
+    private val TZHAAR_MAUL_STYLE_WEAPONS =
+        arrayOf(
+            "item.tzhaarketom",
+            "item.tzhaarketom_t",
+            "item.hill_giant_club",
+        )
+
     private val DEFENDERS =
         arrayOf(
             "item.bronze_defender",
@@ -125,9 +132,11 @@ object CombatConfigs {
 
             return when {
                 pawn.hasEquipped(EquipmentType.WEAPON, *GODSWORDS) -> 7045
+                pawn.hasEquipped(EquipmentType.WEAPON, *TZHAAR_MAUL_STYLE_WEAPONS) -> 2661
                 pawn.hasWeaponType(WeaponType.AXE) -> if (style == 1) 401 else 395
                 pawn.hasWeaponType(WeaponType.HAMMER) -> 401
                 pawn.hasWeaponType(WeaponType.BULWARK) -> 7511
+                pawn.hasWeaponType(WeaponType.BLUNT) -> if (style == 2) 400 else 401
                 pawn.hasWeaponType(WeaponType.SCYTHE) -> 8056
                 pawn.hasWeaponType(WeaponType.BOW) -> 426
                 pawn.hasWeaponType(WeaponType.CROSSBOW) -> 4230
@@ -171,6 +180,7 @@ object CombatConfigs {
 
                 pawn.hasEquipped(EquipmentType.WEAPON, *BOXING_GLOVES) -> 3679
                 pawn.hasEquipped(EquipmentType.WEAPON, *GODSWORDS) -> 7056
+                pawn.hasEquipped(EquipmentType.WEAPON, *TZHAAR_MAUL_STYLE_WEAPONS) -> 1666
                 pawn.hasEquipped(EquipmentType.WEAPON, "item.light_ballista", "item.heavy_ballista") -> 7219
                 pawn.hasEquipped(EquipmentType.WEAPON, "item.zamorakian_spear") -> 1709
 
@@ -184,6 +194,7 @@ object CombatConfigs {
                 pawn.hasWeaponType(WeaponType.SPEAR, WeaponType.HALBERD) -> 430
                 pawn.hasWeaponType(WeaponType.WHIP) -> 1659
                 pawn.hasWeaponType(WeaponType.BULWARK) -> 7512
+                pawn.hasWeaponType(WeaponType.BLUNT) -> 403
                 else -> 424
             }
         }
@@ -276,6 +287,14 @@ object CombatConfigs {
                 pawn.hasWeaponType(WeaponType.BLUDGEON) ->
                     when (style) {
                         0, 1, 3 -> AttackStyle.AGGRESSIVE
+                        else -> AttackStyle.NONE
+                    }
+
+                pawn.hasWeaponType(WeaponType.BLUNT) ->
+                    when (style) {
+                        0 -> AttackStyle.ACCURATE
+                        1 -> AttackStyle.AGGRESSIVE
+                        3 -> AttackStyle.DEFENSIVE
                         else -> AttackStyle.NONE
                     }
 
@@ -396,6 +415,8 @@ object CombatConfigs {
 
                 pawn.hasWeaponType(WeaponType.BLUDGEON) -> CombatStyle.CRUSH
 
+                pawn.hasWeaponType(WeaponType.BLUNT) -> CombatStyle.CRUSH
+
                 pawn.hasWeaponType(WeaponType.BULWARK) ->
                     when (style) {
                         0 -> CombatStyle.CRUSH
@@ -495,6 +516,14 @@ object CombatConfigs {
             }
 
             player.hasWeaponType(WeaponType.BLUDGEON) -> XpMode.STRENGTH
+
+            player.hasWeaponType(WeaponType.BLUNT) -> {
+                when (style) {
+                    1 -> XpMode.STRENGTH
+                    3 -> XpMode.DEFENCE
+                    else -> XpMode.ATTACK
+                }
+            }
 
             player.hasWeaponType(WeaponType.BULWARK) -> XpMode.ATTACK
 

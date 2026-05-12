@@ -98,7 +98,6 @@ class ItemMetadataService : Service {
                     def.weaponType = WeaponCategory.get(def, def.category)
                 }
 
-
                 def.bonuses =
                     intArrayOf(
                         def.getValidatedParam(ParamMapper.item.STAB_ATTACK_BONUS),

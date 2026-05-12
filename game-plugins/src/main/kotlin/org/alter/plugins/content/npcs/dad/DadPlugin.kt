@@ -8,7 +8,6 @@ import org.alter.api.ext.message
 import org.alter.api.ext.player
 import org.alter.api.ext.playSound
 import org.alter.game.Server
-import org.alter.game.model.Direction
 import org.alter.game.model.World
 import org.alter.game.model.combat.NpcCombatDef
 import org.alter.game.model.move.moveTo
@@ -24,7 +23,6 @@ class DadPlugin(
     init {
         setMultiCombatRegion(DadArena.REGION_ID)
 
-        spawnNpc("npc.dad", tile = DadArena.DAD_SPAWN_TILE, walkRadius = 4, direction = Direction.SOUTH)
         DadArena.THROWER_SPAWNS.forEach { spawn ->
             spawnNpc(spawn.npc, tile = spawn.tile, walkRadius = 0, direction = spawn.direction)
         }

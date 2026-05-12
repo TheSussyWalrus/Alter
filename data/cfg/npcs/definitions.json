@@ -485,6 +485,172 @@
     }
   },
   {
+    "id": 4130,
+    "name": "Dad",
+    "tags": [
+      "boss",
+      "dad"
+    ],
+    "combat": {
+      "stats": {
+        "attack": 80,
+        "strength": 100,
+        "defence": 65,
+        "ranged": 0,
+        "magic": 0,
+        "hitpoints": 120
+      },
+      "bonuses": {
+        "attackStab": 0,
+        "attackSlash": 0,
+        "attackCrush": 35,
+        "attackMagic": 0,
+        "attackRanged": 0,
+        "defenceStab": 20,
+        "defenceSlash": 30,
+        "defenceCrush": 25,
+        "defenceMagic": 10,
+        "defenceRanged": 20,
+        "meleeStrength": 0,
+        "rangedStrength": 0,
+        "magicDamage": 0
+      },
+      "animations": {
+        "attack": 284,
+        "block": 285,
+        "death": 287
+      },
+      "sounds": {
+        "attack": 861,
+        "block": 868,
+        "death": 866
+      },
+      "attackSpeed": 5,
+      "respawnDelay": 35,
+      "slayerReq": 1,
+      "slayerXp": 0.0,
+      "poisonChance": 0.0,
+      "venomChance": 0.0,
+      "immunePoison": false,
+      "immuneVenom": false,
+      "immuneCannons": false,
+      "immuneThralls": false
+    },
+    "aggression": {
+      "aggressive": true,
+      "radius": 8,
+      "searchDelay": 1,
+      "alwaysAggressive": true,
+      "retaliates": true
+    },
+    "followRange": 16,
+    "drops": {
+      "always": [
+        {
+          "itemId": 532,
+          "name": "Big bones",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "noted": false
+        },
+        {
+          "itemId": 995,
+          "name": "Coins",
+          "minAmount": 500,
+          "maxAmount": 2500,
+          "noted": false
+        }
+      ],
+      "main": [
+        {
+          "itemId": 1079,
+          "name": "Rune platelegs",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 1,
+          "noted": false
+        },
+        {
+          "itemId": 1127,
+          "name": "Rune platebody",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 1,
+          "noted": false
+        },
+        {
+          "itemId": 1163,
+          "name": "Rune full helm",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 1,
+          "noted": false
+        },
+        {
+          "itemId": 1201,
+          "name": "Rune kiteshield",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 1,
+          "noted": false
+        },
+        {
+          "itemId": 1305,
+          "name": "Dragon longsword",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 1,
+          "noted": false
+        },
+        {
+          "itemId": 1617,
+          "name": "Uncut diamond",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 1,
+          "noted": false
+        },
+        {
+          "itemId": 1631,
+          "name": "Uncut dragonstone",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 1,
+          "noted": false
+        },
+        {
+          "itemId": 4131,
+          "name": "Rune boots",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "weight": 1,
+          "noted": false
+        }
+      ],
+      "mainEmptySlots": 20,
+      "preroll": [
+        {
+          "itemId": 1543,
+          "name": "Key",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "denominator": 50,
+          "noted": false
+        }
+      ],
+      "tertiary": [
+        {
+          "itemId": 20756,
+          "name": "Hill giant club",
+          "minAmount": 1,
+          "maxAmount": 1,
+          "denominator": 256,
+          "noted": false
+        }
+      ]
+    }
+  },
+  {
     "id": 5420,
     "name": "Watchman",
     "tags": [],

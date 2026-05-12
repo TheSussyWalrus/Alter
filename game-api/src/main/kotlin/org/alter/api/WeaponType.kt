@@ -28,5 +28,6 @@ enum class WeaponType(val id: Int) {
     STAFF_HALBERD(id = 21),
     TRIDENT(id = 23),
     BLUDGEON(id = 26),
-    BULWARK(id = 27),
+    BLUNT(id = 27),
+    BULWARK(id = 28),
 }

@@ -1,5 +1,22 @@
 [
   {
+    "key": "dad_4130_2908_3609_0",
+    "npcId": 4130,
+    "name": "Dad",
+    "x": 2908,
+    "z": 3609,
+    "height": 0,
+    "walkRadius": 4,
+    "facing": "SOUTH",
+    "active": true,
+    "enabled": true,
+    "tags": [
+      "boss",
+      "dad"
+    ],
+    "notes": "Public Dad boss arena spawn. Arena mechanics remain in DadPlugin."
+  },
+  {
     "key": "giant_rat_3313_2609_3102_0",
     "npcId": 3313,
     "name": "Giant rat",
