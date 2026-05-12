@@ -9,8 +9,8 @@ import org.alter.api.ext.player
 import org.alter.api.ext.playSound
 import org.alter.game.Server
 import org.alter.game.model.Direction
-import org.alter.game.model.Tile
 import org.alter.game.model.World
+import org.alter.game.model.combat.NpcCombatDef
 import org.alter.game.model.move.moveTo
 import org.alter.game.plugin.KotlinPlugin
 import org.alter.game.plugin.Plugin
@@ -22,11 +22,16 @@ class DadPlugin(
     server: Server,
 ) : KotlinPlugin(r, world, server) {
     init {
-        spawnNpc("npc.dad", tile = DAD_SPAWN_TILE, walkRadius = 4, direction = Direction.SOUTH)
+        setMultiCombatRegion(DadArena.REGION_ID)
+
+        spawnNpc("npc.dad", tile = DadArena.DAD_SPAWN_TILE, walkRadius = 4, direction = Direction.SOUTH)
+        DadArena.THROWER_SPAWNS.forEach { spawn ->
+            spawnNpc(spawn.npc, tile = spawn.tile, walkRadius = 0, direction = spawn.direction)
+        }
 
         onObjOption(obj = DAD_CAVE_ENTRANCE, option = 1, lineOfSightDistance = 2) {
             val obj = player.getInteractingGameObj()
-            if (obj.tile.sameAs(DAD_CAVE_ENTRANCE_TILE)) {
+            if (obj.tile.sameAs(DadArena.CAVE_ENTRANCE_TILE)) {
                 enterDadCave()
             }
         }
@@ -34,7 +39,7 @@ class DadPlugin(
         DAD_ARENA_ENTRANCES.forEach { entrance ->
             onObjOption(obj = entrance, option = "open", lineOfSightDistance = 2) {
                 val obj = player.getInteractingGameObj()
-                if (DAD_ARENA_ENTRANCE_TILES.any { obj.tile.sameAs(it) }) {
+                if (DadArena.ENTRANCE_TILES.any { obj.tile.sameAs(it) }) {
                     enterDadArena()
                 }
             }
@@ -80,26 +85,42 @@ class DadPlugin(
                 deathSound = Sound.TROLL_DEATH
             }
         }
+
+        DadArena.THROWER_SPAWNS.map { it.npc }.distinct().forEach { thrower ->
+            setCombatDef(thrower, THROWER_COMBAT_DEF)
+        }
     }
 
     private fun Plugin.enterDadCave() {
         player.playSound(Sound.TELEPORT_ALL)
         player.message("You enter Dad's cave.")
-        player.moveTo(DAD_GATE_ENTRANCE_TILE)
+        player.moveTo(DadArena.GATE_ENTRANCE_TILE)
     }
 
     private fun Plugin.enterDadArena() {
         player.message("You enter Dad's arena.")
-        player.moveTo(DAD_ARENA_CENTER_TILE)
+        player.moveTo(DadArena.CENTER)
     }
 
     private companion object {
         private const val DAD_CAVE_ENTRANCE = "object.cave_entrance_36556"
         private val DAD_ARENA_ENTRANCES = arrayOf("object.arena_entrance", "object.arena_entrance_3783")
-        private val DAD_CAVE_ENTRANCE_TILE = Tile(2536, 3090, 0)
-        private val DAD_ARENA_ENTRANCE_TILES = arrayOf(Tile(2897, 3618, 0), Tile(2897, 3619, 0))
-        private val DAD_GATE_ENTRANCE_TILE = Tile(2891, 3618, 0)
-        private val DAD_ARENA_CENTER_TILE = Tile(2907, 3623, 0)
-        private val DAD_SPAWN_TILE = Tile(2908, 3623, 0)
+        private val THROWER_COMBAT_DEF =
+            NpcCombatDef.DEFAULT.copy(
+                hitpoints = -1,
+                attackSpeed = 4,
+                attackAnimation = Animation.THROWER_TROLL_ATTACK,
+                blockAnimation = Animation.TROLL_DEFEND,
+                deathAnimation = listOf(Animation.TROLL_DEATH),
+                defaultAttackSound = Sound.TROLL_THROW_ROCK,
+                defaultBlockSound = Sound.TROLL_HIT,
+                defaultDeathSound = Sound.TROLL_DEATH,
+                respawnDelay = 0,
+                aggressiveRadius = 0,
+                aggroTargetDelay = 0,
+                aggressiveTimer = Int.MIN_VALUE,
+                followRange = 0,
+                LootTables = null,
+            )
     }
 }
