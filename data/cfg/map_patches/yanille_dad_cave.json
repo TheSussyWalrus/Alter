@@ -1,0 +1,201 @@
+{
+  "key": "yanille_dad_cave",
+  "description": "Remove the west Yanille doorway bay so Dad's cave entrance can occupy the wall cleanly.",
+  "regionX": 39,
+  "regionY": 48,
+  "revision": 228,
+  "operations": {
+    "removeConnectedLocations": [
+      {
+        "seedTile": { "x": 2539, "z": 3091, "height": 0 },
+        "objectNamePrefixes": [],
+        "objectIds": [17091, 17093],
+        "searchRadius": 1,
+        "startSearchRadius": 1,
+        "diagonalConnections": true,
+        "fillBoundingBox": false,
+        "terrainPadding": 0
+      },
+      {
+        "seedTile": { "x": 2539, "z": 3089, "height": 0 },
+        "objectNamePrefixes": [],
+        "objectIds": [205, 17088],
+        "searchRadius": 0,
+        "startSearchRadius": 0,
+        "diagonalConnections": false,
+        "fillBoundingBox": false,
+        "terrainPadding": 0
+      },
+      {
+        "seedTile": { "x": 2539, "z": 3090, "height": 0 },
+        "objectNamePrefixes": [],
+        "objectIds": [17088],
+        "searchRadius": 0,
+        "startSearchRadius": 0,
+        "diagonalConnections": false,
+        "fillBoundingBox": false,
+        "terrainPadding": 0
+      },
+      {
+        "seedTile": { "x": 2539, "z": 3093, "height": 0 },
+        "objectNamePrefixes": [],
+        "objectIds": [17088],
+        "searchRadius": 0,
+        "startSearchRadius": 0,
+        "diagonalConnections": false,
+        "fillBoundingBox": false,
+        "terrainPadding": 0
+      },
+      {
+        "seedTile": { "x": 2539, "z": 3094, "height": 0 },
+        "objectNamePrefixes": [],
+        "objectIds": [205, 17088],
+        "searchRadius": 0,
+        "startSearchRadius": 0,
+        "diagonalConnections": false,
+        "fillBoundingBox": false,
+        "terrainPadding": 0
+      },
+      {
+        "seedTile": { "x": 2536, "z": 3089, "height": 0 },
+        "objectNamePrefixes": [],
+        "objectIds": [17088],
+        "searchRadius": 0,
+        "startSearchRadius": 0,
+        "diagonalConnections": false,
+        "fillBoundingBox": false,
+        "terrainPadding": 0
+      },
+      {
+        "seedTile": { "x": 2538, "z": 3089, "height": 0 },
+        "objectNamePrefixes": [],
+        "objectIds": [17088],
+        "searchRadius": 0,
+        "startSearchRadius": 0,
+        "diagonalConnections": false,
+        "fillBoundingBox": false,
+        "terrainPadding": 0
+      },
+      {
+        "seedTile": { "x": 2536, "z": 3094, "height": 0 },
+        "objectNamePrefixes": [],
+        "objectIds": [17088],
+        "searchRadius": 0,
+        "startSearchRadius": 0,
+        "diagonalConnections": false,
+        "fillBoundingBox": false,
+        "terrainPadding": 0
+      },
+      {
+        "seedTile": { "x": 2538, "z": 3094, "height": 0 },
+        "objectNamePrefixes": [],
+        "objectIds": [17088],
+        "searchRadius": 0,
+        "startSearchRadius": 0,
+        "diagonalConnections": false,
+        "fillBoundingBox": false,
+        "terrainPadding": 0
+      },
+      {
+        "seedTile": { "x": 2537, "z": 3089, "height": 0 },
+        "objectNamePrefixes": [],
+        "objectIds": [17089],
+        "searchRadius": 0,
+        "startSearchRadius": 0,
+        "diagonalConnections": false,
+        "fillBoundingBox": false,
+        "terrainPadding": 0
+      },
+      {
+        "seedTile": { "x": 2537, "z": 3094, "height": 0 },
+        "objectNamePrefixes": [],
+        "objectIds": [17089],
+        "searchRadius": 0,
+        "startSearchRadius": 0,
+        "diagonalConnections": false,
+        "fillBoundingBox": false,
+        "terrainPadding": 0
+      },
+      {
+        "seedTile": { "x": 2538, "z": 3090, "height": 0 },
+        "objectNamePrefixes": [],
+        "objectIds": [196],
+        "searchRadius": 0,
+        "startSearchRadius": 0,
+        "diagonalConnections": false,
+        "fillBoundingBox": false,
+        "terrainPadding": 0
+      },
+      {
+        "seedTile": { "x": 2538, "z": 3093, "height": 0 },
+        "objectNamePrefixes": [],
+        "objectIds": [196, 335],
+        "searchRadius": 0,
+        "startSearchRadius": 0,
+        "diagonalConnections": false,
+        "fillBoundingBox": false,
+        "terrainPadding": 0
+      },
+      {
+        "seedTile": { "x": 2536, "z": 3090, "height": 0 },
+        "objectNamePrefixes": [],
+        "objectIds": [850],
+        "searchRadius": 0,
+        "startSearchRadius": 0,
+        "diagonalConnections": false,
+        "fillBoundingBox": false,
+        "terrainPadding": 0
+      },
+      {
+        "seedTile": { "x": 2536, "z": 3093, "height": 0 },
+        "objectNamePrefixes": [],
+        "objectIds": [850],
+        "searchRadius": 0,
+        "startSearchRadius": 0,
+        "diagonalConnections": false,
+        "fillBoundingBox": false,
+        "terrainPadding": 0
+      },
+      {
+        "seedTile": { "x": 2537, "z": 3090, "height": 0 },
+        "objectNamePrefixes": [],
+        "objectIds": [336],
+        "searchRadius": 0,
+        "startSearchRadius": 0,
+        "diagonalConnections": false,
+        "fillBoundingBox": false,
+        "terrainPadding": 0
+      },
+      {
+        "seedTile": { "x": 2537, "z": 3093, "height": 0 },
+        "objectNamePrefixes": [],
+        "objectIds": [336],
+        "searchRadius": 0,
+        "startSearchRadius": 0,
+        "diagonalConnections": false,
+        "fillBoundingBox": false,
+        "terrainPadding": 0
+      },
+      {
+        "seedTile": { "x": 2538, "z": 3091, "height": 0 },
+        "objectNamePrefixes": [],
+        "objectIds": [336],
+        "searchRadius": 0,
+        "startSearchRadius": 0,
+        "diagonalConnections": false,
+        "fillBoundingBox": false,
+        "terrainPadding": 0
+      },
+      {
+        "seedTile": { "x": 2538, "z": 3092, "height": 0 },
+        "objectNamePrefixes": [],
+        "objectIds": [336],
+        "searchRadius": 0,
+        "startSearchRadius": 0,
+        "diagonalConnections": false,
+        "fillBoundingBox": false,
+        "terrainPadding": 0
+      }
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "key": "yanille_magic_guild_doors_restore",
+  "description": "Restore the Yanille Magic Guild doors if an earlier local Dad cave patch removed them.",
+  "regionX": 40,
+  "regionY": 48,
+  "revision": 228,
+  "operations": {
+    "addLocations": [
+      {
+        "id": 1732,
+        "tile": { "x": 2597, "z": 3087, "height": 0 },
+        "type": 0,
+        "orientation": 0
+      },
+      {
+        "id": 1733,
+        "tile": { "x": 2597, "z": 3088, "height": 0 },
+        "type": 0,
+        "orientation": 0
+      }
+    ]
+  }
+}
