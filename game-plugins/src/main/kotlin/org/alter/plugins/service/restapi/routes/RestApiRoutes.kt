@@ -14,6 +14,8 @@ import spark.Spark.delete
 import spark.Spark.get
 import spark.Spark.patch
 import spark.Spark.post
+import java.nio.file.Files
+import java.nio.file.Path
 
 /**
  * @TODO Http-api
@@ -22,6 +24,7 @@ class RestApiRoutes(
     private val host: String,
     private val httpPort: Int,
     private val gamePort: Int,
+    private val worldEditorDist: Path? = null,
 ) {
     private val gson = Gson()
     private val defaultWorldId = 2
@@ -32,6 +35,18 @@ class RestApiRoutes(
         auth: Boolean,
     ) {
         val worldEditorController = WorldEditorController(world)
+
+        get("/") { _, res ->
+            serveWorldEditorApp(res)
+        }
+
+        get("/npc-spawns") { _, res ->
+            serveWorldEditorApp(res)
+        }
+
+        get("/qa") { _, res ->
+            serveWorldEditorApp(res)
+        }
 
         get("/players") { req, res ->
             gson.toJson(OnlinePlayersController(req, res, false).init(world))
@@ -443,4 +458,15 @@ class RestApiRoutes(
                 ),
             ),
         )
+
+    private fun serveWorldEditorApp(res: spark.Response): String {
+        val index = worldEditorDist?.resolve("index.html")
+        if (index == null || !Files.isRegularFile(index)) {
+            res.status(503)
+            res.type("text/plain")
+            return "World editor web app is not built. Run npm run build in http-api."
+        }
+        res.type("text/html")
+        return Files.readString(index)
+    }
 }

@@ -7,6 +7,9 @@ import org.alter.game.service.Service
 import org.alter.plugins.service.restapi.routes.CorsRoute
 import org.alter.plugins.service.restapi.routes.RestApiRoutes
 import spark.Spark
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
 
 class RestApiService : Service {
     private var httpPort = 4567
@@ -42,8 +45,12 @@ class RestApiService : Service {
 
         Spark.ipAddress(host)
         Spark.port(httpPort)
+        val worldEditorDist = findWorldEditorDist()
+        if (worldEditorDist != null) {
+            Spark.externalStaticFileLocation(worldEditorDist.toString())
+        }
         CorsRoute(origin, methods, headers)
-        RestApiRoutes(host, httpPort, gamePort).init(world, auth)
+        RestApiRoutes(host, httpPort, gamePort, worldEditorDist).init(world, auth)
         Spark.init()
         Spark.awaitInitialization()
         started = true
@@ -55,5 +62,18 @@ class RestApiService : Service {
     ) {
         started = false
         Spark.stop()
+    }
+
+    private fun findWorldEditorDist(): Path? {
+        val userDir = Paths.get(System.getProperty("user.dir")).toAbsolutePath().normalize()
+        val roots = listOfNotNull(userDir, userDir.parent, userDir.parent?.parent)
+        val candidates =
+            roots.flatMap { root ->
+                listOf(
+                    root.resolve("http-api").resolve("dist"),
+                    root.resolve("Alter").resolve("http-api").resolve("dist"),
+                )
+            }.distinct()
+        return candidates.firstOrNull { Files.isRegularFile(it.resolve("index.html")) }
     }
 }

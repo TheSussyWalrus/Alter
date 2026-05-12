@@ -43,13 +43,16 @@ object Combat {
         pawn: Pawn,
         target: Pawn,
         combatClass: CombatClass,
-    ): Boolean = canEngage(pawn, target) && !areOverlapping(pawn, target) && getStrategy(combatClass).canAttack(pawn, target)
+    ): Boolean = canAttack(pawn, target, getStrategy(combatClass))
 
     fun canAttack(
         pawn: Pawn,
         target: Pawn,
         strategy: CombatStrategy,
-    ): Boolean = canEngage(pawn, target) && !areOverlapping(pawn, target) && strategy.canAttack(pawn, target)
+    ): Boolean =
+        canEngage(pawn, target) &&
+            isWithinAttackRange(pawn, target, strategy.getAttackRange(pawn)) &&
+            strategy.canAttack(pawn, target)
 
     fun isAttackDelayReady(pawn: Pawn): Boolean = !pawn.timers.has(ATTACK_DELAY)
 
@@ -110,7 +113,7 @@ object Combat {
             } else if (target is Player) {
                 val strategy = CombatConfigs.getCombatStrategy(target)
                 val attackRange = strategy.getAttackRange(target)
-                if (/** target.getVarp(AttackTab.DISABLE_AUTO_RETALIATE_VARP) == 0 && */ target.getCombatTarget() != pawn && !areOverlapping(target, pawn) && target.tile.isWithinRadius(pawn.tile, attackRange)) {
+                if (/** target.getVarp(AttackTab.DISABLE_AUTO_RETALIATE_VARP) == 0 && */ target.getCombatTarget() != pawn && isWithinAttackRange(target, pawn, attackRange)) {
                     target.attack(pawn)
                 } /**
                     * @TODO Auto Retaliate
@@ -172,16 +175,8 @@ object Combat {
             return false
         }
 
-        val srcSize = pawn.getSize()
-        val dstSize = Math.max(distance, target.getSize())
-
-        val touching =
-            if (distance > 1) {
-                areOverlapping(start.x, start.z, srcSize, srcSize, end.x, end.z, dstSize, dstSize)
-            } else {
-                areBordering(start.x, start.z, srcSize, srcSize, end.x, end.z, dstSize, dstSize)
-            }
-        val withinRange = touching && world.lineValidator.rayCast(start, end, projectile = projectile)
+        val attackRange = Math.max(1, distance)
+        val withinRange = isWithinAttackRange(pawn, target, attackRange) && world.lineValidator.rayCast(start, end, projectile = projectile)
         return withinRange //|| pawn.walkToInteract(it, target, lineOfSightRange = distance)
     }
 
@@ -315,6 +310,65 @@ object Combat {
                 target.getSize(),
                 target.getSize(),
             )
+
+    fun isWithinAttackRange(
+        pawn: Pawn,
+        target: Pawn,
+        range: Int,
+    ): Boolean {
+        if (range < 1 || pawn.tile.height != target.tile.height) {
+            return false
+        }
+        val distance = getAttackDistance(pawn, target)
+        return distance in 1..range
+    }
+
+    fun getAttackDistance(
+        pawn: Pawn,
+        target: Pawn,
+    ): Int {
+        if (pawn.tile.height != target.tile.height) {
+            return Int.MAX_VALUE
+        }
+        return getAttackDistance(
+            pawn.tile.x,
+            pawn.tile.z,
+            pawn.getSize(),
+            pawn.getSize(),
+            target.tile.x,
+            target.tile.z,
+            target.getSize(),
+            target.getSize(),
+        )
+    }
+
+    fun getAttackDistance(
+        x1: Int,
+        z1: Int,
+        width1: Int,
+        length1: Int,
+        x2: Int,
+        z2: Int,
+        width2: Int,
+        length2: Int,
+    ): Int {
+        val a = Box(x1, z1, width1 - 1, length1 - 1)
+        val b = Box(x2, z2, width2 - 1, length2 - 1)
+
+        val xDistance =
+            when {
+                a.x2 < b.x1 -> b.x1 - a.x2
+                b.x2 < a.x1 -> a.x1 - b.x2
+                else -> 0
+            }
+        val zDistance =
+            when {
+                a.y2 < b.y1 -> b.y1 - a.y2
+                b.y2 < a.y1 -> a.y1 - b.y2
+                else -> 0
+            }
+        return Math.max(xDistance, zDistance)
+    }
 
     fun areOverlapping(
         x1: Int,

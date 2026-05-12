@@ -50,6 +50,6 @@ class NpcSpawnEditorPlugin(
         privilege.powers.contains(Privilege.OWNER_POWER) || privilege.powers.contains(Privilege.DEV_POWER)
 
     private companion object {
-        private const val EDITOR_URL = "http://127.0.0.1:8080/npc-spawns"
+        private const val EDITOR_URL = "http://127.0.0.1:4567/npc-spawns"
     }
 }

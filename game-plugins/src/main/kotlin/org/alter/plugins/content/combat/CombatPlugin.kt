@@ -160,7 +160,7 @@ class CombatPlugin(
                 }
             }
         }
-        if (!overlapping && pawn.tile.getDistance(target.tile) <= attackRange + target.getSize()) {
+        if (Combat.isWithinAttackRange(pawn, target, attackRange)) {
             reached = true
             pawn.stopMovement()
         }
