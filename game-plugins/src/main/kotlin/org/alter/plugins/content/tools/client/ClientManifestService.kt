@@ -204,6 +204,28 @@ class ClientManifestService : Service {
             addProperty("minimumVersion", config.string("minimumClientVersion", "0.1.0"))
             addProperty("bootstrapVersion", config.string("bootstrapVersion", "0.1.0"))
             config.string("downloadUrl", null)?.let { addProperty("downloadUrl", it) } ?: add("downloadUrl", JsonNull.INSTANCE)
+            add("release", release())
+            add("update", update())
+        }
+
+    private fun release(): JsonObject =
+        JsonObject().apply {
+            addProperty("channel", config.string("desktopReleaseChannel", config.string("environment", "local")))
+            addProperty("latestVersion", config.string("desktopLatestVersion", config.string("bootstrapVersion", "0.1.0")))
+            config.string("desktopReleasePublishedAt", null)?.let { addProperty("publishedAt", it) } ?: add("publishedAt", JsonNull.INSTANCE)
+            config.string("desktopReleaseNotesUrl", null)?.let { addProperty("notesUrl", it) } ?: add("notesUrl", JsonNull.INSTANCE)
+            config.string("desktopDownloadPageUrl", null)?.let { addProperty("downloadPageUrl", it) } ?: add("downloadPageUrl", JsonNull.INSTANCE)
+            add("artifacts", config.jsonArray("desktopReleaseArtifacts"))
+        }
+
+    private fun update(): JsonObject =
+        JsonObject().apply {
+            addProperty("enabled", config.boolean("desktopUpdateEnabled", false))
+            addProperty("required", config.boolean("desktopUpdateRequired", false))
+            addProperty("rollout", config.double("desktopUpdateRollout", 0.0).coerceIn(0.0, 1.0))
+            addProperty("launcherExecutable", config.string("desktopLauncherExecutable", "Dodian.exe"))
+            add("eligibleLauncherVersions", config.stringArray("desktopUpdateEligibleLauncherVersions"))
+            config.string("desktopUpdateMessage", null)?.let { addProperty("message", it) } ?: add("message", JsonNull.INSTANCE)
         }
 
     private fun plugins(): JsonObject =
@@ -261,6 +283,13 @@ class ClientManifestService : Service {
             fallback
         }
 
+    private fun JsonObject.double(name: String, fallback: Double): Double =
+        if (has(name) && !get(name).isJsonNull) {
+            runCatching { get(name).asDouble }.getOrDefault(fallback)
+        } else {
+            fallback
+        }
+
     private fun JsonObject.array(name: String, fallback: List<Int>): JsonArray {
         if (!has(name) || get(name).isJsonNull || !get(name).isJsonArray) {
             return fallback.fold(JsonArray()) { arr, value -> arr.add(value); arr }
@@ -277,6 +306,13 @@ class ClientManifestService : Service {
             arr
         }
     }
+
+    private fun JsonObject.jsonArray(name: String): JsonArray =
+        if (has(name) && !get(name).isJsonNull && get(name).isJsonArray) {
+            JsonParser.parseString(get(name).toString()).asJsonArray
+        } else {
+            JsonArray()
+        }
 
     private fun resolveConfigPath(rawPath: String): Path {
         val direct = Paths.get(rawPath)
@@ -354,11 +390,49 @@ class ClientManifestService : Service {
                 },
                 "client": {
                   "type": "object",
-                  "required": ["minimumVersion", "bootstrapVersion"],
+                  "required": ["minimumVersion", "bootstrapVersion", "release", "update"],
                   "properties": {
                     "minimumVersion": { "type": "string" },
                     "bootstrapVersion": { "type": "string" },
-                    "downloadUrl": { "type": ["string", "null"] }
+                    "downloadUrl": { "type": ["string", "null"] },
+                    "release": {
+                      "type": "object",
+                      "required": ["channel", "latestVersion", "publishedAt", "notesUrl", "downloadPageUrl", "artifacts"],
+                      "properties": {
+                        "channel": { "type": "string" },
+                        "latestVersion": { "type": "string" },
+                        "publishedAt": { "type": ["string", "null"] },
+                        "notesUrl": { "type": ["string", "null"] },
+                        "downloadPageUrl": { "type": ["string", "null"] },
+                        "artifacts": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": ["platform", "arch", "format", "url", "sha256", "sizeBytes"],
+                            "properties": {
+                              "platform": { "type": "string", "enum": ["windows", "macos", "linux"] },
+                              "arch": { "type": "string", "enum": ["x64", "arm64"] },
+                              "format": { "type": "string", "enum": ["exe", "msi", "zip", "dmg", "tar.gz", "jar"] },
+                              "url": { "type": ["string", "null"] },
+                              "sha256": { "type": ["string", "null"], "pattern": "^[a-fA-F0-9]{64}$" },
+                              "sizeBytes": { "type": ["integer", "null"], "minimum": 1 }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "update": {
+                      "type": "object",
+                      "required": ["enabled", "required", "rollout", "launcherExecutable", "eligibleLauncherVersions", "message"],
+                      "properties": {
+                        "enabled": { "type": "boolean" },
+                        "required": { "type": "boolean" },
+                        "rollout": { "type": "number", "minimum": 0, "maximum": 1 },
+                        "launcherExecutable": { "type": "string" },
+                        "eligibleLauncherVersions": { "type": "array", "items": { "type": "string" } },
+                        "message": { "type": ["string", "null"] }
+                      }
+                    }
                   }
                 },
                 "plugins": {
