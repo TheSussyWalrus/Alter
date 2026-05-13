@@ -55,7 +55,7 @@ object PlayerSaving {
     fun loadPlayer(client: Client, block: LoginBlock<*>): PlayerLoadResult {
         if (!PlayerDetails.playerExists(client)) {
             logger.info { "Rejected in-game login for unregistered account '${client.loginUsername}'. Create the account on the website first." }
-            return PlayerLoadResult.INVALID_CREDENTIALS
+            return PlayerLoadResult.ACCOUNT_NOT_REGISTERED
         }
 
         return try {

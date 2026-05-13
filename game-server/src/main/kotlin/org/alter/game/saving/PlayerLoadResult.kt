@@ -17,6 +17,11 @@ enum class PlayerLoadResult {
     LOAD_ACCOUNT,
 
     /**
+     * The account has not been registered through the website/forums.
+     */
+    ACCOUNT_NOT_REGISTERED,
+
+    /**
      * The credentials provided at login are incorrect.
      */
     INVALID_CREDENTIALS,

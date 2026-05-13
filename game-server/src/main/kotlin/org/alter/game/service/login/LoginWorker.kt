@@ -77,6 +77,7 @@ class LoginWorker(private val boss: LoginService, private val verificationServic
                 } else {
                     val errorCode =
                         when (loadResult) {
+                            PlayerLoadResult.ACCOUNT_NOT_REGISTERED -> unregisteredAccountResponse()
                             PlayerLoadResult.INVALID_CREDENTIALS -> LoginResponse.InvalidUsernameOrPassword
                             PlayerLoadResult.INVALID_RECONNECTION -> LoginResponse.BadSessionId
                             PlayerLoadResult.MALFORMED -> LoginResponse.Locked
@@ -93,5 +94,19 @@ class LoginWorker(private val boss: LoginService, private val verificationServic
 
     companion object {
         private val logger = KotlinLogging.logger {}
+        private const val DEFAULT_REGISTRATION_URL = "http://127.0.0.1:3000/account/register"
+
+        private fun unregisteredAccountResponse(): LoginResponse.DisallowedByScript {
+            val registrationUrl =
+                System.getProperty("dodian.registrationUrl")
+                    ?: System.getenv("DODIAN_REGISTRATION_URL")
+                    ?: DEFAULT_REGISTRATION_URL
+
+            return LoginResponse.DisallowedByScript(
+                line1 = "This account is not registered.",
+                line2 = "Create your Dodian account first at:",
+                line3 = registrationUrl,
+            )
+        }
     }
 }
