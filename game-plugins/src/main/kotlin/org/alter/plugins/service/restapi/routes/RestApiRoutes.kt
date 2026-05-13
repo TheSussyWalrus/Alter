@@ -9,6 +9,7 @@ import org.alter.game.model.entity.GroundItem
 import org.alter.game.service.rsa.RsaService
 import org.alter.plugins.service.restapi.controllers.OnlinePlayersController
 import org.alter.plugins.service.restapi.controllers.PlayerController
+import org.alter.plugins.service.restapi.controllers.PublicApiController
 import org.alter.plugins.service.restapi.controllers.WorldEditorController
 import spark.Spark.delete
 import spark.Spark.get
@@ -35,6 +36,7 @@ class RestApiRoutes(
         auth: Boolean,
     ) {
         val worldEditorController = WorldEditorController(world)
+        val publicApiController = PublicApiController(world)
 
         get("/") { _, res ->
             serveWorldEditorApp(res)
@@ -63,6 +65,66 @@ class RestApiRoutes(
 
         get("/client_manifest.schema.json") { _, res ->
             worldEditorController.clientManifestSchema(res)
+        }
+
+        get("/api/v1/status") { _, res ->
+            publicApiController.status(res)
+        }
+
+        get("/api/v1/online") { _, res ->
+            publicApiController.online(res)
+        }
+
+        get("/api/v1/players") { req, res ->
+            publicApiController.players(req, res)
+        }
+
+        get("/api/v1/players/:name") { req, res ->
+            publicApiController.player(req, res)
+        }
+
+        get("/api/v1/highscores") { req, res ->
+            publicApiController.highscores(req, res)
+        }
+
+        get("/api/v1/npcs/search") { req, res ->
+            publicApiController.searchNpcs(req, res)
+        }
+
+        get("/api/v1/npc/search") { req, res ->
+            publicApiController.searchNpcs(req, res)
+        }
+
+        get("/api/v1/npcs/:npcId") { req, res ->
+            publicApiController.npc(req, res)
+        }
+
+        get("/api/v1/npc/:npcId") { req, res ->
+            publicApiController.npc(req, res)
+        }
+
+        get("/api/v1/npcs/:npcId/drops") { req, res ->
+            publicApiController.npcDrops(req, res)
+        }
+
+        get("/api/v1/npc/:npcId/drops") { req, res ->
+            publicApiController.npcDrops(req, res)
+        }
+
+        get("/api/v1/items/search") { req, res ->
+            publicApiController.searchItems(req, res)
+        }
+
+        get("/api/v1/item/search") { req, res ->
+            publicApiController.searchItems(req, res)
+        }
+
+        post("/api/v1/auth/verify") { req, res ->
+            publicApiController.verify(req, res)
+        }
+
+        post("/api/v1/auth/register") { req, res ->
+            publicApiController.register(req, res)
         }
 
         get("/world-editor/client-manifest") { _, res ->
