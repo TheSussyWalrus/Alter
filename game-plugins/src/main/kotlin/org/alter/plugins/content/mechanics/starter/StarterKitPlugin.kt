@@ -13,9 +13,11 @@ import org.alter.game.model.container.key.*
 import org.alter.game.model.entity.*
 import org.alter.game.model.item.*
 import org.alter.game.model.queue.*
+import org.alter.game.saving.PlayerSaving
 import org.alter.game.model.shop.*
 import org.alter.game.model.timer.*
 import org.alter.game.plugin.*
+import org.alter.plugins.content.interfaces.attack.AttackTab
 import org.alter.rscm.RSCM.getRSCM
 
 class StarterKitPlugin(
@@ -34,6 +36,12 @@ class StarterKitPlugin(
                     add(getRSCM("item.bronze_pickaxe"))
                     add(getRSCM("item.bronze_dagger"))
                     add(getRSCM("item.knife"))
+                }
+                AttackTab.setEnergy(player, 100)
+                player.attr.remove(NEW_ACCOUNT_ATTR)
+                val client = player as? Client
+                if (client != null) {
+                    PlayerSaving.savePlayer(client)
                 }
             }
         }

@@ -6,8 +6,6 @@ import net.rsprot.protocol.loginprot.incoming.util.AuthenticationType
 import net.rsprot.protocol.loginprot.incoming.util.LoginBlock
 import org.alter.game.GameContext
 import org.alter.game.model.PlayerUID
-import org.alter.game.model.attr.APPEARANCE_SET_ATTR
-import org.alter.game.model.attr.NEW_ACCOUNT_ATTR
 import org.alter.game.model.entity.Client
 import org.alter.game.saving.impl.*
 import org.alter.game.saving.formats.FormatHandler
@@ -56,14 +54,8 @@ object PlayerSaving {
 
     fun loadPlayer(client: Client, block: LoginBlock<*>): PlayerLoadResult {
         if (!PlayerDetails.playerExists(client)) {
-            val registered = PlayerDetails.registerAccount(client)
-            if (!registered) {
-                return PlayerLoadResult.INVALID_CREDENTIALS
-            }
-            configureNewPlayer(client, block)
-            client.uid = PlayerUID(client.loginUsername)
-            savePlayer(client)
-            return PlayerLoadResult.NEW_ACCOUNT
+            logger.info { "Rejected in-game login for unregistered account '${client.loginUsername}'. Create the account on the website first." }
+            return PlayerLoadResult.INVALID_CREDENTIALS
         }
 
         return try {
@@ -127,15 +119,5 @@ object PlayerSaving {
             logger.error(e) { "Failed to decode attributes for client: ${client.loginUsername}" }
             false
         }
-    }
-    private fun configureNewPlayer(client: Client, block: LoginBlock<*>) {
-        client.attr.put(NEW_ACCOUNT_ATTR, true)
-        client.attr.put(APPEARANCE_SET_ATTR, false)
-
-        if (block.authentication is AuthenticationType.PasswordAuthentication<*>) {
-            val passwordAuth = block.authentication as AuthenticationType.PasswordAuthentication<*>
-            client.passwordHash = BCrypt.hashpw(passwordAuth.password.asString(), BCrypt.gensalt(16))
-        }
-        client.tile = client.world.gameContext.home
     }
 }

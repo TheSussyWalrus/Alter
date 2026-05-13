@@ -34,7 +34,7 @@ val MEMBERS_EXPIRES_ATTR = AttributeKey<String>("members_expires")
  * A flag which indicates if the player's account was just created/logged in for
  * the first time.
  */
-val NEW_ACCOUNT_ATTR = AttributeKey<Boolean>()
+val NEW_ACCOUNT_ATTR = AttributeKey<Boolean>("new_account")
 
 /**
  * Indicates the last [Date.time] the player claimed a free bond (tradeable)
